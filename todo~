@@ -1,0 +1,79 @@
+Create wireframe of code snippet app - DONE
+Implement basic UX flow w/ bootstrap
+  - Implement for desktop and tablet - not iPhone - DONE
+  - Create header (Title, search bar, Sign-In, Gear) - DONE
+Implement user signup/login and account persistence
+  - Hookup Sign-In button to Sign-In page
+  - Implement OAuth for google (twitter & facebook later)
+    - Hookup the Google button to do google oauth
+  - Create user session according to email address
+  - Persist user data (Name, email, ???)
+    - CouchDB, MongoDB, Reddis
+    - Create/persist default "General" topic for each user
+  - Implement "Sign Out" button
+Implement snippet page format
+  - Wide page only
+  - Implement Horz and Vert Layout
+    - Create some dummy snippets to use for layout
+    - Implement Horz and Vert buttons
+    - Create JavaScript to toggle CSS for each snippet
+Implement code snippets
+  - Hook up plus button to snippet form page
+  - Add jQuery-ACE for code snippets
+  - Add text editor for code descriptions
+  - ship code snippet to server (per user)
+    - can't create snippets if not signed in
+Implement code-snippet persitence
+  - Create snippet object (Username, Topic (General for now), Snippet Title, Description, Code)
+Add user snippet counter to search box upon login
+  - /<user>/GetSnippetCount
+  - Return count in JSON
+Add "Topic" widget (left column)
+  - Add "General" topic
+  - Add "Plus Button" to create topic
+    - Persist the topic
+  - Add hidden edit button to change topic name or delete topic
+    - if topic is deleted, move all snippets to the "General" topic
+    - if topic is renamed, update name in database
+Add topic selection
+  - When topic is selected, display snippets in the topic
+  - When the "Plus Button" is clicked, add snippet to that topic
+Add ability to search snippets
+  - Send search query to server (/<user>/SearchSnippet/?<query>
+  - Create db query, and get results
+  - Return results in JSON
+  - In JavaScript, take JSON, unpack it, and for each snippet, add to page
+Add "Snippet Attribute Selector" popup
+  - If snippet is owned by logged in user, toggle public or private
+  - Provide ability to move to topic
+  - Provide ability to add to topic
+Implement Gear
+  - Change public or private on snippet creation
+  - Set user snippet color
+  - Set public snippet color
+
+--------
+Persistance Schema
+* User data: User, email, ??? (One "User" to many "Topics")
+  - there should be no "User" to "Snippet" relationship
+* Snippet data: Topic, Title, Description, Code, snippetID, topicID (One "Snippet" to many "Topics")
+* Topic list: Topic, User, topicID (One "Topic" to many "Snippets"
+
+
+To search all user's snippets:
+  - for each topic:
+    - for each snippet in topic:
+      - search snippet for string
+
+To search all snippets:
+  - for each user:
+      - for each topic:
+        - for each snippet in topic:
+          - search snippet for string
+
+To find a particular snippet:
+  - given user:
+    - for each topic:
+      - for each snippet"
+        return when given snippet found
+
