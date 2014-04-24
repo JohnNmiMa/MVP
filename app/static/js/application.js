@@ -10,31 +10,31 @@ Utils.numberWithCommas = function(x) {
 $(document).ready(function() {
 
     // Use VEX dialogs to show the application instructions
-	function showInfoDialog() {
+	function showSigninDialog() {
 		vex.open({
-			contentClassName: 'infoDialog',
+			contentClassName: 'signinDialog',
 			content: 
-                '<h3>Help</h3>' +
-                '<ol>' +
-                '<li>Click the "Samples" link and choose a sample invitation or business card' +
-                '<li>Fill in the form on the edit page' +
-                '<li>When the form is complete, click the "Save" button' +
-                '<li>To make changes, click the "Edit" button and make the changes' +
-                '<li>Once the invitation is correct, screenshot the invitation' +
-                '    <ul>' +
-                '    <li>On Mac OS X, type "Shift+Command+4"' +
-                '    <li>On Windows:' +
-                '        <ol>' +
-                '        <li>select the browser window displaying the invitation' +
-                '        <li>type "Alt + PrtScn"' +
-                '        </ol>' +
-                '    </ul>' +
-                '<li>Edit the screenshot image if needed, then print or email to class attendees' +
-                '<li>Contact Pam to have other invitations added to the list of samples' +
-                '</ol>',
+                '<h2>Sign In</h2>' +
+                '<a href="/signin/facebook">' +
+                '  <div class="signinButton facebookButton">' +
+                '    <i class="fa fa-facebook-square"></i>' +
+                '    <p>Sign in with Facebook</p>' +
+                '  </div></a>' +
+                '<a href="/signin/twitter">' +
+                '  <div class="signinButton twitterButton">' +
+                '    <i class="fa fa-twitter-square"></i>' +
+                '    <p>Sign in with Twitter</p>' +
+                '  </div></a>' +
+                '<a href="/signin/google">' +
+                '  <div class="signinButton googleButton">' +
+                '    <i class="fa fa-google-plus-square"></i>' +
+                '    <p>Sign in with Google</p>' +
+                '  </div></a>',
 			overlayClassName:'infoDialogOverlay',
 			showCloseButton:false});
 	}
+
+    $('#signin').click(showSigninDialog);
 
 	// jQuery UI code for tooltips
 	//$(document).tooltip();

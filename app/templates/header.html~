@@ -9,8 +9,13 @@
         </button>
         <a href="#" class="navbar-brand hidden-xs">SomeCode</a>
         <form class="snippetForm" role="search">
-            <input type="text" class="form-control" placeholder="Search public snippets">
-        </form-->
+            {% if name %}
+                {% set ph = 'Search personal or public snippets' %}
+            {% else %}
+                {% set ph = 'Search public snippets' %}
+            {% endif %}
+            <input type="text" class="form-control" placeholder='{{ph}}'>
+        </form>
     </div>
     <!-- Collection of nav links, forms, and other content for toggling -->
     <div id="navbarCollapse" class="collapse navbar-collapse">
@@ -20,7 +25,12 @@
             </div>
         </form-->
         <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Sign In</a></li>
+            {% if name %}
+                <li><a href="#" id="username">{{name}}</a></li>
+                <li><a href="/logout/<name>" id="signout">Log Out</a></li>
+            {% else %}
+                <li><a href="#" id="signin">Sign In</a></li>
+            {% endif %}
             <li><a href="#"><span class="glyphicon glyphicon-cog"></span></a></li>
         </ul>
     </div>
