@@ -3,6 +3,7 @@ from flask.ext.login import login_user, logout_user, current_user, login_require
 from models import User, ROLE_USER, ROLE_ADMIN
 from app import app, login_manager, oauth
 from facebook_oauth import facebook
+from twitter_oauth import twitter
 from datetime import datetime
 import pdb
 
@@ -36,7 +37,8 @@ def signin(social):
             next=request.args.get('next') or request.referrer or None,
             _external=True))
     elif (social == 'twitter'):
-        login_user(user)
+        return twitter.authorize(callback=url_for('twitter_authorized',
+            next=request.args.get('next') or request.referrer or None))
     elif (social == 'google'):
         login_user(user)
 
@@ -58,14 +60,12 @@ def logout():
     return redirect(url_for('index'))
 
 
-@app.route('/signin/authorized')
+@app.route('/signin/facebook_authorized')
 @facebook.authorized_handler
 def facebook_authorized(resp):
     next_url = request.args.get('next') or url_for('index')
     if resp is None or 'access_token' not in resp:
         #return redirect(next_url)
-        pdb.set_trace()
-        me = facebook.get('/me')
         flash(u'<h2>Facebook login error - please try logging in again!</h2>', 'error')
         return redirect(next_url)
 
@@ -74,8 +74,10 @@ def facebook_authorized(resp):
     session['logged_in'] = True
     session['oauth_token'] = (resp['access_token'], '')
     me = facebook.get('/me')
+    #print("response user id, username & email = {}, {} & {}").format(me.data['id'], me.data['username'], me.data['email'])
+    #pdb.set_trace()
 
-    user = User(1001, me.data['name'], me.data['email'], ROLE_USER)
+    user = User(1001, me.data['username'], me.data['email'], ROLE_USER)
     login_user(user)
 
     return redirect(url_for('user'))
@@ -86,6 +88,37 @@ def get_facebook_oauth_token():
     return session.get('oauth_token')
 
 
+@app.route('/signin/twitter_authorized')
+@twitter.authorized_handler
+def twitter_authorized(resp):
+    next_url = request.args.get('next') or url_for('index')
+    if resp is None:
+        flash(u'<h2>Twitter login error - please try logging in again!</h2>', 'error')
+        return redirect(next_url)
+
+    session['logged_in'] = True
+    session['oauth_token'] = (
+        resp['oauth_token'],
+        resp['oauth_token_secret']
+    )
+    session['twitter_user'] = resp['screen_name']
+    #print("response user_id and screen_name = {} and {}").format(resp['user_id'], resp['screen_name'])
+    #pdb.set_trace()
+
+    user = User(1002, resp['screen_name'], '', ROLE_USER)
+    login_user(user)
+
+    #return redirect(next_url)
+    return redirect(url_for('user'))
+
+
+@twitter.tokengetter
+def get_twitter_oauth_token():
+    #pdb.set_trace()
+    keysec = session.get('oauth_token')
+    return session.get('oauth_token')
+
+
 def pop_login_session():
     session.pop('logged_in', None)
     session.pop('oauth_token', None)
@@ -93,6 +126,5 @@ def pop_login_session():
 
 @login_manager.user_loader
 def load_user(id):
-    #pdb.set_trace()
     return User.get_user(int(id))
 
