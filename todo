@@ -3,9 +3,9 @@ Implement basic UX flow w/ bootstrap
   - Implement for desktop and tablet - not iPhone - DONE
   - Create header (Title, search bar, Sign-In, Gear) - DONE
 Implement user signup/login and account persistence
-  - Hookup Sign-In button to Sign-In page
-  - Implement OAuth for google (twitter & facebook later)
-    - Hookup the Google button to do google oauth
+  - Hookup Sign-In button to Sign-In page - DONE
+  - Implement OAuth for google (twitter & facebook later) - DONE
+    - Hookup the Google button to do google oauth - DONE
   - Create user session according to email address
   - Persist user data (Name, email, ???)
     - CouchDB, MongoDB, Reddis

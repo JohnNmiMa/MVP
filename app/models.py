@@ -1,23 +1,17 @@
-#from app import db, app
-from app import app
+from app import db, app
 
 ROLE_USER = 0
 ROLE_ADMIN = 1
 
-class User():
-    users = {}
-
-    def __init__(self, id, name, email, role):
-        self.id = id
-        self.name = name
-        self.email = email
-        self.role = role
-        User.users[self.id] = self
-
-    #id = db.Column(db.Integer, primary_key = True)
-    #name = db.Column(db.String(64), index = True, unique = True)
-    #email = db.Column(db.String(120), index = True, unique = True)
-    #role = db.Column(db.SmallInteger, default = ROLE_USER)
+class User(db.Model):
+    id =         db.Column(db.Integer, primary_key = True)
+    google_id =  db.Column(db.String(1024), unique = True)
+    fb_id =      db.Column(db.String(1024), unique = True)
+    twitter_id = db.Column(db.String(1024), unique = True)
+    name =       db.Column(db.String(64))
+    email =      db.Column(db.String(120), index = True, unique = True)
+    role =       db.Column(db.SmallInteger, default = ROLE_USER)
+    topic =      db.relationship('Topic', backref = 'user', lazy = 'dynamic')
 
     def is_authenticated(self):
         return True
@@ -31,10 +25,13 @@ class User():
     def get_id(self):
         return unicode(self.id)
 
-    @staticmethod
-    def get_user(id):
-        return User.users[id]
+    def __repr__(self):
+        return '<User %r, email %r, google_id %r, fb_id %r, twitter_id %r, role %r>' % (self.name, self.email, self.google_id, self.fb_id, self.twitter_id, self.role)
+
+class Topic(db.Model):
+    id =    db.Column(db.Integer, primary_key = True)
+    topic = db.Column(db.String(80))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __repr__(self):
-        return '<User %r>' % (self.name)
-
+        return '<Topic %r>' % (self.topic)

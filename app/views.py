@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for, session, request, g
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from models import User, ROLE_USER, ROLE_ADMIN
-from app import app, login_manager, oauth
+from app import app, db, login_manager, oauth
 from facebook_oauth import facebook
 from twitter_oauth import twitter
 from google_oauth import google
@@ -76,9 +76,21 @@ def facebook_authorized(resp):
     #print("response user id, username & email = {}, {} & {}").format(me.data['id'], me.data['username'], me.data['email'])
     #pdb.set_trace()
 
-    user = User(1001, me.data['username'], me.data['email'], ROLE_USER)
-    login_user(user)
+    # See if user is already in the db
+    user = User.query.filter_by(email = me.data['email']).first()
+    if user is None:
+        # Save new user in the db
+        user = User(fb_id = me.data['id'], name = me.data['username'], email = me.data['email'], role = ROLE_USER)
+        db.session.add(user)
+        db.session.commit()
+    else:
+        fb_id = user.fb_id
+        if fb_id is None:
+            user.fb_id = me.data['id']
+            db.session.commit()
 
+    # Log the user in
+    login_user(user)
     return redirect(url_for('user'))
 
 @facebook.tokengetter
@@ -97,19 +109,28 @@ def twitter_authorized(resp):
         flash(u'<h5>Twitter login error - please try logging in again!</h5>', 'error')
         return redirect(next_url)
 
+    # Save the access token away
     session['logged_in'] = True
     session['oauth_token'] = (
         resp['oauth_token'],
         resp['oauth_token_secret']
     )
-    session['twitter_user'] = resp['screen_name']
+    screen_name = resp['screen_name']
+    twitter_id = resp['user_id']
+    session['twitter_user'] = screen_name
     #print("response user_id and screen_name = {} and {}").format(resp['user_id'], resp['screen_name'])
     #pdb.set_trace()
 
-    user = User(1002, resp['screen_name'], '', ROLE_USER)
-    login_user(user)
+    # See if user is already in the db
+    user = User.query.filter_by(twitter_id = twitter_id).first()
+    if user is None:
+        # Save new user in the db
+        user = User(twitter_id = twitter_id, name = screen_name, role = ROLE_USER)
+        db.session.add(user)
+        db.session.commit()
 
-    #return redirect(next_url)
+    # Log the user in
+    login_user(user)
     return redirect(url_for('user'))
 
 @twitter.tokengetter
@@ -150,11 +171,22 @@ def google_authorized(resp):
     #print("response user id, username & email = {}, {} & {}").format(me['id'], me['name'], me['email'])
     #pdb.set_trace()
 
-    # Log the user in
+    # See if user is already in the db
     me = json.load(response)
-    user = User(int(me['id']), me['given_name'], me['email'], ROLE_USER)
-    login_user(user)
+    user = User.query.filter_by(email = me['email']).first()
+    if user is None:
+        # Save new user in the db
+        user = User(google_id = me['id'], name = me['given_name'], email = me['email'], role = ROLE_USER)
+        db.session.add(user)
+        db.session.commit()
+    else:
+        google_id = user.google_id
+        if google_id is None:
+            user.google_id = me['id']
+            db.session.commit()
 
+    # Log the user in
+    login_user(user)
     return redirect(url_for('user'))
 
 @google.tokengetter
@@ -170,5 +202,5 @@ def pop_login_session():
 
 @login_manager.user_loader
 def load_user(id):
-    return User.get_user(int(id))
+    return User.query.get(int(id))
 
