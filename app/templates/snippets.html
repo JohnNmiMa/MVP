@@ -1,0 +1,87 @@
+<div class="snippet">
+    <div class="snippetTitle">
+        <h5>Class Definition</h5>
+        <div class="snippetContent">
+            <div class="snippetDes-horz">
+                <p>Classes are used to create user defined datatypes.</p>
+                <ul class='snippetDesStyle'>
+                    <li>By convention, they are capitalized.</li>
+                    <li>A class is a python object, and is a template used to create class instances. A class instance is created by instantiation <em>(inst = class()</em>).</li>
+                    <li>Classes can have docstrings.</li>
+                    <li>Use the <em>pass</em> statement to define a null class.</li>
+                </ul>
+            </div>
+            <div class="snippetCode-horz">
+                <pre class="snippetCodeStyle">
+class Dog:
+""" This is a docstring for the Dog class. """
+pass
+                    <pre class='snippetCommandStyle'>
+>>> d = Dog()
+>>> Dog.__doc__
+>>> ' This is a docstring for the Dog class. '</pre></pre>
+            </div>
+        </div>
+      </div>
+</div>
+<div class="snippet">
+    <div class="snippetTitle">
+        <h5>Class Variables</h5>
+        <div class="snippetContent">
+            <div class="snippetDes-horz">
+                <p>Class variables in python are shared among all of the class instances.</p>
+                <ul>
+                    <li>If you change the class variable with the class object (class.attr = value), the value is changed in all existing and future class instances <em>(Dog.sound = 'yip')</em>.
+                    <li>If you change the variable through a class instance <em>(big_dog.sound = 'growl')</em> a local variable is created for that instance and added to the instance's dictionary.</li>
+                </ul>
+            </div>
+            <div class="snippetCode-horz">
+                 <pre class="snippetCodeStyle">
+class Dog:
+sound = 'bark'
+            <pre class="snippetCommandStyle">
+>>> print Dog.sound
+bark
+>>> big_dog = Dog()
+>>> small_dog = Dog()
+>>> print big_dog.sound, small_dog.sound 
+bark bark
+>>> Dog.sound = 'yip'
+>>> print big_dog.sound, small_dog.sound 
+yip yip
+>>> big_dog.sound = 'growl'
+>>> print big_dog.sound, small_dog.sound 
+growl yip</pre></pre>
+            </div>
+        </div>
+      </div>
+</div>
+<div class="snippet">
+    <div class="snippetTitle">
+        <h5>Built-in Class Attributes</h5>
+        <div class="snippetContent">
+            <div class="snippetDes-horz">
+                <ul>
+                    <li>__dict__ Dictionary containing the class's namespace</li>
+                    <li>__doc__ The docstring - set to <em>None</em> if undefined</li>
+                    <li>__name__ Class name</li>
+                    <li>__module__ Module name in which the class is defined - is "__main__" in interactive mode</li>
+                    <li>__bases__ A tuple containing the base classes</li>
+                </ul>
+            </div>
+        </div>
+      </div>
+</div>
+<div class="snippet">
+    <div class="snippetTitle">
+        <h5>Built-in Instance Attributes</h5>
+        <div class="snippetContent">
+            <div class="snippetDes-horz">
+                <ul class="snippetTextAlone">
+                    <li>__dict__ Dictionary containing the instances's namespace</li>
+                    <li>__class__ Name of the instance's class</li>
+                </ul>
+            </div>
+        </div>
+      </div>
+</div>

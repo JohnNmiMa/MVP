@@ -1,5 +1,13 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<h2>Welcome home {{name}}</h2>
+<div id="snippetBlock">
+
+    {% include "snippetbar.html" %}
+
+    <div class="container-fluid">
+        {% include "snippets.html" %}
+    </div>
+
+</div>
 {% endblock %}

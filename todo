@@ -6,17 +6,17 @@ Implement user signup/login and account persistence
   - Hookup Sign-In button to Sign-In page - DONE
   - Implement OAuth for google (twitter & facebook later) - DONE
     - Hookup the Google button to do google oauth - DONE
-  - Create user session according to email address
-  - Persist user data (Name, email, ???)
+  - Create user session according to email address - DONE
+  - Persist user data (Name, email, ???) - DONE
     - CouchDB, MongoDB, Reddis
     - Create/persist default "General" topic for each user
-  - Implement "Sign Out" button
-Implement snippet page format
-  - Wide page only
-  - Implement Horz and Vert Layout
-    - Create some dummy snippets to use for layout
-    - Implement Horz and Vert buttons
-    - Create JavaScript to toggle CSS for each snippet
+  - Implement "Sign Out" button - DONE
+Implement snippet page format - DONE
+  - Wide page only - DONE
+  - Implement Horz and Vert Layout - DONE
+    - Create some dummy snippets to use for layout - DONE
+    - Implement Horz and Vert buttons - DONE
+    - Create JavaScript to toggle CSS for each snippet - DONE
 Implement code snippets
   - Hook up plus button to snippet form page
   - Add jQuery-ACE for code snippets

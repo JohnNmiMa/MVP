@@ -10,7 +10,7 @@ Utils.numberWithCommas = function(x) {
 $(document).ready(function() {
 
     // Use VEX dialogs to show the application instructions
-	function showSigninDialog() {
+    function showSigninDialog() {
 		vex.open({
 			contentClassName: 'signinDialog',
 			content: 
@@ -33,6 +33,27 @@ $(document).ready(function() {
 			overlayClassName:'infoDialogOverlay',
 			showCloseButton:false});
 	}
+
+    $('#snippetHorzIcon').click(function() {
+        $('.snippetDes-vert').toggleClass('snippetDes-vert snippetDes-horz');
+        $('.snippetCode-vert').toggleClass('snippetCode-vert snippetCode-horz');
+        $('.snippetDes-horz').css('display', 'block');
+        $('.snippetCode-horz').css('display', 'block');
+    });
+
+    $('#snippetVertIcon').click(function() {
+        $('.snippetDes-horz').toggleClass('snippetDes-horz snippetDes-vert');
+        $('.snippetCode-horz').toggleClass('snippetCode-horz snippetCode-vert');
+        $('.snippetDes-vert').css('display', 'block');
+        $('.snippetCode-vert').css('display', 'block');
+    });
+
+    $('#snippetTitleOnlyIcon').click(function() {
+        $('.snippetDes-vert').toggle();
+        $('.snippetCode-vert').toggle();
+        $('.snippetDes-horz').toggle();
+        $('.snippetCode-horz').toggle();
+    });
 
     $('#signin').click(showSigninDialog);
 

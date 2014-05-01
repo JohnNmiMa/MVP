@@ -13,15 +13,64 @@
     //background-color: @doterra-secondary-color !important;
     //color:#fff !important;;
 }
-.vex-content.signinDialog h2 {
-    margin-top:0;
-}
+    .vex-content.signinDialog h2 {
+        margin-top:0;
+    }
+    .vex-content.signinDialog div.signinButton {
+        position:relative;
+        height:50px;
+        margin-top: 8px;
+        border-radius: 4px;
+        border:none;
+    }
 
-.vex-content.signinDialog ul.instructions, .vex-content.signinDialog ul.attributions {
-	margin-left:10px !important;
-	padding-left:10px !important;
-	list-style: disc !important;
-}
+    @fb-btn-color: #3da1d4;
+    div.facebookButton {
+        background-color:@fb-btn-color !important;
+    }
+    div.facebookButton:hover {
+        background-color:darken(@fb-btn-color, 7%) !important;
+    }
+
+    @twt-btn-color: #67acdc;
+    div.twitterButton {
+        background-color:@twt-btn-color !important;
+    }
+    div.twitterButton:hover {
+        background-color:darken(@twt-btn-color, 7%) !important;
+    }
+
+    @goog-btn-color: #dd4b39;
+    div.googleButton {
+        background-color:@goog-btn-color !important;
+    }
+    div.googleButton:hover {
+        background-color:darken(@goog-btn-color, 9%) !important;
+    }
+
+    div.signinButton i {
+        float: left;
+        font-size: 2.5em;
+        color:#fff !important;
+        line-height: 50px;
+        padding-left: 15px;
+    }
+
+    div.signinButton p {
+        float:left;
+        line-height: 50px;
+        margin:0 !important;
+        padding-right: 15px;
+        padding-left: 10px;
+        font-size: 1.1em;
+        color:#fff !important;
+        vertical-align: middle;
+    }
+    .vex-content.signinDialog ul.instructions, .vex-content.signinDialog ul.attributions {
+        margin-left:10px !important;
+        padding-left:10px !important;
+        list-style: disc !important;
+    }
 
 .vex-content.validateDialog {
 	//width:400px !important;
@@ -34,68 +83,95 @@
 	background:none !important;
 }
 
-div.navbar-header {
+nav div.navbar-header {
 }
 
-form.snippetForm {
-    float:left;
-    min-width:300px;
-    padding:10px 15px;
-}
+    nav form.snippetForm {
+        float:left;
+        min-width:300px;
+        padding:10px 15px;
+    }
 
-.glyphicon {
-    font-size:1.5em;
-}
+    .glyphicon {
+        font-size:1.5em;
+    }
 
-div.signinButton {
-    position:relative;
-    height:50px;
-    margin-top: 8px;
-    border-radius: 4px;
-    border:none;
-}
 
-@fb-btn-color: #3da1d4;
-div.facebookButton {
-    background-color:@fb-btn-color !important;
+#snippetBar {
+    display:relative;
+    margin-top: -20px;
+    height: 50px;
 }
-div.facebookButton:hover {
-    background-color:darken(@fb-btn-color, 7%) !important;
-}
+    #snippetBar a {
+        color:#555;
+    }
+    #snippetBar a:hover {
+        background-color:#fff;
+    }
+    #leftSnippetBar {
+        position:absolute;
+        left: 0;
+    }
+    #rightSnippetBar {
+        position:absolute;
+        right: 0;
+    }
+    #rightSnippetBar li a {
+        padding-left:0;
+    }
+    #rightSnippetBar .fa-square-o, #rightSnippetBar .fa-plus {
+        margin:2px 0 !important;
+    }
 
-@twt-btn-color: #67acdc;
-div.twitterButton {
-    background-color:@twt-btn-color !important;
-}
-div.twitterButton:hover {
-    background-color:darken(@twt-btn-color, 7%) !important;
-}
+    #snippetTopicSearchDisplay h5 {
+        margin: 16px 0;
+    }
 
-@goog-btn-color: #dd4b39;
-div.googleButton {
-    background-color:@goog-btn-color !important;
+/* Snippet styles */
+.snippet {
+    .make-row();
 }
-div.googleButton:hover {
-    background-color:darken(@goog-btn-color, 9%) !important;
+.snippetTitle {
+    .make-sm-column(12);
 }
-
-div.signinButton i {
-    float: left;
-    font-size: 2.5em;
-    color:#fff !important;
-    line-height: 50px;
-    padding-left: 15px;
+.snippetTitle h5 {
+    font-weight:bold;
+    margin: 5px 0;
 }
-
-div.signinButton p {
-    float:left;
-    line-height: 50px;
-    margin:0 !important;
-    padding-right: 15px;
-    padding-left: 10px;
-    font-size: 1.1em;
-    color:#fff !important;
-    vertical-align: middle;
+.snippetContent {
+    .make-row();
+}
+.snippetDes-horz {
+    .make-sm-column(6);
+    font-size: small;
+}
+.snippetDes-vert {
+    .make-sm-column(12);
+    font-size: small;
+}
+.snippetDes-horz ul {
+    padding-left: 18px;
+}
+.snippetCode-horz {
+    .make-sm-column(6);
+}
+.snippetCode-vert {
+    .make-sm-column(12);
+}
+.snippetCodeStyle {
+    font-size: x-small;
+    background-color: #e3e3bb;
+    border: none;
+    margin-bottom:0;
+}
+.snippetCommandStyle {
+    font-size: x-small;
+    background-color: #e3e3bb;
+    border: none;
+    border-top: 1px solid #bbb;
+    padding-bottom:0;
+    padding-left:0;
+    margin-bottom:0;
 }
 
 /* Used to style the jQuery tooptip */
