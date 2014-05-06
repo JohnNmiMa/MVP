@@ -38,8 +38,21 @@
    
         {% include "header.html" %}
 
-        {% block content %}
-        {% endblock %}
+        <div id='snippetBlock'>
+            {% block snippetBlock %}
+            {% endblock %}
+
+            <div id='snippetPanel'>
+                {% block snippetBar %}
+                {% endblock %}
+
+                <div id='snippetContainer' class='container-fluid'>
+                    {% block snippets %}
+                    {% endblock %}
+                </div>
+            </div>
+
+        </div>
 
     </body>
 </html>
