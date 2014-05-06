@@ -2,7 +2,13 @@
     <ul id='leftSnippetBar' class="nav nav-pills navbar-left">
         <!--<li id='snippetNavToggle'><a href="#"><span class="glyphicon glyphicon-align-justify"></span></a></li>-->
         <li id='snippetNavToggle'><a href="#"><span class="fa fa-align-justify fa-2x"></span></a></li>
-        <li id='snippetTopicSearchDisplay'><h5>JavaScript OO topic</h5></li>
+        {% if page == 'index' %}
+        {% set astring = 'class search' %}
+        {% else %}
+        {% set astring = 'Python OO topic' %}
+        {% endif %}
+        <!--<li id='snippetTopicSearchDisplay'><h5>JavaScript OO topic</h5></li>-->
+        <li id='snippetTopicSearchDisplay'><h5>{{astring}}</h5></li>
     </ul>
     <ul id='rightSnippetBar' class="nav nav-pills navbar-left">
         <li id='snippetAdd'><a href="#"><span class="fa fa-plus fa-2x"></span></a></li>

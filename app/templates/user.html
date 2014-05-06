@@ -1,12 +1,20 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div id="snippetBlock">
+<div>
 
     {% include "snippetbar.html" %}
 
-    <div class="container-fluid">
-        {% include "snippets.html" %}
+    <div id='snippetBlock'>
+        <div id='topicPanel'>
+        </div>
+        <div id='snippetContainer' class='row'>
+            <div class="col-sm-12">
+                <div class="container-fluid">
+                    {% include "snippets.html" %}
+                </div>
+            </div>
+        </div>
     </div>
 
 </div>

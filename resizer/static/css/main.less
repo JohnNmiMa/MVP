@@ -1,0 +1,171 @@
+// The custom doTerra colors are in the variables.less file
+@import "../less/variables.less";
+@import "../less/mixins.less";
+
+/*
+ *Setup VEX popup styling
+ */
+
+body {
+}
+
+.vex-content.infoDialog {
+	font-weight:300 !important;
+	width:600px !important;
+}
+
+.vex-content.infoDialog ul.instructions, .vex-content.infoDialog ul.attributions {
+	margin-left:10px !important;
+	padding-left:10px !important;
+	list-style: disc !important;
+}
+
+@default-rightpanel-width: 79.9%;
+@default-topicpanel-width: 20%;
+#snippetBlock {
+}
+    /*
+     * Setup Topic Panel
+     */
+
+    #topicPanel {
+        float:left;
+        width:@default-topicpanel-width;
+        //min-width:100px;
+        min-height:400px;
+        margin-top: 30px;
+        background: #eee;
+    }
+        #topicPanel .panel-heading {
+            height:42px;
+        }
+        #topicPanel .panel-heading span.topicTitle {
+            position:absolute;
+            line-height:21px;
+            vertical-align:center;
+        }
+        #topicPanel .panel-heading span.fa-plus {
+            position:absolute;
+            right:10px;
+            line-height:21px;
+            font-size:1.5em;
+        }
+        #topicPanel ul {
+            padding: 0;
+        }
+        #topicPanel ul li {
+            list-style-type: none;
+        }
+        #topicPanel li a {
+            padding: 0;
+        }
+        #topicPanel li a span.fa {
+            font-size:1.8em !important;
+        }
+        #topicPanel li a:hover {
+            text-decoration: none;
+        }
+
+    /*
+     * Right Panel
+     */
+    #snippetPanel {
+        float: left;
+        vertical-align: top;
+        width:@default-rightpanel-width;
+    }
+
+    /*
+     * Icon Bar
+     */
+
+    @icon-color:#999;
+    #iconBar {
+        position: relative;
+        margin-top: -20px;
+        height: 50px;
+        //border:1px solid red;
+    }
+        #iconBar a {
+            background-color:#fff;
+        }
+        #iconBar a span:hover {
+            color:darken(@icon-color, 15%);
+        }
+        #leftIconBar {
+            position:absolute;
+            left: 0;
+        }
+        #rightIconBar {
+            position:absolute;
+            right: 0;
+        }
+        #rightIconBar li a {
+            padding-left:0;
+        }
+        #rightIconBar .fa-square-o, #rightIconBar .fa-plus {
+            margin:2px 0 !important;
+        }
+
+    /*
+     * Setup Snippets
+     */
+
+    #snippetContainer {
+        //border: 1px solid red;
+    }
+        .snippet {
+            .make-row();
+            background: #eee;
+        }
+        .snippetTitle {
+            .make-sm-column(12);
+        }
+        .snippetTitle h5 {
+            font-weight:bold;
+            margin: 5px 0;
+        }
+        .snippetContent {
+            .make-row();
+        }
+        .snippetDes-horz {
+            .make-sm-column(6);
+            font-size: small;
+        }
+        .snippetDes-vert {
+            .make-sm-column(12);
+            font-size: small;
+        }
+        .snippetDes-horz ul {
+            padding-left: 18px;
+        }
+        .snippetCode-horz {
+            .make-sm-column(6);
+        }
+        .snippetCode-vert {
+            .make-sm-column(12);
+        }
+        .snippetCodeStyle {
+            font-size: x-small;
+            background-color: #e3e3bb;
+            border: none;
+            margin-bottom:0;
+        }
+        .snippetCommandStyle {
+            font-size: x-small;
+            background-color: #e3e3bb;
+            border: none;
+            border-top: 1px solid #bbb;
+            padding-bottom:0;
+            padding-left:0;
+            margin-bottom:0;
+        }
+
+.fa {
+    color:@icon-color;
+}
+
+.clear-float {
+    clear:both;
+}
+

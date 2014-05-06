@@ -1,0 +1,14 @@
+1) Create general webpage framework using bootstrap
+- create simple header - DONE
+- create snippet bar
+- create left panel
+- create snippet panel
+
+2) Make left panel an accordian
+- create button to toggle accordion
+- see if there is javascript that can trigger the accordian
+
+3) Make left and snippet panels resizable
+- be able to show resize handles on left panel but not on snippet panel
+- be able to resize the left panel
+- make the alsoResize work to resize the snippet panel

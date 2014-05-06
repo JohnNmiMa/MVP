@@ -19,7 +19,7 @@ def before_request():
 @app.route('/')
 @app.route('/index')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', page='index')
 
 
 @app.route('/signin/<social>')
@@ -45,7 +45,7 @@ def signin(social):
 @app.route('/user')
 #@login_required
 def user():
-    return render_template('user.html', name=g.user.name)
+    return render_template('user.html', name=g.user.name, page='home')
 
 
 @app.route('/logout')
