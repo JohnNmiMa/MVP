@@ -3,18 +3,17 @@
 {% block content %}
 <div>
 
-    {% include "snippetbar.html" %}
-
     <div id='snippetBlock'>
-        <div id='topicPanel'>
-        </div>
-        <div id='snippetContainer' class='row'>
-            <div class="col-sm-12">
-                <div class="container-fluid">
-                    {% include "snippets.html" %}
-                </div>
+        {% include "topic-panel.html" %}
+
+        <div id='snippetPanel'>
+            {% include "snippetbar.html" %}
+
+            <div id='snippetContainer' class='container-fluid'>
+                {% include "snippets.html" %}
             </div>
         </div>
+
     </div>
 
 </div>

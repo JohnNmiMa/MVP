@@ -89,7 +89,6 @@
 
 nav div.navbar-header {
 }
-
     nav form.snippetForm {
         float:left;
         min-width:300px;
@@ -100,42 +99,9 @@ nav div.navbar-header {
         font-size:1.5em;
     }
 
-/*
- * Setup Snippet Bar
- */
-
-#snippetBar {
-    display:relative;
-    margin-top: -20px;
-    height: 50px;
-}
-    #snippetBar a {
-        color:#555;
-    }
-    #snippetBar a:hover {
-        background-color:#fff;
-    }
-    #leftSnippetBar {
-        position:absolute;
-        left: 0;
-    }
-    #rightSnippetBar {
-        position:absolute;
-        right: 0;
-    }
-    #rightSnippetBar li a {
-        padding-left:0;
-    }
-    #rightSnippetBar .fa-square-o, #rightSnippetBar .fa-plus {
-        margin:2px 0 !important;
-    }
-
-    #snippetTopicSearchDisplay h5 {
-        margin: 16px 0;
-    }
-
+@default-rightpanel-width: 79.9%;
+@default-topicpanel-width: 20%;
 #snippetBlock {
-    position:relative;
 }
     /*
      * Setup Topic Panel
@@ -144,20 +110,90 @@ nav div.navbar-header {
     #topicPanel {
         position:relative;
         float:left;
-        min-width:20%;
+        width:@default-topicpanel-width;
+        //min-width:100px;
         min-height:400px;
-        border: 1px solid black;
+        margin-top: 30px;
+        background: #eee;
+    }
+        #topicPanel .panel-heading {
+            height:42px;
+        }
+        #topicPanel .panel-heading span.topicTitle {
+            position:absolute;
+            line-height:21px;
+            vertical-align:center;
+        }
+        #topicPanel .panel-heading span.fa-plus {
+            position:absolute;
+            right:10px;
+            line-height:21px;
+            font-size:1.5em;
+        }
+        #topicPanel ul {
+            padding: 0;
+        }
+        #topicPanel ul li {
+            list-style-type: none;
+        }
+        #topicPanel li a {
+            padding: 0;
+        }
+        #topicPanel li a span.fa {
+            font-size:1.8em !important;
+        }
+        #topicPanel li a:hover {
+            text-decoration: none;
+        }
+
+    /*
+     * Snippet Panel
+     */
+    #snippetPanel {
+        float: left;
+        vertical-align: top;
+        width:@default-rightpanel-width;
     }
 
+    /*
+     * Snippet Bar
+     */
+    @icon-color:#999;
+    #snippetBar {
+        position: relative;
+        margin-top: -20px;
+        height: 50px;
+        border:1px solid red;
+    }
+        #snippetBar a {
+            background-color:#fff;
+        }
+        #snippetBar a span:hover {
+            color:darken(@icon-color, 15%);
+        }
+        #leftSnippetBar {
+            position:absolute;
+            left: 0;
+        }
+        #rightSnippetBar {
+            position:absolute;
+            right: 0;
+        }
+        #rightSnippetBar li a {
+            padding-left:0;
+        }
+        #rightSnippetBar .fa-square-o, #rightSnippetBar .fa-plus {
+            margin:2px 0 !important;
+        }
+
+        #snippetTopicSearchDisplay h5 {
+            margin: 16px 0;
+        }
 
     /*
      * Setup Snippets
      */
-
     #snippetContainer {
-        position:relative;
-        float:left;
-        width:80%;
         border: 1px solid red;
     }
 
@@ -207,7 +243,7 @@ nav div.navbar-header {
             margin-bottom:0;
         }
 
-/* Used to style the jQuery tooptip */
-.ui-tooltip {
-	font-size:9px;
+.fa {
+    color:@icon-color;
 }
+

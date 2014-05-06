@@ -28,7 +28,7 @@ $(document).ready(function() {
 		showInfoDialog();
 	});
 
-    function showTopicPanel() {
+    function showTopicPanel(callback) {
         var topicPanelWidth = $('#topicPanel').width(),
             snippetPanelWidth = $('#snippetPanel').width(),
             snippetBlockWidth = $('#snippetBlock').width(),
@@ -36,14 +36,18 @@ $(document).ready(function() {
         if (topicPanelWidth < (20*delta)) {
             $('#snippetPanel').width(snippetPanelWidth - delta);
             $('#topicPanel').width(topicPanelWidth + delta);
-            setTimeout(showTopicPanel, 1);
+            setTimeout(showTopicPanel, 1, callback);
         } else {
             $('#snippetPanel').width('78%');
             $('#topicPanel').width('20%');
+
+            if (typeof callback == "function") {
+                callback(); // rotate the icon when the "show" is complete
+            }
         }
     }
 
-    function hideTopicPanel() {
+    function hideTopicPanel(callback) {
         var topicPanelWidth = $('#topicPanel').width(),
             snippetPanelWidth = $('#snippetPanel').width(),
             snippetBlockWidth = $('#snippetBlock').width(),
@@ -51,33 +55,34 @@ $(document).ready(function() {
         if (topicPanelWidth > delta) {
             $('#topicPanel').width(topicPanelWidth - delta);
             $('#snippetPanel').width(snippetPanelWidth + delta);
-            setTimeout(hideTopicPanel, 1);
+            setTimeout(hideTopicPanel, 1, callback);
         } else { 
             $("#topicPanel").width(0);
             $("#topicPanel").toggle();
             $('#snippetPanel').width('100%');
+
+            if (typeof callback == "function") {
+                callback(); // rotate the icon when the "hide" is complete
+            }
         }
     }
 
     $('#toggleIcon').click(function() {
         if($('#topicPanel').css('display') != 'none') {
-            hideTopicPanel();
-            $('#toggleIcon span').removeClass('fa-rotate-90');
+            hideTopicPanel(function() {
+                $('#toggleIcon span').removeClass('fa-rotate-90');
+            });
         } else {
             var snippetPanelWidth = $('#snippetPanel').width(),
                 snippetBlockWidth = $('#snippetBlock').width(),
                 delta = snippetBlockWidth / 100.0;
             $('#snippetPanel').width(snippetPanelWidth - delta/4);
             $("#topicPanel").css('display', 'block');
-            showTopicPanel();
-            $('#toggleIcon span').addClass('fa-rotate-90');
+            showTopicPanel(function() {
+                $('#toggleIcon span').addClass('fa-rotate-90');
+            });
         }
     });
 
-    function doResize() {
-        console.log("Got resize event for Topic Panel");
-    };
-
-    $("#topicPanel").on('resize', doResize);
 });
 
