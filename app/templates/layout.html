@@ -5,8 +5,9 @@
 
         <!-- jQuery -->
         <!--script src="http://code.jquery.com/jquery-latest.js"></script-->
-		<script src="/static/js/jquery-2.0.3.js"></script>
-		<script src="/static/js/jquery-ui-1.10.3.custom.js"></script>
+        <link rel="stylesheet" href="static/css/jquery-ui-1.10.3.custom.min.css"></link>
+		<script src="/static/js/jquery-2.1.1.min.js"></script>
+		<script src="/static/js/jquery-ui-1.10.3.custom.min.js"></script>
 
         <!-- Font Awesome -->
 		<link type="text/css" rel="stylesheet" href="/static/fonts/font-awesome/css/font-awesome.css">
@@ -39,10 +40,15 @@
         {% include "header.html" %}
 
         <div id='snippetBlock'>
-            {% block snippetBlock %}
+            {% block topicPanel %}
             {% endblock %}
 
-            <div id='snippetPanel'>
+            {% if page == 'index' %}
+                {% set loggedInState = 'loggedout' %}
+            {% else %}
+                {% set loggedInState = 'loggedin' %}
+            {% endif %}
+            <div id='snippetPanel' class='{{loggedInState}}'>
                 {% block snippetBar %}
                 {% endblock %}
 

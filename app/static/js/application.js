@@ -56,10 +56,10 @@ $(document).ready(function() {
     });
 
     $('#snippetTitleOnlyIcon').click(function() {
-        $('.snippetDes-vert').toggle();
-        $('.snippetCode-vert').toggle();
-        $('.snippetDes-horz').toggle();
-        $('.snippetCode-horz').toggle();
+        $('.snippetDes-vert').css('display', 'none');
+        $('.snippetCode-vert').css('display', 'none');
+        $('.snippetDes-horz').css('display', 'none');
+        $('.snippetCode-horz').css('display', 'none');
     });
 
     function showTopicPanel(callback) {
@@ -107,6 +107,7 @@ $(document).ready(function() {
     }
 
     $('#toggleIcon').click(function() {
+        if ($(this).hasClass('deactivate')) return;
         if($('#topicPanel').css('display') != 'none') {
             hideTopicPanel(function() {
                 $('#toggleIcon span').removeClass('fa-rotate-90');

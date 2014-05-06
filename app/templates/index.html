@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% block snippetBlock %}
+{% block topicPanel %}
     {% with errors = get_flashed_messages(category_filter=['error']) %}
         {% if errors %}
             <div id="formErrors">
@@ -11,6 +11,8 @@
         {% endif %}
     {% endwith %}
 
+    <!-- don't show the topic panel if not logged in -->
+    {#{% include "topic-panel.html" %}#}
     {% include "topic-panel.html" %}
 {% endblock %}
 

@@ -1,5 +1,10 @@
 <!-- TOPIC PANEL -->
-<div id='topicPanel' class='panel panel-default'>
+{% if page == 'index' %}
+    {% set loggedInState = 'loggedout' %}
+{% else %}
+    {% set loggedInState = 'loggedin' %}
+{% endif %}
+<div id='topicPanel' class='panel panel-default {{loggedInState}}'>
     <div class='panel-heading'>
         <span class='topicTitle'>Topics</span>
         <a href="#"><span class="fa fa-plus"></span></a>

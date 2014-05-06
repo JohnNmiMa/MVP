@@ -26,3 +26,5 @@ EE-Gospel
 *.swo
 
 resizer/static/js/.application.js.swo
+
+app/templates/user.html~

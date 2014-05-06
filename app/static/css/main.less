@@ -99,7 +99,8 @@ nav div.navbar-header {
         font-size:1.5em;
     }
 
-@default-rightpanel-width: 79.9%;
+@default-rightpanel-width-narrow: 79.9%;
+@default-rightpanel-width-wide: 100%;
 @default-topicpanel-width: 20%;
 #snippetBlock {
 }
@@ -110,13 +111,19 @@ nav div.navbar-header {
     #topicPanel {
         position:relative;
         float:left;
-        width:@default-topicpanel-width;
         //min-width:100px;
         min-height:400px;
         margin-top: 30px;
         background: #eee;
         overflow: hidden;
     }
+        #topicPanel.loggedin {
+            width:@default-topicpanel-width;
+        }
+        #topicPanel.loggedout {
+            width:0;
+            display:none;
+        }
         #topicPanel .panel-heading {
             height:42px;
         }
@@ -153,7 +160,12 @@ nav div.navbar-header {
     #snippetPanel {
         float: left;
         vertical-align: top;
-        width:@default-rightpanel-width;
+    }
+    #snippetPanel.loggedin {
+        width:@default-rightpanel-width-narrow;
+    }
+    #snippetPanel.loggedout {
+        width:@default-rightpanel-width-wide;
     }
 
     /*
@@ -176,6 +188,13 @@ nav div.navbar-header {
             position:absolute;
             left: 0;
         }
+            #toggleIcon a.deactivate {
+                pointer-events: none;
+                cursor: default;
+            }
+            #snippetAdd.hide {
+                display:none;
+            }
         #rightSnippetBar {
             position:absolute;
             right: 0;

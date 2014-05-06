@@ -1,16 +1,22 @@
 <!-- SNIPPET BAR -->
 <div id='snippetBar'>
     <ul id='leftSnippetBar' class="nav nav-pills">
-        <li id='toggleIcon'><a href="#"><span class="fa fa-align-justify fa-2x fa-rotate-90"></span></a></li>
         {% if page == 'index' %}
-        {% set astring = 'class search' %}
+            {% set searchString = 'class search' %}
+            {% set active = 'deactivate' %}
+            {% set rotate = '' %}
         {% else %}
-        {% set astring = 'Python OO topic' %}
+            {% set astring = 'Python OO topic' %}
+            {% set rotate = 'fa-rotate-90' %}
         {% endif %}
-        <li id='snippetTopicSearchDisplay'><h5>{{astring}}</h5></li>
+        <li id='toggleIcon' class={{active}}><a href="#" class={{active}}><span class="fa fa-align-justify fa-2x {{rotate}}"></span></a></li>
+        <li id='snippetTopicSearchDisplay'><h5>{{searchString}}</h5></li>
     </ul>
     <ul id='rightSnippetBar' class="nav nav-pills">
-        <li id='snippetAdd'><a href="#"><span class="fa fa-plus fa-2x"></span></a></li>
+        {% if page == 'index' %}
+        {% set visible = 'hide' %}
+        {% endif %}
+        <li id='snippetAdd' class={{visible}}><a href="#"><span class="fa fa-plus fa-2x"></span></a></li>
         <li id='snippetHorzIcon'>
             <a href="#">
                 <span class="fa-stack">
