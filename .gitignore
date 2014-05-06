@@ -22,3 +22,7 @@ todo~
 
 
 EE-Gospel
+
+*.swo
+
+resizer/static/js/.application.js.swo

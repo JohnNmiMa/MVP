@@ -9,7 +9,11 @@ Utils.numberWithCommas = function(x) {
 
 $(document).ready(function() {
 
-    var snippetPanelWidthPct = 0;
+    var topicPanelWidthRatio = topicPanelRatio();
+
+    function topicPanelRatio() {
+        return $('#topicPanel').width() / $('#topicPanel').parent().width();
+    }
 
     // Use VEX dialogs to show the application instructions
 	function showInfoDialog() {
@@ -32,14 +36,18 @@ $(document).ready(function() {
         var topicPanelWidth = $('#topicPanel').width(),
             snippetPanelWidth = $('#snippetPanel').width(),
             snippetBlockWidth = $('#snippetBlock').width(),
-            delta = snippetBlockWidth / 100.0 / 2;  // make larger 1/100 of the whole snippet area
-        if (topicPanelWidth < (20*delta)) {
+            deltaFactor = 0.3, // decrease for faster animation
+            delta = snippetBlockWidth / (100.0 * deltaFactor),  // make larger 1/100 of the whole snippet area
+            newTPW = topicPanelWidth + delta;
+        if (newTPW < (snippetBlockWidth * topicPanelWidthRatio)) {
             $('#snippetPanel').width(snippetPanelWidth - delta);
-            $('#topicPanel').width(topicPanelWidth + delta);
+            $('#topicPanel').width(newTPW);
             setTimeout(showTopicPanel, 1, callback);
         } else {
-            $('#snippetPanel').width('78%');
-            $('#topicPanel').width('20%');
+            var spwStr = (((1.0 - topicPanelWidthRatio) * 100.0) - 2).toString() + '%',
+                tpwStr = (topicPanelWidthRatio * 100.0).toString() + '%';
+            $('#snippetPanel').width(spwStr);
+            $('#topicPanel').width(tpwStr);
 
             if (typeof callback == "function") {
                 callback(); // rotate the icon when the "show" is complete
@@ -51,8 +59,9 @@ $(document).ready(function() {
         var topicPanelWidth = $('#topicPanel').width(),
             snippetPanelWidth = $('#snippetPanel').width(),
             snippetBlockWidth = $('#snippetBlock').width(),
-            delta = snippetBlockWidth / 100.0 / 1.5; // make smaller 1/100 of the whole snippet area
-        if (topicPanelWidth > delta) {
+            deltaFactor = .4, // decrease for faster animation
+            delta = snippetBlockWidth / (100.0 * deltaFactor);  // make smaller 1/100 of the whole snippet area
+        if (topicPanelWidth > (delta * deltaFactor)) {
             $('#topicPanel').width(topicPanelWidth - delta);
             $('#snippetPanel').width(snippetPanelWidth + delta);
             setTimeout(hideTopicPanel, 1, callback);
