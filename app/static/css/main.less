@@ -105,7 +105,7 @@ nav div.navbar-header {
 #snippetBlock {
 }
     /*
-     * Setup Topic Panel
+     * Topic Panel
      */
 
     #topicPanel {
@@ -172,6 +172,8 @@ nav div.navbar-header {
      * Snippet Bar
      */
     @icon-color:#999;
+    @icon-color-selected:black;
+    @icon-hover-color: darken(@icon-color, 15%);
     #snippetBar {
         position: relative;
         margin-top: -20px;
@@ -182,7 +184,7 @@ nav div.navbar-header {
             background-color:#fff;
         }
         #snippetBar a span:hover {
-            color:darken(@icon-color, 15%);
+            color:@icon-hover-color;
         }
         #leftSnippetBar {
             position:absolute;
@@ -204,6 +206,15 @@ nav div.navbar-header {
         }
         #rightSnippetBar .fa-square-o, #rightSnippetBar .fa-plus {
             margin:2px 0 !important;
+        }
+        #rightSnippetBar span {
+            color:@icon-color;
+        }
+        #rightSnippetBar span.active {
+            color:@icon-color-selected;
+        }
+        #rightSnippetBar span i {
+            color:inherit;
         }
 
         #snippetTopicSearchDisplay h5 {

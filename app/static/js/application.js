@@ -46,6 +46,9 @@ $(document).ready(function() {
         $('.snippetCode-vert').toggleClass('snippetCode-vert snippetCode-horz');
         $('.snippetDes-horz').css('display', 'block');
         $('.snippetCode-horz').css('display', 'block');
+        $('#snippetHorzIcon span').addClass('active');
+        $('#snippetVertIcon span').removeClass('active');
+        $('#snippetTitleOnlyIcon span').removeClass('active');
     });
 
     $('#snippetVertIcon').click(function() {
@@ -53,6 +56,9 @@ $(document).ready(function() {
         $('.snippetCode-horz').toggleClass('snippetCode-horz snippetCode-vert');
         $('.snippetDes-vert').css('display', 'block');
         $('.snippetCode-vert').css('display', 'block');
+        $('#snippetHorzIcon span').removeClass('active');
+        $('#snippetVertIcon span').addClass('active');
+        $('#snippetTitleOnlyIcon span').removeClass('active');
     });
 
     $('#snippetTitleOnlyIcon').click(function() {
@@ -60,6 +66,9 @@ $(document).ready(function() {
         $('.snippetCode-vert').css('display', 'none');
         $('.snippetDes-horz').css('display', 'none');
         $('.snippetCode-horz').css('display', 'none');
+        $('#snippetHorzIcon span').removeClass('active');
+        $('#snippetVertIcon span').removeClass('active');
+        $('#snippetTitleOnlyIcon span').addClass('active');
     });
 
     function showTopicPanel(callback) {
