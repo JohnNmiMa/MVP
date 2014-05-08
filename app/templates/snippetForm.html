@@ -1,0 +1,24 @@
+<!-- SNIPPET FORM -->
+{% if page == 'home' %}
+<form id='snippetForm' role="form" style='display:none'>
+    <fieldset>
+        <div class="snippet">
+            <div class="snippetTitle">
+                <div id='titleDiv'>
+                    <input id='titleField' type="text" name="title" class="form-control" placeholder="Add snippet title here">
+                    <div id='snippetSave'><a href='#'></a></div>
+                    <div id='snippetCancel'><a href='#'></a></div>
+                </div>
+                <div id='formContent' class="snippetContent">
+                    <div class="snippetDes-horz">
+                        <textarea id='desInput' name="des" class="form-control" placeholder="Add snippet description here"></textarea>
+                    </div>
+                    <div class="snippetCode-horz">
+                        <textarea id='codeInput' name="code" class="form-control" placeholder="Add snippet code here"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+</form>
+{% endif %}

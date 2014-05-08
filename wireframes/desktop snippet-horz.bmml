@@ -1,4 +1,4 @@
-<mockup version="1.0" skin="wireframe" fontFace="Balsamiq Sans" measuredW="1288" measuredH="629" mockupW="1279" mockupH="629">
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="1288" measuredH="629" mockupW="1279" mockupH="629">
   <controls>
     <control controlID="0" controlTypeID="com.balsamiq.mockups::Canvas" x="106" y="82" w="939" h="547" measuredW="100" measuredH="70" zOrder="2" locked="false" isInGroup="-1">
       <controlProperties>
@@ -479,9 +479,9 @@
     <control controlID="194" controlTypeID="com.balsamiq.mockups::Icon" x="859" y="53" w="-1" h="-1" measuredW="24" measuredH="24" zOrder="59" locked="false" isInGroup="-1">
       <controlProperties>
         <color>0</color>
-        <href>add%20snippet%26bm%3Badd%20snippet.bmml%26bm%3Badd%20snippet.bmml%26bm%3Badd%20snippet.bmml</href>
+        <href>add%20snippet%20popup%26bm%3Badd%20snippet%20popup.bmml%26bm%3Badd%20snippet%20popup.bmml%26bm%3Badd%20snippet%20popup.bmml</href>
         <icon>PlusIcon%7Csmall</icon>
-        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22850%2C53%2C874%2C77%22%20href%3D%22add%2520snippet.bmml%22%20alt%3D%22add%20snippet%22%20id%3D%22194%22/%3E</map>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22850%2C53%2C874%2C77%22%20href%3D%22add%2520snippet%2520popup.bmml%22%20alt%3D%22add%20snippet%20popup%22%20id%3D%22194%22/%3E</map>
         <rotation>90</rotation>
       </controlProperties>
     </control>

@@ -15,6 +15,15 @@ $(document).ready(function() {
         return $('#topicPanel').width() / $('#topicPanel').parent().width();
     }
 
+    $('#snippetAdd').click(function() {
+        $('#snippetForm').show();
+    });
+
+    $('#snippetCancel').click(function() {
+        $('#snippetForm').hide();
+        $('#snippetForm')[0].reset();
+    });
+
     // Use VEX dialogs to show the application instructions
     function showSigninDialog() {
 		vex.open({
@@ -36,7 +45,7 @@ $(document).ready(function() {
                 '    <i class="fa fa-google-plus-square"></i>' +
                 '    <p>Sign in with Google</p>' +
                 '  </div></a>',
-			overlayClassName:'infoDialogOverlay',
+			overlayClassName:'signinDialogOverlay',
 			showCloseButton:false});
 	}
     $('#signin').click(showSigninDialog);
@@ -132,6 +141,7 @@ $(document).ready(function() {
             });
         }
     });
+
 
 });
 

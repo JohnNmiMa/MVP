@@ -7,6 +7,18 @@
  *Setup VEX popup styling
  */
 
+.vex-content.snippetCreateContent {
+    width:90% !important;
+}
+    #snippetCreateForm div.snippet {
+        height:60% !important;
+    }
+
+/*.vex-overlay.validateDialogOverlay {*/
+	/*background:none !important;*/
+/*}*/
+
+
 .vex-content.signinDialog {
 	font-weight:300 !important;
 	width:270px !important;
@@ -71,17 +83,6 @@
         padding-left:10px !important;
         list-style: disc !important;
     }
-
-.vex-content.validateDialog {
-	//width:400px !important;
-    background-color:#dedfe0 !important;
-	font-weight:500 !important;
-	font-size:0.85em !important;
-}
-
-.vex-overlay.validateDialogOverlay {
-	background:none !important;
-}
 
 /*
  * Setup header
@@ -224,6 +225,8 @@ nav div.navbar-header {
     /*
      * Setup Snippets
      */
+    @user-snippet-code-color:#e3e3bb;
+    @public-snippet-code-color:#fbcb9c;
     #snippetContainer {
         //border: 1px solid red;
     }
@@ -232,14 +235,47 @@ nav div.navbar-header {
             .make-row();
         }
         .snippetTitle {
-            .make-sm-column(12);
+            .make-xs-column(12);
         }
-        .snippetTitle h5 {
-            font-weight:bold;
-            margin: 5px 0;
+        .snippetTitle {
+            .make-xs-column(12);
         }
+            .snippetTitle h5 {
+                font-weight:bold;
+                margin: 5px 0;
+            }
+            #titleDiv {
+                position:relative;
+            }
+            #titleField {
+                position:absolute;
+                left:0;
+            }
+            #snippetSave, #snippetCancel {
+                position:absolute;
+                line-height:34px;
+                vertical-align:center;
+                width:40px;
+                height:34px;
+                border-radius: 4px;
+            }
+            #snippetCancel {
+                right:50px;
+                background-color:red;
+            }
+            #snippetSave {
+                right:0;
+                background-color:green;
+            }
         .snippetContent {
             .make-row();
+        }
+        #formContent.snippetContent {
+            margin-top:34px;
+        }
+        .snippetContent textarea {
+            margin:5px 0;
+            resize:vertical;
         }
         .snippetDes-horz {
             .make-sm-column(6);
@@ -260,19 +296,23 @@ nav div.navbar-header {
         }
         .snippetCodeStyle {
             font-size: x-small;
-            background-color: #e3e3bb;
+            background-color:@user-snippet-code-color;
             border: none;
             margin-bottom:0;
         }
         .snippetCommandStyle {
             font-size: x-small;
-            background-color: #e3e3bb;
+            background-color:@user-snippet-code-color;
             border: none;
             border-top: 1px solid #bbb;
             padding-bottom:0;
             padding-left:0;
             margin-bottom:0;
         }
+
+#codeInput {
+    background-color:@user-snippet-code-color;
+}
 
 .fa {
     color:@icon-color;
