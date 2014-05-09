@@ -7,6 +7,21 @@ Utils.numberWithCommas = function(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
+// Using a getJSON AJAX request
+function postSnippet(form) {
+    var data = $("#snippetForm").serialize();
+    console.log('The snippet title = ' + title);
+    console.log('The snippet description = ' + description);
+    console.log('The snippet code = ' + code);
+    console.log('The data = ' + data);
+    /*$.getJSON('/snippet', function(data) {*/
+    $.post('/snippet', data, function(data) {
+        console.log("Received an AJAX return from the server");
+        //$("#result").text(data.result);
+    });
+    return false;
+}
+
 $(document).ready(function() {
 
     var topicPanelWidthRatio = topicPanelRatio();
@@ -22,6 +37,78 @@ $(document).ready(function() {
     $('#snippetCancel').click(function() {
         $('#snippetForm').hide();
         $('#snippetForm')[0].reset();
+    });
+
+    function displaySnippet() {
+        var title = $('#titleField').val(),
+            description = $('#desField').val(),
+            code = $('#codeField').val(),
+            ss  = '<div class="snippet">';
+            ss += '    <div class="snippetTitle">';
+            ss += '        <h5>' + title + '</h5>';
+            ss += '        <div class="snippetContent">';
+            if (description) {
+                ss += '            <div class="snippetDes-horz">';
+                ss += '                <p class="snippetDesStyle">' + description + '</p>';
+                ss += '            </div>';
+            } else {
+                ss += '            <div class="snippetDes-horz">';
+                ss += '            </div>';
+            }
+            if (code) {
+                ss += '            <div class="snippetCode-horz">';
+                ss += '                <pre class="snippetCodeStyle">' + code + '</pre>';
+                ss += '            </div>';
+            }
+            ss += '        </div>';
+            ss += '    </div>';
+            ss += '</div>';
+
+        // Reset form and hide it
+        $('#snippetForm')[0].reset();
+        $('#snippetForm').hide();
+        
+        // Create a new snippet with the form data
+        $('#snippetForm').after(ss);
+    }
+
+    // Eatup the form keyboard 'enter' event, so the user must click the submit button
+    $("#snippetForm").bind("keyup keypress", function(event) {
+        var code = event.keyCode || event.which,
+            target = event.target.nodeName;
+
+        // Don't eat up the 'enter' key when typing in <textarea> tags.
+        if (target.toUpperCase().search('TEXTAREA') == -1) {
+            if (code == 13) {
+                event.preventDefault();
+                return false;
+            }
+        }
+    });
+
+    // Use AJAX to POST the new snippet
+    $('#snippetSave').click(function() {
+        var title = $('#titleField').val(),
+            data = $("#snippetForm").serialize();
+
+        // Must have at least a title
+        if (!title) return false;
+
+        var ajaxOptions = {
+            url:'snippets/General',
+            type: 'POST',
+            dataType: "json",
+            data: data,
+            success: function(results) {
+                displaySnippet();
+            },
+            error: function(req, status, error) {
+                console.log("AJAX returned with error");
+            }
+        };
+
+        $.ajax(ajaxOptions);
+        return false;
     });
 
     // Use VEX dialogs to show the application instructions

@@ -11,7 +11,7 @@ class User(db.Model):
     name =       db.Column(db.String(64))
     email =      db.Column(db.String(120), index = True, unique = True)
     role =       db.Column(db.SmallInteger, default = ROLE_USER)
-    topic =      db.relationship('Topic', backref = 'user', lazy = 'dynamic')
+    topics =     db.relationship('Topic', backref = 'author', lazy = 'dynamic')
 
     def is_authenticated(self):
         return True

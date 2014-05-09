@@ -27,7 +27,7 @@
         <ul class="nav navbar-nav navbar-right">
             {% if name %}
                 <li><a href="#" id="username">{{name}}</a></li>
-                <li><a href="/logout/<name>" id="signout">Log Out</a></li>
+                <li><a href="/logout" id="signout">Log Out</a></li>
             {% else %}
                 <li><a href="#" id="signin">Sign In</a></li>
             {% endif %}

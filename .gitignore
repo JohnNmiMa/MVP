@@ -28,3 +28,9 @@ EE-Gospel
 resizer/static/js/.application.js.swo
 
 app/templates/user.html~
+
+*.db
+
+*.db
+
+*.html~

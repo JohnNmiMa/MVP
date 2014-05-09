@@ -90,7 +90,7 @@
 
 nav div.navbar-header {
 }
-    nav form.snippetForm {
+    nav form.snippetSearchForm {
         float:left;
         min-width:300px;
         padding:10px 15px;
@@ -231,6 +231,8 @@ nav div.navbar-header {
         //border: 1px solid red;
     }
 
+        @des-font-family:"Helvetica Neue", Helvetica, Arial, sans-serif;
+        @code-font-family:Menlo, Monaco, Consolas, "Courier New", monospace;
         .snippet {
             .make-row();
         }
@@ -250,6 +252,9 @@ nav div.navbar-header {
             #titleField {
                 position:absolute;
                 left:0;
+                font-weight: bold;
+                font-size: 14px;
+                font-family: inherit;
             }
             #snippetSave, #snippetCancel {
                 position:absolute;
@@ -257,6 +262,7 @@ nav div.navbar-header {
                 vertical-align:center;
                 width:40px;
                 height:34px;
+                border:none;
                 border-radius: 4px;
             }
             #snippetCancel {
@@ -294,7 +300,18 @@ nav div.navbar-header {
         .snippetCode-vert {
             .make-sm-column(12);
         }
+        .snippetDesStyle {
+            font-family:@des-font-family;
+            //border:none;
+            background-color:white;
+            //padding:0;
+        }
+        textarea.snippetDesStyle {
+            font-family:@des-font-family;
+            font-size: small;
+        }
         .snippetCodeStyle {
+            font-family:@code-font-family;
             font-size: x-small;
             background-color:@user-snippet-code-color;
             border: none;
@@ -309,10 +326,6 @@ nav div.navbar-header {
             padding-left:0;
             margin-bottom:0;
         }
-
-#codeInput {
-    background-color:@user-snippet-code-color;
-}
 
 .fa {
     color:@icon-color;

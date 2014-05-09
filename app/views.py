@@ -1,6 +1,6 @@
-from flask import render_template, flash, redirect, url_for, session, request, g
+from flask import render_template, flash, redirect, url_for, session, request, g, jsonify
 from flask.ext.login import login_user, logout_user, current_user, login_required
-from models import User, ROLE_USER, ROLE_ADMIN
+from models import User, Topic, ROLE_USER, ROLE_ADMIN
 from app import app, db, login_manager, oauth
 from facebook_oauth import facebook
 from twitter_oauth import twitter
@@ -48,6 +48,30 @@ def user():
     return render_template('user.html', name=g.user.name, page='home')
 
 
+@app.route('/snippets/<topic>', methods = ['POST'])
+@login_required
+def snippets(topic):
+    if request.method == 'POST':
+        # See if the topic exists
+        topics = g.user.topics.all()
+        for t in topics:
+            if (t.topic == topic):
+                break
+            return jsonify(error=404, text='Invalid topic name'), 404
+
+        # Get the snippet data from the form
+        if (request.form):
+            form = request.form.to_dict()
+        title = form['title']
+        description = form['description']
+        code = form['code']
+
+        #pdb.set_trace()
+        # Persist the snippet to the users topic
+        #topic = Topic(topic = 'General', author = q.user)
+        return jsonify({})
+
+
 @app.route('/logout')
 @login_required
 def logout():
@@ -79,9 +103,11 @@ def facebook_authorized(resp):
     # See if user is already in the db
     user = User.query.filter_by(email = me.data['email']).first()
     if user is None:
-        # Save new user in the db
+        # Save new user and the 'General' topic in the db
         user = User(fb_id = me.data['id'], name = me.data['username'], email = me.data['email'], role = ROLE_USER)
         db.session.add(user)
+        topic = Topic(topic = 'General', author = user)
+        db.session.add(topic)
         db.session.commit()
     else:
         fb_id = user.fb_id
@@ -127,6 +153,8 @@ def twitter_authorized(resp):
         # Save new user in the db
         user = User(twitter_id = twitter_id, name = screen_name, role = ROLE_USER)
         db.session.add(user)
+        topic = Topic(topic = 'General', author = user)
+        db.session.add(topic)
         db.session.commit()
 
     # Log the user in
@@ -177,7 +205,9 @@ def google_authorized(resp):
     if user is None:
         # Save new user in the db
         user = User(google_id = me['id'], name = me['given_name'], email = me['email'], role = ROLE_USER)
+        topic = Topic(topic = 'General', author = user)
         db.session.add(user)
+        db.session.add(topic)
         db.session.commit()
     else:
         google_id = user.google_id
