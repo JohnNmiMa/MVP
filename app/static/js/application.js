@@ -24,7 +24,11 @@ function postSnippet(form) {
 
 $(document).ready(function() {
 
-    var topicPanelWidthRatio = topicPanelRatio();
+    var SNIPPET_HORIZONTAL = 'snippetDes-horz',
+        SNIPPET_VERTICAL = 'snippetDes-vert',
+        snippetDesLayout = SNIPPET_HORIZONTAL,
+        snippetCodeLayout = SNIPPET_HORIZONTAL,
+        topicPanelWidthRatio = topicPanelRatio();
 
     function topicPanelRatio() {
         return $('#topicPanel').width() / $('#topicPanel').parent().width();
@@ -68,7 +72,7 @@ $(document).ready(function() {
                 // Select topic in topic panel
                 $('#topicPanel div.panel-body li').removeClass('active');
                 that.addClass('active');
-                $('#topicPanel div.panel-body li a span').text(count);
+                that.find('a span').text(count);
             },
             error: function(req, status, error) {
                 console.log("AJAX returned with error");
@@ -86,7 +90,8 @@ $(document).ready(function() {
          * and adds the new snippet to the DOM
          */
 
-        var title = $('#titleField').val(),
+        var that = $(this),
+            title = $('#titleField').val(),
             data = $("#snippetForm").serialize(),
             topicname = $('#snippetTopicSearchDisplay').text();
 
@@ -160,15 +165,15 @@ $(document).ready(function() {
         ss +=     '        <h5>' + title + '</h5>';
         ss +=     '        <div class="snippetContent">';
         if (description) {
-            ss += '            <div class="snippetDes-horz">';
+            ss += '            <div class="' + snippetDesLayout + '">';
             ss += '                <p class="snippetDesStyle">' + description + '</p>';
             ss += '            </div>';
         } else {
-            ss += '            <div class="snippetDes-horz">';
+            ss += '            <div class="' + snippetDesLayout + '">';
             ss += '            </div>';
         }
         if (code) {
-            ss += '            <div class="snippetCode-horz">';
+            ss += '            <div class="' + snippetCodeLayout + '">';
             ss += '                <pre class="snippetCodeStyle">' + code + '</pre>';
             ss += '            </div>';
         }
@@ -229,6 +234,8 @@ $(document).ready(function() {
         $('#snippetHorzIcon span').addClass('active');
         $('#snippetVertIcon span').removeClass('active');
         $('#snippetTitleOnlyIcon span').removeClass('active');
+        snippetDesLayout = SNIPPET_HORIZONTAL;
+        snippetCodeLayout = SNIPPET_HORIZONTAL;
     });
 
     $('#snippetVertIcon').click(function() {
@@ -239,6 +246,8 @@ $(document).ready(function() {
         $('#snippetHorzIcon span').removeClass('active');
         $('#snippetVertIcon span').addClass('active');
         $('#snippetTitleOnlyIcon span').removeClass('active');
+        snippetDesLayout = SNIPPET_VERTICAL;
+        snippetCodeLayout = SNIPPET_VERTICAL;
     });
 
     $('#snippetTitleOnlyIcon').click(function() {

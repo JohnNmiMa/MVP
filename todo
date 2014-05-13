@@ -44,6 +44,10 @@ Add "Topic" widget (left column) - DONE
   - Show snippet count in topic panel for each topic - DONE
   - Highlight selected topic - DONE
 
+Create "Topics"
+  - Add "Plus Button" to create topic
+    - Persist the topic
+
 Delete "Snippets"
   - Add UI to delete a snippet
   - Update db in server
@@ -51,10 +55,6 @@ Delete "Snippets"
 
 Change snippet public or private state
   - If snippet is owned by logged in user, toggle public or private
-
-Create "Topics"
-  - Add "Plus Button" to create topic
-    - Persist the topic
 
 Delete "Topics"
   - Figure out UI
