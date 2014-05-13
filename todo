@@ -99,7 +99,7 @@ Implement Gear
 Bugs:
 * Title length can be created bigger than desired.
 * Title field does not wrap.
-* Topic count is not incremented when a new snippet is added
+* Topic count is not incremented when a new snippet is added - DONE
 
 --------
 Persistance Schema

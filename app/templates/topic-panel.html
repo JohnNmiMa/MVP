@@ -7,10 +7,18 @@
 <div id='topicPanel' class='panel panel-default {{loggedInState}}'>
     <div class='panel-heading'>
         <span class='topicTitle'>Topics</span>
-        <a href="#"><span class="fa fa-plus"></span></a>
+        <a id="topicAdd" href="#"><span class="fa fa-plus"></span></a>
     </div>
     <div class='panel-body'>
         <ul class='list-group'>
+            <li id='topicFormContainer' class='list-group-item' style='display:none'>
+                <form id='topicForm' role='form' method='post' onSubmit='return snippet.saveTopic(this)'>
+                    <fieldset>
+                        <input id='topicNameField' type="text" name="topicName"
+                               class="form-control" placeholder="New topic title">
+                    </fieldset>
+                </form>
+            </li>
             {% for topic in topics %}
             <li class='list-group-item'><a href="#">{{topic.topic}}
                 <span class='badge pull-right'>{{topic.snippets.count()}}</span></a>
