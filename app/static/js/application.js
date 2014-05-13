@@ -18,11 +18,6 @@ var snippet = (function() {
      * Local methods
      */
 
-    var saveTopic = function(form) {
-        console.log("Saving a new topic");
-        return false;
-    }
-
     var buildSnippet = function(title, description, code) {
         var ss  = '<div class="snippet">';
         ss +=     '    <span class="snippetID" style="display:none">snippet_id</span>';
@@ -103,6 +98,12 @@ var snippet = (function() {
      * Public methods
      */
 
+    var saveTopic = function(form) {
+        console.log("Saving a new topic");
+        return false;
+    }
+
+
     var createSnippet = function(snippetAddButton) {
         /*
          * Creates a new snippet from the snippet form control,
@@ -143,6 +144,7 @@ var snippet = (function() {
         return false;
     };
 
+
     var displayTopicSnippet = function(topicItem) {
         /*
          * Displays the selected topic in the snippet panel,
@@ -181,6 +183,7 @@ var snippet = (function() {
         $.ajax(ajaxOptions);
     };
 
+
     var showSnippetsHorizontal = function() {
         $('.snippetDes-vert').toggleClass('snippetDes-vert snippetDes-horz');
         $('.snippetCode-vert').toggleClass('snippetCode-vert snippetCode-horz');
@@ -216,6 +219,7 @@ var snippet = (function() {
         snippetDesLayout = SNIPPET_TITLESONLY;
         snippetCodeLayout = SNIPPET_TITLESONLY;
     };
+
 
     // Use VEX dialogs to show the application instructions
     var showSigninDialog = function() {
@@ -337,7 +341,7 @@ $(document).ready(function() {
     });
 
 
-    var showTopicPanel = function(callback) {
+    var showTopicPanel = function(panelWidthRatio, callback) {
         var topicPanelWidth = $('#topicPanel').width(),
             snippetPanelWidth = $('#snippetPanel').width(),
             snippetBlockWidth = $('#snippetBlock').width(),
@@ -345,13 +349,13 @@ $(document).ready(function() {
             delta = snippetBlockWidth / (100.0 * deltaFactor),  // make larger 1/100 of the whole snippet area
             newTPW = topicPanelWidth + delta;
 
-        if (newTPW < (snippetBlockWidth * topicPanelWidthRatio)) {
+        if (newTPW < (snippetBlockWidth * panelWidthRatio)) {
             $('#snippetPanel').width(snippetPanelWidth - delta);
             $('#topicPanel').width(newTPW);
-            setTimeout(showTopicPanel, 1, callback);
+            setTimeout(showTopicPanel, 1, panelWidthRatio, callback);
         } else {
-            var spwStr = (((1.0 - topicPanelWidthRatio) * 100.0) - 2).toString() + '%',
-                tpwStr = (topicPanelWidthRatio * 100.0).toString() + '%';
+            var spwStr = (((1.0 - panelWidthRatio) * 100.0) - 2).toString() + '%',
+                tpwStr = (panelWidthRatio * 100.0).toString() + '%';
             $('#snippetPanel').width(spwStr);
             $('#topicPanel').width(tpwStr);
 
