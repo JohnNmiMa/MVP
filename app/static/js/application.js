@@ -39,38 +39,146 @@ $(document).ready(function() {
         $('#snippetForm')[0].reset();
     });
 
-    function displaySnippet() {
+    // Use AJAX to GET a list snippets
+    // Called when a topic in the topic panel is clicked
+    $('#topicPanel div.panel-body li').click(function() {
+        /*
+         * Displays the selected topic in the snippet panel,
+         * sends an AJAX 'GET' request to get the list of snippets
+         * associated with the topic, and updates the snippet panel
+         * with the returned snippets
+         */
+
+        var that = $(this),
+            topicname = $(this).text();
+        if (!topicname) return;
+        topicname = topicname.replace(/[0-9]/g, ''); // remove trailing 'count' number from topic name
+
+        var ajaxOptions = {
+            url:'snippets/' + topicname,
+            type: 'GET',
+            dataType: "json",
+            success: function(results) {
+                var count = updateTopicSnippets(results);
+                console.log("AJAX returned with a list of snippets");
+
+                // Update the UI to show the currently displayed topic snippets
+                $('#snippetTopicSearchDisplay').text(topicname);
+
+                // Select topic in topic panel
+                $('#topicPanel div.panel-body li').removeClass('active');
+                that.addClass('active');
+                $('#topicPanel div.panel-body li a span').text(count);
+            },
+            error: function(req, status, error) {
+                console.log("AJAX returned with error");
+            }
+        };
+
+        $.ajax(ajaxOptions);
+    });
+
+    // Use AJAX to POST the new snippet
+    $('#snippetSave').click(function() {
+        /*
+         * Creates a new snippet from the snippet form control,
+         * sends an AJAX request to persist the new snippet,
+         * and adds the new snippet to the DOM
+         */
+
+        var title = $('#titleField').val(),
+            data = $("#snippetForm").serialize(),
+            topicname = $('#snippetTopicSearchDisplay').text();
+
+        // Must have at least a snippet title
+        if (!title) return false;
+
+        // Let the snippet get added to the "General" topic if no topic is current selected.
+        // The user always has the "General" topic
+        if (!topicname) {
+            topicname = 'General'
+        }
+
+        var ajaxOptions = {
+            url:'snippets/' + topicname,
+            type: 'POST',
+            dataType: "json",
+            data: data,
+            success: function(results) {
+                displayNewSnippet(results['id']);
+            },
+            error: function(req, status, error) {
+                console.log("AJAX returned with error");
+            }
+        };
+
+        $.ajax(ajaxOptions);
+        return false;
+    });
+
+    var displayNewSnippet = function(snippet_id) {
+        /* Adds a new snippet to the DOM */
         var title = $('#titleField').val(),
             description = $('#desField').val(),
             code = $('#codeField').val(),
-            ss  = '<div class="snippet">';
-            ss += '    <div class="snippetTitle">';
-            ss += '        <h5>' + title + '</h5>';
-            ss += '        <div class="snippetContent">';
-            if (description) {
-                ss += '            <div class="snippetDes-horz">';
-                ss += '                <p class="snippetDesStyle">' + description + '</p>';
-                ss += '            </div>';
-            } else {
-                ss += '            <div class="snippetDes-horz">';
-                ss += '            </div>';
-            }
-            if (code) {
-                ss += '            <div class="snippetCode-horz">';
-                ss += '                <pre class="snippetCodeStyle">' + code + '</pre>';
-                ss += '            </div>';
-            }
-            ss += '        </div>';
-            ss += '    </div>';
-            ss += '</div>';
+            ss = buildSnippet(title, description, code);
 
         // Reset form and hide it
         $('#snippetForm')[0].reset();
         $('#snippetForm').hide();
         
         // Create a new snippet with the form data
-        $('#snippetForm').after(ss);
+        $('#userSnippets').prepend(ss);
     }
+
+    var updateTopicSnippets = function(snippets) {
+        /* Adds the snippets associated with a topic to the DOM */
+        var count = 0,
+            key,
+            snippet,
+            title = '', description = '', code = '';
+
+        // Clear panel to get ready to display snippets in the topic
+        $('#userSnippets').empty();
+
+        // Show the new snippets
+        for (key in snippets) {
+            snippet = snippets[key];
+            title = snippet.title;
+            description = snippet.description;
+            code = snippet.code;
+            $('#userSnippets').append(buildSnippet(title, description, code));
+            count += 1;
+        }
+        return count;
+    }
+
+    var buildSnippet = function(title, description, code) {
+        var ss  = '<div class="snippet">';
+        ss +=     '    <span class="snippetID" style="display:none">snippet_id</span>';
+        ss +=     '    <div class="snippetTitle">';
+        ss +=     '        <h5>' + title + '</h5>';
+        ss +=     '        <div class="snippetContent">';
+        if (description) {
+            ss += '            <div class="snippetDes-horz">';
+            ss += '                <p class="snippetDesStyle">' + description + '</p>';
+            ss += '            </div>';
+        } else {
+            ss += '            <div class="snippetDes-horz">';
+            ss += '            </div>';
+        }
+        if (code) {
+            ss += '            <div class="snippetCode-horz">';
+            ss += '                <pre class="snippetCodeStyle">' + code + '</pre>';
+            ss += '            </div>';
+        }
+        ss +=     '        </div>';
+        ss +=     '    </div>';
+        ss +=     '</div>';
+
+        return ss;
+    }
+
 
     // Eatup the form keyboard 'enter' event, so the user must click the submit button
     $("#snippetForm").bind("keyup keypress", function(event) {
@@ -86,30 +194,6 @@ $(document).ready(function() {
         }
     });
 
-    // Use AJAX to POST the new snippet
-    $('#snippetSave').click(function() {
-        var title = $('#titleField').val(),
-            data = $("#snippetForm").serialize();
-
-        // Must have at least a title
-        if (!title) return false;
-
-        var ajaxOptions = {
-            url:'snippets/General',
-            type: 'POST',
-            dataType: "json",
-            data: data,
-            success: function(results) {
-                displaySnippet();
-            },
-            error: function(req, status, error) {
-                console.log("AJAX returned with error");
-            }
-        };
-
-        $.ajax(ajaxOptions);
-        return false;
-    });
 
     // Use VEX dialogs to show the application instructions
     function showSigninDialog() {

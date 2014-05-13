@@ -1,7 +1,9 @@
 Create wireframe of code snippet app - DONE
+
 Implement basic UX flow w/ bootstrap
   - Implement for desktop and tablet - not iPhone - DONE
   - Create header (Title, search bar, Sign-In, Gear) - DONE
+
 Implement user signup/login and account persistence
   - Hookup Sign-In button to Sign-In page - DONE
   - Implement OAuth for google (twitter & facebook later) - DONE
@@ -9,48 +11,94 @@ Implement user signup/login and account persistence
   - Create user session according to email address - DONE
   - Persist user data (Name, email, ???) - DONE
     - CouchDB, MongoDB, Reddis
-    - Create/persist default "General" topic for each user
+    - Create/persist default "General" topic for each user - DONE
   - Implement "Sign Out" button - DONE
+
 Implement snippet page format - DONE
   - Wide page only - DONE
   - Implement Horz and Vert Layout - DONE
     - Create some dummy snippets to use for layout - DONE
     - Implement Horz and Vert buttons - DONE
     - Create JavaScript to toggle CSS for each snippet - DONE
-Implement code snippets
-  - Hook up plus button to snippet form page
-  - Add jQuery-ACE for code snippets
-  - Add text editor for code descriptions
-  - ship code snippet to server (per user)
-    - can't create snippets if not signed in
-Implement code-snippet persitence
-  - Create snippet object (Username, Topic (General for now), Snippet Title, Description, Code)
-Add user snippet counter to search box upon login
-  - /<user>/GetSnippetCount
-  - Return count in JSON
-Add "Topic" widget (left column)
-  - Add "General" topic
+
+Add "Snippets"
+  - Hook up plus button to snippet form page - DONE
+  - ship code snippet to server (per user) - DONE
+    - can't create snippets if not signed in - DONE
+    - persist the snippet in the topic - DONE
+  l Add jQuery-ACE for code snippets
+  l Add text editor for code descriptions
+
+Add "Topic" widget (left column) - DONE
+  - Add "General" topic - DONE
+  - Be able to get list of topics from server - DONE
+    - display list in the topic panel - DONE
+  - Clicking of topic title
+    - When a snippet is clicked, a topic title to page - DONE
+    - Create python script to add sample snippets to db - for test use - DONE
+    - Don't show any snippets upon login - DONE
+    - Snow snippets when topic title is clicked - DONE
+      - Add a timestamp to snippets - DONE
+      - Bring back list of snippets sorted according to time - DONE
+  l Add "All" topic
+  - Show snippet count in topic panel for each topic - DONE
+  - Highlight selected topic - DONE
+
+Delete "Snippets"
+  - Add UI to delete a snippet
+  - Update db in server
+  - Update UI to by removing the snippet from the DOM
+
+Change snippet public or private state
+  - If snippet is owned by logged in user, toggle public or private
+
+Create "Topics"
   - Add "Plus Button" to create topic
     - Persist the topic
-  - Add hidden edit button to change topic name or delete topic
-    - if topic is deleted, move all snippets to the "General" topic
-    - if topic is renamed, update name in database
-Add topic selection
-  - When topic is selected, display snippets in the topic
-  - When the "Plus Button" is clicked, add snippet to that topic
-Add ability to search snippets
+
+Delete "Topics"
+  - Figure out UI
+  - Send request to remove the topic id resource
+    - In server, move all snippets in the topic to the General topic
+    - In server, delete the topic.
+      - Make sure the user.topics query will not return the topic in the list
+
+Snippet search capabilities
+  - Add user snippet counter to search box upon login
+    - /<topic>/TotalSnippets
+    - Return count in JSON
   - Send search query to server (/<user>/SearchSnippet/?<query>
   - Create db query, and get results
   - Return results in JSON
   - In JavaScript, take JSON, unpack it, and for each snippet, add to page
-Add "Snippet Attribute Selector" popup
-  - If snippet is owned by logged in user, toggle public or private
+
+Edit "Topics"
+  - Figure out UI
+  - if topic is renamed, update name in database
+
+Associate snippet with a topic or multiple topics
+  - Update database to support a many-to-many relationship
   - Provide ability to move to topic
+    - Figure out UI
+    - Update db to remove old topic link and associate snippet to new topic link
   - Provide ability to add to topic
+    - Figure out UI
+    - Update db to associate snippet to new topic link
+      - show that the snippt belongs in multiple topics
+
 Implement Gear
-  - Change public or private on snippet creation
+  - Add "Setting" model in server
+  - When a topic is added, save away last_used_topic in settings.
+    - When the user logs in, display the last_used topic.
+  - Create Settings UI
+  - Set default for snippet creation to public or private
   - Set user snippet color
   - Set public snippet color
+
+--------
+Bugs:
+1) Title length can be created bigger than desired.
+2) Title field does not wrap.
 
 --------
 Persistance Schema

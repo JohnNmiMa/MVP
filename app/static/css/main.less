@@ -7,6 +7,8 @@
  *Setup VEX popup styling
  */
 
+body { padding-top: 57px; }
+
 .vex-content.snippetCreateContent {
     width:90% !important;
 }
@@ -99,11 +101,17 @@ nav div.navbar-header {
     .glyphicon {
         font-size:1.5em;
     }
+.navbar .navbar-collapse {
+    padding-left: 15px;
+    padding-right: 15px;
+}
 
 @default-rightpanel-width-narrow: 79.9%;
 @default-rightpanel-width-wide: 100%;
 @default-topicpanel-width: 20%;
 #snippetBlock {
+    margin:0 15px;
+    overflow:auto;
 }
     /*
      * Topic Panel
@@ -112,9 +120,8 @@ nav div.navbar-header {
     #topicPanel {
         position:relative;
         float:left;
-        //min-width:100px;
         min-height:400px;
-        margin-top: 30px;
+        margin-top: 50px;
         background: #eee;
         overflow: hidden;
     }
@@ -127,6 +134,9 @@ nav div.navbar-header {
         }
         #topicPanel .panel-heading {
             height:42px;
+        }
+        #topicPanel .panel-body {
+            padding:5px 10px;
         }
         #topicPanel .panel-heading span.topicTitle {
             position:absolute;
@@ -143,10 +153,15 @@ nav div.navbar-header {
             padding: 0;
         }
         #topicPanel ul li {
-            list-style-type: none;
+            //list-style-type: none;
+            padding: 3px 5px;
+        }
+        #topicPanel ul li.active {
+            color:white;
         }
         #topicPanel li a {
             padding: 0;
+            color:inherit;
         }
         #topicPanel li a span.fa {
             font-size:1.8em !important;
@@ -177,7 +192,7 @@ nav div.navbar-header {
     @icon-hover-color: darken(@icon-color, 15%);
     #snippetBar {
         position: relative;
-        margin-top: -20px;
+        margin-top: 0;
         height: 50px;
         //border:1px solid red;
     }
@@ -218,7 +233,7 @@ nav div.navbar-header {
             color:inherit;
         }
 
-        #snippetTopicSearchDisplay h5 {
+        #snippetTopicSearchDisplay {
             margin: 16px 0;
         }
 
@@ -229,6 +244,8 @@ nav div.navbar-header {
     @public-snippet-code-color:#fbcb9c;
     #snippetContainer {
         //border: 1px solid red;
+        //padding-left:0;
+        padding-right:0;
     }
 
         @des-font-family:"Helvetica Neue", Helvetica, Arial, sans-serif;

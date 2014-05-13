@@ -10,11 +10,10 @@
         <a href="#"><span class="fa fa-plus"></span></a>
     </div>
     <div class='panel-body'>
-        <ul>
-            <li><a href='#'>General</a></li>
-            <li><a href='#'>Python OO</a></li>
-            <li><a href='#'>JavaScript OO</a></li>
-            <li><a href='#'>C++ OO</a></li>
+        <ul class='list-group'>
+            {% for topic in topics %}
+            <li class='list-group-item'><a href="#">{{topic.topic}}<span class='badge pull-right'>0</span></a></li>
+            {% endfor %}
         </ul>
     </div>
 </div>

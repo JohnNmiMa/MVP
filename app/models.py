@@ -29,9 +29,39 @@ class User(db.Model):
         return '<User %r, email %r, google_id %r, fb_id %r, twitter_id %r, role %r>' % (self.name, self.email, self.google_id, self.fb_id, self.twitter_id, self.role)
 
 class Topic(db.Model):
-    id =    db.Column(db.Integer, primary_key = True)
-    topic = db.Column(db.String(80))
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    id =       db.Column(db.Integer, primary_key = True)
+    topic =    db.Column(db.String(80))
+    user_id =  db.Column(db.Integer, db.ForeignKey('user.id'))
+    snippets = db.relationship('Snippet', order_by='desc(Snippet.timestamp)', backref = 'topic', lazy = 'dynamic')
+
+    #def get_time_ordered_snippets(self):
+        #Snippet.query.join(
 
     def __repr__(self):
         return '<Topic %r>' % (self.topic)
+
+class Snippet(db.Model):
+    id =          db.Column(db.Integer, primary_key = True)
+    title =       db.Column(db.String(256))
+    description = db.Column(db.Text)
+    code =        db.Column(db.Text)
+    timestamp =   db.Column(db.DateTime)
+    public =      db.Column(db.Boolean)
+    ref_count =   db.Column(db.Integer)
+    topic_id  =   db.Column(db.Integer, db.ForeignKey('topic.id'))
+
+    def __init__(self, title, description, code, timestamp, topic, public=False):
+        self.title = title
+        self.description = description
+        self.code = code
+        self.timestamp = timestamp
+        self.public = public
+        self.ref_count = 1
+        self.topic = topic
+
+    def inc_ref(self):
+        self.ref_count += 1;
+
+    def __repr__(self):
+        return '<title:%r, description:%r, code:%r, timestamp:%r, public:%r, ref_count:%r>' % \
+               (self.title, self.description, self.code, self.timestamp, self.public, self.ref_count)

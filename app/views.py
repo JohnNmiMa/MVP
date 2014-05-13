@@ -1,11 +1,13 @@
 from flask import render_template, flash, redirect, url_for, session, request, g, jsonify
 from flask.ext.login import login_user, logout_user, current_user, login_required
-from models import User, Topic, ROLE_USER, ROLE_ADMIN
+from models import User, Topic, Snippet, ROLE_USER, ROLE_ADMIN
 from app import app, db, login_manager, oauth
 from facebook_oauth import facebook
 from twitter_oauth import twitter
 from google_oauth import google
 from datetime import datetime
+from sqlalchemy import desc
+import json
 import pdb
 
 
@@ -45,18 +47,17 @@ def signin(social):
 @app.route('/user')
 #@login_required
 def user():
-    return render_template('user.html', name=g.user.name, page='home')
+    topics = g.user.topics.all()
+    return render_template('user.html', name=g.user.name, topics = topics, page='home')
 
 
-@app.route('/snippets/<topic>', methods = ['POST'])
+@app.route('/snippets/<topic>', methods = ['POST', 'GET'])
 @login_required
 def snippets(topic):
     if request.method == 'POST':
         # See if the topic exists
-        topics = g.user.topics.all()
-        for t in topics:
-            if (t.topic == topic):
-                break
+        topic = g.user.topics.filter_by(topic=topic).first()
+        if topic is None:
             return jsonify(error=404, text='Invalid topic name'), 404
 
         # Get the snippet data from the form
@@ -66,10 +67,31 @@ def snippets(topic):
         description = form['description']
         code = form['code']
 
-        #pdb.set_trace()
         # Persist the snippet to the users topic
-        #topic = Topic(topic = 'General', author = q.user)
-        return jsonify({})
+        #pdb.set_trace()
+        snippet = Snippet(title = title, description = description, code = code,
+                          timestamp=datetime.utcnow(),
+                          topic=topic, public = False)
+        db.session.add(snippet)
+        db.session.commit()
+        return jsonify(id=snippet.id)
+
+    elif request.method == 'GET':
+        # Find the topic
+        topic = g.user.topics.filter_by(topic=topic).first()
+        if topic is None:
+            return jsonify(error=404, text='Invalid topic name'), 404
+
+        # Get all snippets in the topic
+        #snippets = topic.snippets.all()
+        snippets = topic.snippets.order_by(Snippet.timestamp.desc()).all()
+        reply = {}
+        #pdb.set_trace()
+        for i, snip in enumerate(snippets):
+            d = dict(title=snip.title, description=snip.description, code=snip.code)
+            reply[i] = d
+
+        return jsonify(reply)
 
 
 @app.route('/logout')
