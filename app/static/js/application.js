@@ -54,9 +54,9 @@ $(document).ready(function() {
          */
 
         var that = $(this),
-            topicname = $(this).text();
+            // Get only the "li a" element text, not the children span's badge "count" text
+            topicname = $(this).find('a').clone().children().remove().end().text();
         if (!topicname) return;
-        topicname = topicname.replace(/[0-9]/g, ''); // remove trailing 'count' number from topic name
 
         var ajaxOptions = {
             url:'snippets/' + topicname,
@@ -111,6 +111,7 @@ $(document).ready(function() {
             data: data,
             success: function(results) {
                 displayNewSnippet(results['id']);
+                incrementTopicCount();
             },
             error: function(req, status, error) {
                 console.log("AJAX returned with error");
@@ -120,6 +121,12 @@ $(document).ready(function() {
         $.ajax(ajaxOptions);
         return false;
     });
+
+    var incrementTopicCount = function() {
+        var badge = $('#topicPanel .list-group li.active').find('a span');
+            badge_count = Number(badge.text());
+        badge.text(badge_count + 1);
+    }
 
     var displayNewSnippet = function(snippet_id) {
         /* Adds a new snippet to the DOM */
