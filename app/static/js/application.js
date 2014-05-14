@@ -136,6 +136,9 @@ var snippet = (function() {
             return false;
         }
 
+        // Name can't be empty
+        if (!topicName) return false;
+
         // Use AJAX to persist the new topic
         // Use AJAX to POST the new snippet
         var ajaxOptions = {
@@ -332,6 +335,7 @@ $(document).ready(function() {
     $('#topicAdd').click(function() {
         $('#topicForm')[0].reset();
         $('#topicFormContainer').toggle();
+        $('#topicNameField').focus();
     });
 
     // Topic in topic panel is clicked
@@ -350,6 +354,7 @@ $(document).ready(function() {
     // Snippet 'add' button is clicked
     $('#snippetAdd').click(function() {
         $('#snippetForm').show();
+        $('#titleField').focus();
     });
 
     // 'Columns' icon in snippet panel is clicked

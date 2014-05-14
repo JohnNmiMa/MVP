@@ -6,16 +6,16 @@
         <div class="snippet">
             <div class="snippetTitle">
                 <div id='titleDiv'>
-                    <input id='titleField' type="text" name="title" class="form-control" autocomplete="off" placeholder="Add snippet title here">
-                    <button id="snippetSave" type="button" name="snippetSave" form="snippetForm"></button>
-                    <button id="snippetCancel" type="button" name="snippetCancel"></button>
+                    <input id='titleField' type="text" name="title" class="form-control" autocomplete="off" autofocus="on" tabindex="1" placeholder="Add snippet title here">
+                    <button id="snippetSave" type="button" name="snippetSave" form="snippetForm" autofocus="off" tabindex="4"></button>
+                    <button id="snippetCancel" type="button" name="snippetCancel" autofocus="off" tabindex="-1"></button>
                 </div>
                 <div id='formContent' class="snippetContent">
                     <div class="snippetDes-horz">
-                        <textarea id='desField' name="description" class="form-control snippetDesStyle" placeholder="Add snippet description here"></textarea>
+                        <textarea id='desField' name="description" class="form-control snippetDesStyle" placeholder="Add snippet description here" tabindex="2"></textarea>
                     </div>
                     <div class="snippetCode-horz">
-                        <textarea id='codeField' name="code" class="form-control snippetCodeStyle" placeholder="Add snippet code here"></textarea>
+                        <textarea id='codeField' name="code" class="form-control snippetCodeStyle" placeholder="Add snippet code here" tabindex="3"></textarea>
                     </div>
                 </div>
             </div>
