@@ -61,7 +61,7 @@ growl yip</pre></pre>
       </div>
 </div>
 {% endif %}
-{% if page == 'home' %}
+{% if page == 'index' or page == 'home' %}
 <div class="snippet">
     <div class="snippetTitle">
         <h5>Built-in Class Attributes</h5>
@@ -78,6 +78,8 @@ growl yip</pre></pre>
         </div>
       </div>
 </div>
+{% endif %}
+{% if page == 'home' %}
 <div class="snippet">
     <div class="snippetTitle">
         <h5>Built-in Instance Attributes</h5>
@@ -91,6 +93,8 @@ growl yip</pre></pre>
         </div>
       </div>
 </div>
+{% endif %}
+{% if page == 'home' %}
 <div class="snippet">
     <div class="snippetTitle">
         <h5>Instance Variables/Methods, Ctor/Dtor</h5>
@@ -98,9 +102,11 @@ growl yip</pre></pre>
         </div>
       </div>
 </div>
+{% endif %}
+{% if page == 'index' or page == 'home' %}
 <div class="snippet">
     <div class="snippetTitle">
-        <h5>Inheritance, Public/Private Attrs</h5>
+        <h5>Class Inheritance, Public/Private Attrs</h5>
         <div class="snippetContent">
         </div>
       </div>

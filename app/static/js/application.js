@@ -8,11 +8,12 @@ Utils.numberWithCommas = function(x) {
 }
 
 var snippet = (function() {
-    var SNIPPET_HORIZONTAL = 'snippetDes-horz',
-        SNIPPET_VERTICAL = 'snippetDes-vert',
-        SNIPPET_TITLESONLY = 'snippetDes-vert',
-        snippetDesLayout = SNIPPET_HORIZONTAL,
-        snippetCodeLayout = SNIPPET_HORIZONTAL,
+    var SNIPPET_DES_HORIZONTAL =  'snippetDes-horz',
+        SNIPPET_DES_VERTICAL =    'snippetDes-vert',
+        SNIPPET_CODE_HORIZONTAL = 'snippetCode-horz',
+        SNIPPET_CODE_VERTICAL =   'snippetCode-vert',
+        snippetDesLayout =        SNIPPET_DES_HORIZONTAL,
+        snippetCodeLayout =       SNIPPET_CODE_HORIZONTAL,
         isTopicPopoverDisplayed = false;
 
     /*
@@ -39,26 +40,24 @@ var snippet = (function() {
 
     var buildSnippet = function(title, description, code) {
         var ss  = '<div class="snippet">';
+
+        // Always add the title, as it should always be present
         ss +=     '    <span class="snippetID" style="display:none">snippet_id</span>';
+
         ss +=     '    <div class="snippetTitle">';
         ss +=     '        <h5>' + title + '</h5>';
         ss +=     '        <div class="snippetContent">';
+
         if (description) {
-            if (snippetDesLayout != SNIPPET_TITLESONLY) {
-                ss += '            <div class="' + snippetDesLayout + '">';
-            }
+            // Only add the description section if a description was entered
+            ss += '            <div class="' + snippetDesLayout + '">';
             ss += '                <p class="snippetDesStyle">' + description + '</p>';
             ss += '            </div>';
-        } else {
-            if (snippetDesLayout != SNIPPET_TITLESONLY) {
-                ss += '            <div class="' + snippetDesLayout + '">';
-            }
-            ss += '            </div>';
         }
+
         if (code) {
-            if (snippetCodeLayout != SNIPPET_TITLESONLY) {
-                ss += '            <div class="' + snippetCodeLayout + '">';
-            }
+            // Only add the code section if a description was entered
+            ss += '            <div class="' + snippetCodeLayout + '">';
             ss += '                <pre class="snippetCodeStyle">' + code + '</pre>';
             ss += '            </div>';
         }
@@ -118,8 +117,8 @@ var snippet = (function() {
      * Public methods
      */
 
-    var saveTopic = function(form) {
-        var topicName = form.topicName.value,
+    var createTopic = function(form) {
+        var topicName = form.topicName.value.replace(/^\s+|\s+$/g,''),
             duplicateNameFound = false;
         console.log("Saving a new topic named " + topicName);
 
@@ -211,7 +210,7 @@ var snippet = (function() {
 
         var that = $(topicItem),
             // Get only the "li a" element text, not the children span's badge "count" text
-            topicname = $(topicItem).find('a').clone().children().remove().end().text();
+            topicname = $(topicItem).find('a').clone().children().remove().end().text().replace(/^\s+|\s+$/g,'');
         if (!topicname) return;
 
         // Use AJAX to GET a list snippets
@@ -241,39 +240,50 @@ var snippet = (function() {
 
 
     var showSnippetsHorizontal = function() {
+        // Update snippet description and code have horizontal layout
         $('.snippetDes-vert').toggleClass('snippetDes-vert snippetDes-horz');
         $('.snippetCode-vert').toggleClass('snippetCode-vert snippetCode-horz');
         $('.snippetDes-horz').css('display', 'block');
         $('.snippetCode-horz').css('display', 'block');
+
+        // Make the title, description and code visible
         $('#snippetHorzIcon span').addClass('active');
         $('#snippetVertIcon span').removeClass('active');
         $('#snippetTitleOnlyIcon span').removeClass('active');
-        snippetDesLayout = SNIPPET_HORIZONTAL;
-        snippetCodeLayout = SNIPPET_HORIZONTAL;
+
+        // Save away the layout state
+        snippetDesLayout = SNIPPET_DES_HORIZONTAL;
+        snippetCodeLayout = SNIPPET_CODE_HORIZONTAL;
     };
 
     var showSnippetsVertical = function() {
+        // Update snippet description and code have vertical layout
         $('.snippetDes-horz').toggleClass('snippetDes-horz snippetDes-vert');
         $('.snippetCode-horz').toggleClass('snippetCode-horz snippetCode-vert');
         $('.snippetDes-vert').css('display', 'block');
         $('.snippetCode-vert').css('display', 'block');
+
+        // Make the title, description and code visible
         $('#snippetHorzIcon span').removeClass('active');
         $('#snippetVertIcon span').addClass('active');
         $('#snippetTitleOnlyIcon span').removeClass('active');
-        snippetDesLayout = SNIPPET_VERTICAL;
-        snippetCodeLayout = SNIPPET_VERTICAL;
+
+        // Save away the layout state
+        snippetDesLayout = SNIPPET_DES_VERTICAL;
+        snippetCodeLayout = SNIPPET_CODE_VERTICAL;
     };
 
     var showSnippetTitlesOnly = function() {
+        // Update snippet description and code to be hidden - show only the title
         $('.snippetDes-vert').css('display', 'none');
         $('.snippetCode-vert').css('display', 'none');
         $('.snippetDes-horz').css('display', 'none');
         $('.snippetCode-horz').css('display', 'none');
+
+        // Make the title, description and code visible
         $('#snippetHorzIcon span').removeClass('active');
         $('#snippetVertIcon span').removeClass('active');
         $('#snippetTitleOnlyIcon span').addClass('active');
-        snippetDesLayout = SNIPPET_TITLESONLY;
-        snippetCodeLayout = SNIPPET_TITLESONLY;
     };
 
 
@@ -305,7 +315,7 @@ var snippet = (function() {
     return {
         get isTopicPopoverDisplayed() { return isTopicPopoverDisplayed; },     // exported getter
         set isTopicPopoverDisplayed(bool) { isTopicPopoverDisplayed = bool; }, // exported setter
-        saveTopic:saveTopic,
+        createTopic:createTopic,
         createSnippet:createSnippet,
         displayTopicSnippet:displayTopicSnippet,
         showSnippetsHorizontal:showSnippetsHorizontal,
@@ -346,7 +356,8 @@ $(document).ready(function() {
     });
 
     // Topic in topic panel is clicked
-    $('#topicPanel div.panel-body li').click(function() {
+    //$('#topicPanel div.panel-body li.topicItem').click(function() {
+    $('#topicPanel div.panel-body').on('click', 'li.topicItem', function() {
         snippet.displayTopicSnippet(this);
     });
 

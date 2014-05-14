@@ -7,7 +7,9 @@
  *Setup VEX popup styling
  */
 
-body { padding-top: 57px; }
+body {
+    padding-top: 57px;
+}
 
 .vex-content.snippetCreateContent {
     width:90% !important;
@@ -111,7 +113,6 @@ nav div.navbar-header {
 @default-topicpanel-width: 20%;
 #snippetBlock {
     margin:0 15px;
-    //overflow:hidden;
 }
     /*
      * Topic Panel
@@ -123,7 +124,6 @@ nav div.navbar-header {
         min-height:400px;
         margin-top: 50px;
         background: #eee;
-        overflow: hidden;
     }
         #topicPanel.loggedin {
             width:@default-topicpanel-width;
@@ -250,6 +250,8 @@ nav div.navbar-header {
         //padding-left:0;
         padding-right:0;
     }
+        #snippetContainer #userSnippets {
+        }
 
         @des-font-family:"Helvetica Neue", Helvetica, Arial, sans-serif;
         @code-font-family:Menlo, Monaco, Consolas, "Courier New", monospace;
