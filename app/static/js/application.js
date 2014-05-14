@@ -12,11 +12,30 @@ var snippet = (function() {
         SNIPPET_VERTICAL = 'snippetDes-vert',
         SNIPPET_TITLESONLY = 'snippetDes-vert',
         snippetDesLayout = SNIPPET_HORIZONTAL,
-        snippetCodeLayout = SNIPPET_HORIZONTAL;
+        snippetCodeLayout = SNIPPET_HORIZONTAL,
+        isTopicPopoverDisplayed = false;
 
     /*
      * Local methods
      */
+
+    var buildTopic = function(topicName) {
+        var t =  '<li class="list-group-item topicItem"><a href="#">' + topicName;
+            t += '    <span class="badge pull-right">0</span></a></li>';
+
+        return t;
+    }
+
+    var displayNewTopic = function(topicName) {
+        var t = buildTopic(topicName);
+
+        // Create a new snippet with the form data
+        $('#topicFormContainer').after(t);
+
+        $('#topicForm')[0].reset();
+        $('#topicFormContainer').hide();
+    }
+
 
     var buildSnippet = function(title, description, code) {
         var ss  = '<div class="snippet">';
@@ -49,6 +68,7 @@ var snippet = (function() {
 
         return ss;
     }
+
 
     var displayNewSnippet = function(snippet_id) {
         /* Adds a new snippet to the DOM */
@@ -94,24 +114,6 @@ var snippet = (function() {
     }
 
 
-    var buildTopic = function(topicName) {
-        var t =  '<li class="list-group-item topicItem"><a href="#">' + topicName;
-            t += '    <span class="badge pull-right">0</span></a></li>';
-
-        return t;
-    }
-
-    var displayNewTopic = function(topicName) {
-        var t = buildTopic(topicName);
-
-        // Create a new snippet with the form data
-        $('#topicFormContainer').after(t);
-
-        $('#topicForm')[0].reset();
-        $('#topicFormContainer').hide();
-    }
-
-
     /*
      * Public methods
      */
@@ -124,15 +126,16 @@ var snippet = (function() {
         // Make sure the topic doesn't already exist
         $('#topicPanel .topicItem a').each(function() {
             tmpTopicName = $(this).clone().children().remove().end().text().replace(/^\s+|\s+$/g,'');
-            if (topicName === tmpTopicName) {
+            if (topicName.toUpperCase() === tmpTopicName.toUpperCase()) {
                 duplicateNameFound = true;
                 return;
             }
         });
 
         if (duplicateNameFound) {
-            $('#topicForm')[0].reset();
             // Let user know the name already exists
+            $('#topicNameField').popover('show');
+            isTopicPopoverDisplayed = true;
             return false;
         }
 
@@ -300,6 +303,8 @@ var snippet = (function() {
 	}
 
     return {
+        get isTopicPopoverDisplayed() { return isTopicPopoverDisplayed; },     // exported getter
+        set isTopicPopoverDisplayed(bool) { isTopicPopoverDisplayed = bool; }, // exported setter
         saveTopic:saveTopic,
         createSnippet:createSnippet,
         displayTopicSnippet:displayTopicSnippet,
@@ -336,6 +341,8 @@ $(document).ready(function() {
         $('#topicForm')[0].reset();
         $('#topicFormContainer').toggle();
         $('#topicNameField').focus();
+        $('#topicNameField').popover('hide');
+        snippet.isTopicPopoverDisplayed = false;
     });
 
     // Topic in topic panel is clicked
@@ -343,13 +350,27 @@ $(document).ready(function() {
         snippet.displayTopicSnippet(this);
     });
 
+    // Enable Bootstrap popover for the topic name input field
+    $('#topicNameField').popover({container:'body', trigger:'manual', toggle:'popover', placement:'right',
+                                  content:"This name already exists. Please type another name."});
+    // Dismiss the popover upon click
+    $('#topicNameField').click(function() {
+        if (snippet.isTopicPopoverDisplayed) {
+            $(this).popover('hide');
+            snippet.isTopicPopoverDisplayed = false;
+        }
+    });
+    $('#topicNameField').on('input', function() {
+        if (snippet.isTopicPopoverDisplayed) {
+            $(this).popover('hide');
+            snippet.isTopicPopoverDisplayed = false;
+        }
+    });
+
 
     /* 
      * Snippet Panel Controls
      */
-
-    // 'Topic Toggle' icon in snippet panel is clicked
-    //$('#toggleIcon').click(updateTopicPanel);
 
     // Snippet 'add' button is clicked
     $('#snippetAdd').click(function() {
