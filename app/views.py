@@ -51,6 +51,15 @@ def user():
     return render_template('user.html', name=g.user.name, topics = topics, page='home')
 
 
+@app.route('/topic/<new_topic>', methods = ['POST'])
+@login_required
+def topic(new_topic):
+    if request.method == 'POST':
+        t = Topic(topic = new_topic, author = g.user)
+        db.session.add(t)
+        db.session.commit()
+    return jsonify(id=t.id)
+
 @app.route('/snippets/<topic>', methods = ['POST', 'GET'])
 @login_required
 def snippets(topic):

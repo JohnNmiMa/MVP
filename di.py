@@ -162,6 +162,12 @@ def delete_snips():
         db.session.delete(snip)
     db.session.commit()
 
+def delete_topic():
+    topics = qtopic()
+    for topic in topics:
+        db.session.delete(topic)
+    db.session.commit()
+
 def populate_db():
     create_db()
     add_users()

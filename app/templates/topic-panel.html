@@ -12,15 +12,13 @@
     <div class='panel-body'>
         <ul class='list-group'>
             <li id='topicFormContainer' class='list-group-item' style='display:none'>
-                <form id='topicForm' role='form' method='post' onSubmit='return snippet.saveTopic(this)'>
-                    <fieldset>
-                        <input id='topicNameField' type="text" name="topicName"
-                               class="form-control" placeholder="New topic title">
-                    </fieldset>
+                <form id='topicForm' name='topicForm' role='form' method='post' onSubmit='return snippet.saveTopic(this)'>
+                        <input id='topicNameField' type="text" name="topicName" class="form-control"
+                               maxlength="30" autocomplete="off" placeholder="New topic title">
                 </form>
             </li>
             {% for topic in topics %}
-            <li class='list-group-item'><a href="#">{{topic.topic}}
+            <li class='list-group-item topicItem'><a href="#">{{topic.topic}}
                 <span class='badge pull-right'>{{topic.snippets.count()}}</span></a>
             </li>
             {% endfor %}

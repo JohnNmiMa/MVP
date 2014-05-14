@@ -94,15 +94,65 @@ var snippet = (function() {
     }
 
 
+    var buildTopic = function(topicName) {
+        var t =  '<li class="list-group-item topicItem"><a href="#">' + topicName;
+            t += '    <span class="badge pull-right">0</span></a></li>';
+
+        return t;
+    }
+
+    var displayNewTopic = function(topicName) {
+        var t = buildTopic(topicName);
+
+        // Create a new snippet with the form data
+        $('#topicFormContainer').after(t);
+
+        $('#topicForm')[0].reset();
+        $('#topicFormContainer').hide();
+    }
+
+
     /*
      * Public methods
      */
 
     var saveTopic = function(form) {
-        console.log("Saving a new topic");
+        var topicName = form.topicName.value,
+            duplicateNameFound = false;
+        console.log("Saving a new topic named " + topicName);
+
+        // Make sure the topic doesn't already exist
+        $('#topicPanel .topicItem a').each(function() {
+            tmpTopicName = $(this).clone().children().remove().end().text().replace(/^\s+|\s+$/g,'');
+            if (topicName === tmpTopicName) {
+                duplicateNameFound = true;
+                return;
+            }
+        });
+
+        if (duplicateNameFound) {
+            $('#topicForm')[0].reset();
+            // Let user know the name already exists
+            return false;
+        }
+
+        // Use AJAX to persist the new topic
+        // Use AJAX to POST the new snippet
+        var ajaxOptions = {
+            url:'topic/' + topicName,
+            type: 'POST',
+            dataType: "json",
+            success: function(results) {
+                displayNewTopic(topicName);
+            },
+            error: function(req, status, error) {
+                console.log("AJAX returned with error");
+            }
+        };
+
+        $.ajax(ajaxOptions);
         return false;
     }
-
 
     var createSnippet = function(snippetAddButton) {
         /*
@@ -280,6 +330,7 @@ $(document).ready(function() {
 
     // Topic 'add' button is clicked
     $('#topicAdd').click(function() {
+        $('#topicForm')[0].reset();
         $('#topicFormContainer').toggle();
     });
 

@@ -47,7 +47,8 @@ Add "Topic" widget (left column) - DONE
 Create "Topics"
   - Add "Plus Button" to create topic - DONE
     - Add the topicForm - DONE
-    - Persist the topic
+    - Persist the topic - DONE
+      - if topic already exists - tell user to pick a new topic name
     - Update the UI with the new topic
 
 Delete "Snippets"
