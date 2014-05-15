@@ -8,12 +8,12 @@ Utils.numberWithCommas = function(x) {
 }
 
 var snippet = (function() {
-    var SNIPPET_DES_HORIZONTAL =  'snippetDes-horz',
-        SNIPPET_DES_VERTICAL =    'snippetDes-vert',
-        SNIPPET_CODE_HORIZONTAL = 'snippetCode-horz',
-        SNIPPET_CODE_VERTICAL =   'snippetCode-vert',
-        snippetDesLayout =        SNIPPET_DES_HORIZONTAL,
-        snippetCodeLayout =       SNIPPET_CODE_HORIZONTAL,
+    var SNIPPET_DES_COL =   'snippetDes-col',
+        SNIPPET_DES_ROW =   'snippetDes-row',
+        SNIPPET_CODE_COL =  'snippetCode-col',
+        SNIPPET_CODE_ROW =  'snippetCode-row',
+        snippetDesLayout =  SNIPPET_DES_COL,
+        snippetCodeLayout = SNIPPET_CODE_COL,
         isTopicPopoverDisplayed = false;
 
     /*
@@ -240,49 +240,49 @@ var snippet = (function() {
 
 
     var showSnippetsHorizontal = function() {
-        // Update snippet description and code have horizontal layout
-        $('.snippetDes-vert').toggleClass('snippetDes-vert snippetDes-horz');
-        $('.snippetCode-vert').toggleClass('snippetCode-vert snippetCode-horz');
-        $('.snippetDes-horz').css('display', 'block');
-        $('.snippetCode-horz').css('display', 'block');
+        // Update snippet description and code have columnar layout
+        $('.snippetDes-row').toggleClass('snippetDes-row snippetDes-col');
+        $('.snippetCode-row').toggleClass('snippetCode-row snippetCode-col');
+        $('.snippetDes-col').css('display', 'block');
+        $('.snippetCode-col').css('display', 'block');
 
         // Make the title, description and code visible
-        $('#snippetHorzIcon span').addClass('active');
-        $('#snippetVertIcon span').removeClass('active');
+        $('#snippetColIcon span').addClass('active');
+        $('#snippetRowIcon span').removeClass('active');
         $('#snippetTitleOnlyIcon span').removeClass('active');
 
         // Save away the layout state
-        snippetDesLayout = SNIPPET_DES_HORIZONTAL;
-        snippetCodeLayout = SNIPPET_CODE_HORIZONTAL;
+        snippetDesLayout = SNIPPET_DES_COL;
+        snippetCodeLayout = SNIPPET_CODE_COL;
     };
 
     var showSnippetsVertical = function() {
-        // Update snippet description and code have vertical layout
-        $('.snippetDes-horz').toggleClass('snippetDes-horz snippetDes-vert');
-        $('.snippetCode-horz').toggleClass('snippetCode-horz snippetCode-vert');
-        $('.snippetDes-vert').css('display', 'block');
-        $('.snippetCode-vert').css('display', 'block');
+        // Update snippet description and code have row layout
+        $('.snippetDes-col').toggleClass('snippetDes-col snippetDes-row');
+        $('.snippetCode-col').toggleClass('snippetCode-col snippetCode-row');
+        $('.snippetDes-row').css('display', 'block');
+        $('.snippetCode-row').css('display', 'block');
 
         // Make the title, description and code visible
-        $('#snippetHorzIcon span').removeClass('active');
-        $('#snippetVertIcon span').addClass('active');
+        $('#snippetColIcon span').removeClass('active');
+        $('#snippetRowIcon span').addClass('active');
         $('#snippetTitleOnlyIcon span').removeClass('active');
 
         // Save away the layout state
-        snippetDesLayout = SNIPPET_DES_VERTICAL;
-        snippetCodeLayout = SNIPPET_CODE_VERTICAL;
+        snippetDesLayout = SNIPPET_DES_ROW;
+        snippetCodeLayout = SNIPPET_CODE_ROW;
     };
 
     var showSnippetTitlesOnly = function() {
         // Update snippet description and code to be hidden - show only the title
-        $('.snippetDes-vert').css('display', 'none');
-        $('.snippetCode-vert').css('display', 'none');
-        $('.snippetDes-horz').css('display', 'none');
-        $('.snippetCode-horz').css('display', 'none');
+        $('.snippetDes-row').css('display', 'none');
+        $('.snippetCode-row').css('display', 'none');
+        $('.snippetDes-col').css('display', 'none');
+        $('.snippetCode-col').css('display', 'none');
 
         // Make the title, description and code visible
-        $('#snippetHorzIcon span').removeClass('active');
-        $('#snippetVertIcon span').removeClass('active');
+        $('#snippetColIcon span').removeClass('active');
+        $('#snippetRowIcon span').removeClass('active');
         $('#snippetTitleOnlyIcon span').addClass('active');
     };
 
@@ -390,10 +390,10 @@ $(document).ready(function() {
     });
 
     // 'Columns' icon in snippet panel is clicked
-    $('#snippetHorzIcon').click(snippet.showSnippetsHorizontal);
+    $('#snippetColIcon').click(snippet.showSnippetsHorizontal);
 
     // 'Rows' icon in snippet panel is clicked
-    $('#snippetVertIcon').click(snippet.showSnippetsVertical);
+    $('#snippetRowIcon').click(snippet.showSnippetsVertical);
 
     // 'Title Only' icon in snippet panel is clicked
     $('#snippetTitleOnlyIcon').click(snippet.showSnippetTitlesOnly);
