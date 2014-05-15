@@ -48,8 +48,8 @@ Create "Topics"
   - Add "Plus Button" to create topic - DONE
     - Add the topicForm - DONE
     - Persist the topic - DONE
-      - if topic already exists - tell user to pick a new topic name
-    - Update the UI with the new topic
+      - if topic already exists - tell user to pick a new topic name - DONE
+    - Update the UI with the new topic - DONE
 
 Delete "Snippets"
   - Add UI to delete a snippet

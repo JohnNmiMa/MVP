@@ -85,7 +85,7 @@ body {
         position: relative;
         margin-top: -20px;
         height: 50px;
-        border:1px solid red;
+        //border:1px solid red;
         overflow: hidden;
     }
         #iconBar a {
@@ -97,7 +97,12 @@ body {
         #leftIconBar {
             position:absolute;
             left: 0;
+            padding-left:5px;
         }
+            #leftIconBar #toggleIcon a {
+                //padding-left:5px;
+                margin-left:-15px;
+            }
         #rightIconBar {
             position:absolute;
             right: 0;
@@ -113,55 +118,76 @@ body {
      * Setup Snippets
      */
 
+
     #snippetContainer {
-        border: 1px solid red;
+        //border: 1px solid red;
     }
         .snippet {
             .make-row();
-            background: #eee;
+            //border:1px solid red;
         }
-        .snippetTitle {
-            .make-sm-column(12);
-        }
-        .snippetTitle h5 {
-            font-weight:bold;
-            margin: 5px 0;
-        }
-        .snippetContent {
-            .make-row();
-        }
-        .snippetDes-horz {
-            .make-sm-column(6);
-            font-size: small;
-        }
-        .snippetDes-vert {
-            .make-sm-column(12);
-            font-size: small;
-        }
-        .snippetDes-horz ul {
-            padding-left: 18px;
-        }
-        .snippetCode-horz {
-            .make-sm-column(6);
-        }
-        .snippetCode-vert {
-            .make-sm-column(12);
-        }
-        .snippetCodeStyle {
-            font-size: x-small;
-            background-color: #e3e3bb;
-            border: none;
-            margin-bottom:0;
-        }
-        .snippetCommandStyle {
-            font-size: x-small;
-            background-color: #e3e3bb;
-            border: none;
-            border-top: 1px solid #bbb;
-            padding-bottom:0;
-            padding-left:0;
-            margin-bottom:0;
-        }
+
+            .snippetSelector {
+                position:relative;
+                float:left;
+                width:3%;
+                min-width:35px;
+                padding:0 5px;
+                //border:1px solid green;
+            }
+
+            .snippetContent {
+                position:relative;
+                float:left;
+                width:97%;
+                .make-row();
+                //border:1px solid blue;
+            }
+
+                .snippetTitle {
+                    .make-sm-column(12);
+                }
+                    .snippetTitle h5 {
+                        font-weight:bold;
+                        margin: 5px 0;
+                    }
+
+                    .snippetTextAreas {
+                        .make-row();
+                    }
+                        .snippetDes-col {
+                            .make-sm-column(6);
+                            font-size: small;
+                        }
+                            .snippetDes-col ul {
+                                padding-left: 18px;
+                            }
+                        .snippetDes-row {
+                            .make-sm-column(12);
+                            font-size: small;
+                        }
+
+                        .snippetCode-col {
+                            .make-sm-column(6);
+                        }
+                        .snippetCode-row {
+                            .make-sm-column(12);
+                        }
+                            .snippetCodeStyle {
+                                font-size: x-small;
+                                background-color: #e3e3bb;
+                                border: none;
+                                margin-bottom:0;
+                            }
+                            .snippetCommandStyle {
+                                font-size: x-small;
+                                background-color: #e3e3bb;
+                                border: none;
+                                border-top: 1px solid #bbb;
+                                padding-bottom:0;
+                                padding-left:0;
+                                margin-bottom:0;
+                            }
 
 .fa {
     color:@icon-color;
