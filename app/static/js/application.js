@@ -39,14 +39,14 @@ var snippet = (function() {
 
 
     var buildSnippet = function(title, description, code) {
-        var ss  = '<div class="snippet">';
+        var ss  = '<div class="snippetContent">';
 
         // Always add the title, as it should always be present
         ss +=     '    <span class="snippetID" style="display:none">snippet_id</span>';
 
         ss +=     '    <div class="snippetTitle">';
         ss +=     '        <h5>' + title + '</h5>';
-        ss +=     '        <div class="snippetContent">';
+        ss +=     '        <div class="snippetTextAreas">';
 
         if (description) {
             // Only add the description section if a description was entered
