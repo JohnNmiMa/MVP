@@ -53,6 +53,9 @@ Create "Topics"
 
 Delete "Snippets"
   - Add UI to delete a snippet
+    - Redesign the snippet html/css
+    - Add the new design
+    - Add the snippet id to the snippet
   - Update db in server
   - Update UI to by removing the snippet from the DOM
 
@@ -110,6 +113,9 @@ Persistance Schema
   - there should be no "User" to "Snippet" relationship
 * Snippet data: Topic, Title, Description, Code, snippetID, topicID (One "Snippet" to many "Topics")
 * Topic list: Topic, User, topicID (One "Topic" to many "Snippets"
+* Refresh main snippet page where no snippets are displayed, then
+  Select a layout,
+  then click a topic to get snippets on the page. They are not in the layout.
 
 
 To search all user's snippets:

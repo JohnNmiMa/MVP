@@ -39,28 +39,36 @@ var snippet = (function() {
 
 
     var buildSnippet = function(title, description, code) {
-        var ss  = '<div class="snippetContent">';
+        var ss =  '<div class="snippet">';
+        ss +=     '    <div class="snippetSelector">';
+        ss +=     '        <a href="#"><span class="fa fa-circle-o fa-2x"></span></a>';
+        ss +=     '    </div>';
+        ss +=     '    <div class="snippetContent">';
+
+        // Add the snippet id in an invisible place
+        ss +=     '        <span class="snippetID" style="display:none">snippet_id</span>';
 
         // Always add the title, as it should always be present
-        ss +=     '    <span class="snippetID" style="display:none">snippet_id</span>';
-
-        ss +=     '    <div class="snippetTitle">';
-        ss +=     '        <h5>' + title + '</h5>';
-        ss +=     '        <div class="snippetTextAreas">';
+        ss +=     '        <div class="snippetTitle">';
+        ss +=     '            <h5>' + title + '</h5>';
+        ss +=     '            <div class="snippetTextAreas">';
 
         if (description) {
             // Only add the description section if a description was entered
-            ss += '            <div class="' + snippetDesLayout + '">';
-            ss += '                <p class="snippetDesStyle">' + description + '</p>';
-            ss += '            </div>';
+            ss += '                <div class="' + snippetDesLayout + '">';
+            ss += '                    <p class="snippetDesStyle">' + description + '</p>';
+            ss += '                </div>';
+        } else {
+            ss += '                <div class="' + snippetDesLayout + '"></div>';
         }
 
         if (code) {
             // Only add the code section if a description was entered
-            ss += '            <div class="' + snippetCodeLayout + '">';
-            ss += '                <pre class="snippetCodeStyle">' + code + '</pre>';
-            ss += '            </div>';
+            ss += '                <div class="' + snippetCodeLayout + '">';
+            ss += '                    <pre class="snippetCodeStyle">' + code + '</pre>';
+            ss += '                </div>';
         }
+        ss +=     '            </div>';
         ss +=     '        </div>';
         ss +=     '    </div>';
         ss +=     '</div>';
