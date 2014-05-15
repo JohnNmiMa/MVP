@@ -2,19 +2,25 @@
 {% if page == 'home' %}
 <form id='snippetForm' role="form" method='post' style='display:none'>
     <fieldset>
-        <div class="snippetContent">
-            <div class="snippetTitle">
-                <div id='titleDiv'>
-                    <input id='titleField' type="text" name="title" class="form-control" autocomplete="off" autofocus="on" tabindex="1" placeholder="Add snippet title here">
-                    <button id="snippetSave" type="button" name="snippetSave" form="snippetForm" autofocus="off" tabindex="4"></button>
-                    <button id="snippetCancel" type="button" name="snippetCancel" autofocus="off" tabindex="-1"></button>
-                </div>
-                <div id='formContent' class="snippetTextAreas">
-                    <div class="snippetDes-col">
-                        <textarea id='desField' name="description" class="form-control snippetDesStyle" placeholder="Add snippet description here" tabindex="2"></textarea>
+        <div class="snippet">
+            <div class="snippetSelector">
+                <a href="#"><span class="fa fa-circle-o fa-2x"></span></a>
+            </div>
+            <div class="snippetContent">
+                <div class="snippetTitle">
+                    <div id='titleDiv'>
+                        <input id='titleField' type="text" name="title" class="form-control" autocomplete="off" autofocus="on" tabindex="1" placeholder="Add snippet title here">
+                        <button id="snippetSave" type="button" name="snippetSave" form="snippetForm" autofocus="off" tabindex="4"></button>
+                        <button id="snippetCancel" type="button" name="snippetCancel" autofocus="off" tabindex="-1"></button>
                     </div>
-                    <div class="snippetCode-col">
-                        <textarea id='codeField' name="code" class="form-control snippetCodeStyle" placeholder="Add snippet code here" tabindex="3"></textarea>
+                    <div id='formContent' class="snippetTextAreas">
+                        <div class="snippetDes-col">
+                            <textarea id='desField' name="description" class="form-control snippetDesStyle" placeholder="Add snippet description here" tabindex="2"></textarea>
+                            <!--<textarea name="description" class="form-control snippetDesStyle" placeholder="Add snippet description here" tabindex="2"></textarea>-->
+                        </div>
+                        <div class="snippetCode-col">
+                            <textarea id='codeField' name="code" class="form-control snippetCodeStyle" placeholder="Add snippet code here" tabindex="3"></textarea>
+                        </div>
                     </div>
                 </div>
             </div>

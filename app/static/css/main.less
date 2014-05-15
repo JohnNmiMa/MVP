@@ -263,6 +263,8 @@ nav div.navbar-header {
         }
             .snippet {
                 .make-row();
+                margin-top:5px;
+                overflow:hidden; // Makes snippetSelector and snippetContent align horizontally!!!
                 //border:1px solid red;
             }
 
@@ -334,7 +336,7 @@ nav div.navbar-header {
 
                         .snippetDes-col {
                             .make-sm-column(6);
-                            padding-top: 1rem; // Keeps column from collapsing to zero width
+                            padding-right: 5px;
                             font-size: small;
                         }
                             .snippetDes-col ul {
@@ -342,17 +344,17 @@ nav div.navbar-header {
                             }
                         .snippetDes-row {
                             .make-sm-column(12);
-                            padding-top: 1rem; // Keeps column from collapsing to zero width
                             font-size: small;
                         }
                             .snippetDes-row ul {
                                 padding-left: 18px;
                             }
+                            .snippetDes-row .snippetDesStyle {
+                                margin-bottom:0;
+                            }
                             .snippetDesStyle {
                                 font-family:@des-font-family;
-                                //border:none;
                                 background-color:white;
-                                //padding:0;
                             }
                             textarea.snippetDesStyle {
                                 font-family:@des-font-family;
@@ -361,6 +363,7 @@ nav div.navbar-header {
 
                         .snippetCode-col {
                             .make-sm-column(6);
+                            padding-left: 5px;
                         }
                         .snippetCode-row {
                             .make-sm-column(12);
