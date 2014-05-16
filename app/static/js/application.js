@@ -16,6 +16,7 @@ var snippet = (function() {
         snippetCodeLayout = SNIPPET_CODE_COL,
         isTopicPopoverDisplayed = false;
         isTopicEditModeEnabled = false;
+        isTopicAddModeEnabled = false;
 
     /*
      * Local methods
@@ -40,6 +41,7 @@ var snippet = (function() {
 
         $('#topicForm')[0].reset();
         $('#topicFormContainer').hide();
+        isTopicAddModeEnabled = false;
     }
 
 
@@ -366,6 +368,8 @@ var snippet = (function() {
         set isTopicPopoverDisplayed(bool) { isTopicPopoverDisplayed = bool; },
         get isTopicEditModeEnabled()      { return isTopicEditModeEnabled; },
         set isTopicEditModeEnabled(bool)  { isTopicEditModeEnabled = bool; },
+        get isTopicAddModeEnabled()       { return isTopicAddModeEnabled; },
+        set isTopicAddModeEnabled(bool)   { isTopicAddModeEnabled = bool; },
 
         createTopic:createTopic,
         deleteTopic:deleteTopic,
@@ -401,20 +405,33 @@ $(document).ready(function() {
 
     // Topic 'add' button is clicked
     $('#topicAdd').click(function() {
-        $('#topicForm')[0].reset();
-        $('#topicFormContainer').toggle();
-        $('#topicNameField').focus();
-        $('#topicNameField').popover('hide');
-        snippet.isTopicPopoverDisplayed = false;
+        if (!snippet.isTopicEditModeEnabled) {
+            snippet.isTopicAddModeEnabled = !snippet.isTopicAddModeEnabled;
+            if (snippet.isTopicAddModeEnabled) {
+                $('#topicFormContainer').show();
+
+                // Clear out the form and set the focus
+                $('#topicForm')[0].reset();
+                $('#topicNameField').focus();
+            } else {
+                $('#topicFormContainer').hide();
+
+                // Remove the popover if displayed
+                $('#topicNameField').popover('hide');
+                snippet.isTopicPopoverDisplayed = false;
+            }
+        }
     });
 
     // Topic 'edit' button is clicked - enable delete buttons on each topic name
     $('#topicEdit').click(function() {
-        isTopicEditModeEnabled = !isTopicEditModeEnabled;
-        if (isTopicEditModeEnabled) {
-            $('#topicPanel li span.topicDelete').show();
-        } else {
-            $('#topicPanel li span.fa.topicDelete').hide();
+        if (!snippet.isTopicAddModeEnabled) {
+            snippet.isTopicEditModeEnabled = !snippet.isTopicEditModeEnabled;
+            if (snippet.isTopicEditModeEnabled) {
+                $('#topicPanel li span.topicDelete').show();
+            } else {
+                $('#topicPanel li span.fa.topicDelete').hide();
+            }
         }
     });
 
@@ -431,7 +448,7 @@ $(document).ready(function() {
     });
     // Same as $('#topicPanel ... span.topicDelete').click(...), but used to add event to new topic
     $('#topicPanel div.panel-body').on('click', 'li.topicItem', function() {
-        if (!isTopicEditModeEnabled) {
+        if (!snippet.isTopicEditModeEnabled) {
             snippet.displayTopicSnippet(this);
         }
     });
