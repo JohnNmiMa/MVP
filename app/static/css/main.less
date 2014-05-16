@@ -141,16 +141,21 @@ nav div.navbar-header {
         #topicPanel .panel-body #topicForm #topicNameField {
             padding:3px 6px;
         }
-        #topicPanel .panel-heading span.topicTitle {
+        #topicTitle {
             position:absolute;
             line-height:21px;
             vertical-align:center;
         }
-        #topicPanel .panel-heading span.fa-plus {
+        #topicAdd {
             position:absolute;
             right:10px;
             line-height:21px;
             font-size:1.5em;
+        }
+        #topicEdit {
+            position:absolute;
+            right:40px;
+            line-height:21px;
         }
         #topicPanel ul {
             padding: 0;
@@ -166,8 +171,9 @@ nav div.navbar-header {
             padding: 0;
             color:inherit;
         }
-        #topicPanel li a span.fa {
-            font-size:1.8em !important;
+        #topicPanel li span.topicDelete {
+            color:red;
+            cursor: pointer;
         }
         #topicPanel li a:hover {
             text-decoration: none;

@@ -15,6 +15,7 @@ var snippet = (function() {
         snippetDesLayout =  SNIPPET_DES_COL,
         snippetCodeLayout = SNIPPET_CODE_COL,
         isTopicPopoverDisplayed = false;
+        isTopicEditModeEnabled = false;
 
     /*
      * Local methods
@@ -321,8 +322,12 @@ var snippet = (function() {
 	}
 
     return {
-        get isTopicPopoverDisplayed() { return isTopicPopoverDisplayed; },     // exported getter
-        set isTopicPopoverDisplayed(bool) { isTopicPopoverDisplayed = bool; }, // exported setter
+        // Exported getters and setters
+        get isTopicPopoverDisplayed()     { return isTopicPopoverDisplayed; },
+        set isTopicPopoverDisplayed(bool) { isTopicPopoverDisplayed = bool; },
+        get isTopicEditModeEnabled()      { return isTopicEditModeEnabled; },
+        set isTopicEditModeEnabled(bool)  { isTopicEditModeEnabled = bool; },
+
         createTopic:createTopic,
         createSnippet:createSnippet,
         displayTopicSnippet:displayTopicSnippet,
@@ -363,10 +368,24 @@ $(document).ready(function() {
         snippet.isTopicPopoverDisplayed = false;
     });
 
+    $('#topicEdit').click(function() {
+        isTopicEditModeEnabled = !isTopicEditModeEnabled;
+        if (isTopicEditModeEnabled) {
+            $('#topicPanel li span.fa.fa-minus-circle').show();
+        } else {
+            $('#topicPanel li span.fa.fa-minus-circle').hide();
+        }
+    });
+
     // Topic in topic panel is clicked
-    //$('#topicPanel div.panel-body li.topicItem').click(function() {
+    // This won't work as new topic items added will not have click event attached to them:
+    $('#topicPanel div.panel-body li.topicItem span.fa.fa-minus-circle').click(function() {
+        console.log("Delete topic item - clicked delete icon");
+    });
     $('#topicPanel div.panel-body').on('click', 'li.topicItem', function() {
-        snippet.displayTopicSnippet(this);
+        if (!isTopicEditModeEnabled) {
+            snippet.displayTopicSnippet(this);
+        }
     });
 
     // Enable Bootstrap popover for the topic name input field

@@ -6,8 +6,9 @@
 {% endif %}
 <div id='topicPanel' class='panel panel-default {{loggedInState}}'>
     <div class='panel-heading'>
-        <span class='topicTitle'>Topics</span>
+        <span id="topicTitle">Topics</span>
         <a id="topicAdd" href="#"><span class="fa fa-plus"></span></a>
+        <a id="topicEdit" href="#"><span class="fa fa-pencil"></span></a>
     </div>
     <div class='panel-body'>
         <ul class='list-group'>
@@ -18,8 +19,10 @@
                 </form>
             </li>
             {% for topic in topics %}
-            <li class='list-group-item topicItem'><a href="#">{{topic.topic}}
-                <span class='badge pull-right'>{{topic.snippets.count()}}</span></a>
+            <li class='list-group-item topicItem'>
+                <span class="fa fa-minus-circle topicDelete" style="display:none"></span>
+                <a href="#">{{topic.topic}}</a>
+                <span class='badge pull-right'>{{topic.snippets.count()}}</span>
             </li>
             {% endfor %}
         </ul>
