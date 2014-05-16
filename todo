@@ -63,8 +63,9 @@ Change snippet public or private state
   - If snippet is owned by logged in user, toggle public or private
 
 Delete "Topics"
-  - Figure out UI
-  - Send request to remove the topic id resource
+  - Figure out UI - DONE
+    - prompt user to delete topic
+  - Send request to remove the topic id resource - DONE
     - In server, move all snippets in the topic to the General topic
     - In server, delete the topic.
       - Make sure the user.topics query will not return the topic in the list
@@ -106,6 +107,7 @@ Bugs:
 * Title length can be created bigger than desired.
 * Title field does not wrap.
 * Topic count is not incremented when a new snippet is added - DONE
+* When new topic is added, put it in the list below the 'General' topic
 
 --------
 Persistance Schema

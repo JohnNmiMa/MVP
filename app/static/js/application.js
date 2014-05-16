@@ -21,15 +21,19 @@ var snippet = (function() {
      * Local methods
      */
 
-    var buildTopic = function(topicName) {
-        var t =  '<li class="list-group-item topicItem"><a href="#">' + topicName;
-            t += '    <span class="badge pull-right">0</span></a></li>';
+    var buildTopic = function(topicName, id) {
+        var t  = '<li class="list-group-item topicItem">';
+            t += '    <span class="fa fa-minus-circle topicDelete" style="display:none"></span>';
+            t += '    <a href="#" class="topicName">' + topicName + '</a>';
+            t += '    <span class="badge pull-right topicCounter">0</span>';
+            t += '    <span class="topicID" style="display:none">' + id + '</span>';
+            t += '</li>';
 
         return t;
     }
 
-    var displayNewTopic = function(topicName) {
-        var t = buildTopic(topicName);
+    var displayNewTopic = function(topicName, id) {
+        var t = buildTopic(topicName, id);
 
         // Create a new snippet with the form data
         $('#topicFormContainer').after(t);
@@ -94,8 +98,16 @@ var snippet = (function() {
     }
 
     var incrementTopicCount = function() {
-        var badge = $('#topicPanel .list-group li.active').find('a span');
-            badge_count = Number(badge.text());
+        var badge = {},
+            badge_count = 0;
+
+        if ($('#topicPanel .list-group li.topicItem.active span.topicCounter').length) {
+            badge = $('#topicPanel .list-group li.topicItem.active span.topicCounter');
+        } else {
+            // No topic is active, so increment the General topic
+            badge = $('#topicPanel .list-group li.topicGeneralItem span.topicCounter');
+        }
+        badge_count = Number(badge.text());
         badge.text(badge_count + 1);
     }
 
@@ -157,7 +169,7 @@ var snippet = (function() {
             type: 'POST',
             dataType: "json",
             success: function(results) {
-                displayNewTopic(topicName);
+                displayNewTopic(topicName, results['id']);
             },
             error: function(req, status, error) {
                 console.log("AJAX returned with error");
@@ -166,6 +178,33 @@ var snippet = (function() {
 
         $.ajax(ajaxOptions);
         return false;
+    }
+
+    var deleteTopic = function(topicItem) {
+        /*
+         * Deletes a topic from the list of topics.
+         * - Sends an AJAX 'DELETE' request to delete the topic from the db.
+         * - Removes the topic name from the topic panel
+         */
+
+        var that = $(topicItem),
+            //topicName = $(topicItem).find('a').clone().children().remove().end().text().replace(/^\s+|\s+$/g,''),
+            topicID = $(topicItem).find('span.topicID').text();
+
+        // Use AJAX to delete the new topic
+        var ajaxOptions = {
+            url:'topic/' + topicID,
+            type: 'DELETE',
+            dataType: "json",
+            success: function(results) {
+                console.log("AJAX returned with success");
+            },
+            error: function(req, status, error) {
+                console.log("AJAX returned with error");
+            }
+        };
+
+        $.ajax(ajaxOptions);
     }
 
     var createSnippet = function(snippetAddButton) {
@@ -235,7 +274,7 @@ var snippet = (function() {
                 $('#snippetTopicSearchDisplay').text(topicname);
 
                 // Select topic in topic panel
-                $('#topicPanel div.panel-body li').removeClass('active');
+                $('#topicPanel div.panel-body li.topicItem').removeClass('active');
                 that.addClass('active');
                 that.find('a span').text(count);
             },
@@ -329,6 +368,7 @@ var snippet = (function() {
         set isTopicEditModeEnabled(bool)  { isTopicEditModeEnabled = bool; },
 
         createTopic:createTopic,
+        deleteTopic:deleteTopic,
         createSnippet:createSnippet,
         displayTopicSnippet:displayTopicSnippet,
         showSnippetsHorizontal:showSnippetsHorizontal,
@@ -368,6 +408,7 @@ $(document).ready(function() {
         snippet.isTopicPopoverDisplayed = false;
     });
 
+    // Topic 'edit' button is clicked - enable delete buttons on each topic name
     $('#topicEdit').click(function() {
         isTopicEditModeEnabled = !isTopicEditModeEnabled;
         if (isTopicEditModeEnabled) {
@@ -380,9 +421,12 @@ $(document).ready(function() {
     // Topic delete button in topic panel is clicked - will delete topic here
     $('#topicPanel div.panel-body li.topicItem span.topicDelete').click(function() {
         if ($(this).hasClass('topicDeleteInvisible')) {
+            // Don't delete the general topic
             console.log("Don't delete this topic item");
         } else {
+            // Delete the topic here
             console.log("Delete topic item - clicked delete icon");
+            snippet.deleteTopic($(this).parent());
         }
     });
     // Same as $('#topicPanel ... span.topicDelete').click(...), but used to add event to new topic

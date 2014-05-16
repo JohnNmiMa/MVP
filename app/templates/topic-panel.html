@@ -19,16 +19,18 @@
                 </form>
             </li>
             {% for topic in topics %}
-            <li class='list-group-item topicItem'>
                 {% if topic.topic == 'General' %}
-                    <span class="fa fa-circle topicDelete topicDeleteInvisible" style="display:none"></span>
-                    <a href="#">General</a>
+                    <li class='list-group-item topicItem topicGeneralItem'>
+                        <span class="fa fa-circle topicDelete topicDeleteInvisible" style="display:none"></span>
+                        <a href="#" class="topicName">General</a>
                 {% else %}
-                    <span class="fa fa-minus-circle topicDelete" style="display:none"></span>
-                    <a href="#">{{topic.topic}}</a>
+                    <li class='list-group-item topicItem'>
+                        <span class="fa fa-minus-circle topicDelete" style="display:none"></span>
+                        <a href="#" class="topicName">{{topic.topic}}</a>
                 {% endif %}
-                <span class='badge pull-right'>{{topic.snippets.count()}}</span>
-            </li>
+                        <span class='badge pull-right topicCounter'>{{topic.snippets.count()}}</span>
+                        <span class='topicID' style='display:none'>{{topic.id}}</span>
+                    </li>
             {% endfor %}
         </ul>
     </div>

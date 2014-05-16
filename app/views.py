@@ -51,14 +51,19 @@ def user():
     return render_template('user.html', name=g.user.name, topics = topics, page='home')
 
 
-@app.route('/topic/<new_topic>', methods = ['POST'])
+@app.route('/topic/<atopic>', methods = ['POST', 'DELETE'])
 @login_required
-def topic(new_topic):
+def topic(atopic):
     if request.method == 'POST':
-        t = Topic(topic = new_topic, author = g.user)
+        t = Topic(topic = atopic, author = g.user)
         db.session.add(t)
         db.session.commit()
-    return jsonify(id=t.id)
+        return jsonify(id=t.id)
+
+    elif request.method == 'DELETE':
+        print('Delete topic ' + atopic)
+        return jsonify(id=atopic)
+
 
 @app.route('/snippets/<topic>', methods = ['POST', 'GET'])
 @login_required
