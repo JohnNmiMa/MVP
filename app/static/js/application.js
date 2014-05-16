@@ -371,17 +371,21 @@ $(document).ready(function() {
     $('#topicEdit').click(function() {
         isTopicEditModeEnabled = !isTopicEditModeEnabled;
         if (isTopicEditModeEnabled) {
-            $('#topicPanel li span.fa.fa-minus-circle').show();
+            $('#topicPanel li span.topicDelete').show();
         } else {
-            $('#topicPanel li span.fa.fa-minus-circle').hide();
+            $('#topicPanel li span.fa.topicDelete').hide();
         }
     });
 
-    // Topic in topic panel is clicked
-    // This won't work as new topic items added will not have click event attached to them:
-    $('#topicPanel div.panel-body li.topicItem span.fa.fa-minus-circle').click(function() {
-        console.log("Delete topic item - clicked delete icon");
+    // Topic delete button in topic panel is clicked - will delete topic here
+    $('#topicPanel div.panel-body li.topicItem span.topicDelete').click(function() {
+        if ($(this).hasClass('topicDeleteInvisible')) {
+            console.log("Don't delete this topic item");
+        } else {
+            console.log("Delete topic item - clicked delete icon");
+        }
     });
+    // Same as $('#topicPanel ... span.topicDelete').click(...), but used to add event to new topic
     $('#topicPanel div.panel-body').on('click', 'li.topicItem', function() {
         if (!isTopicEditModeEnabled) {
             snippet.displayTopicSnippet(this);
