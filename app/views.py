@@ -62,7 +62,28 @@ def topic(atopic):
 
     elif request.method == 'DELETE':
         print('Delete topic ' + atopic)
-        return jsonify(id=atopic)
+
+        #pdb.set_trace()
+        topic = g.user.topics.filter_by(id=atopic).first()
+        if topic is None:
+            return jsonify(error=404, text='Invalid topic id'), 404
+
+        # Get all snippets in the topic
+        snippets = topic.snippets.all()
+
+        # Move all snippets in the topic to be removed to the 'General' topic
+        general_topic = g.user.topics.filter_by(topic='General').first()
+        snippets_added_to_general = 0
+        for snippet in snippets:
+            snippets_added_to_general += 1
+            snippet.topic = general_topic
+            print('Snippet in {} is {}').format(topic.topic, snippet.id)
+
+        db.session.delete(topic)
+        db.session.commit()
+
+        # Return the number of topics added to the 'General' list
+        return jsonify(id=atopic, new_general_snippets=snippets_added_to_general)
 
 
 @app.route('/snippets/<topic>', methods = ['POST', 'GET'])

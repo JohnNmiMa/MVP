@@ -34,9 +34,6 @@ class Topic(db.Model):
     user_id =  db.Column(db.Integer, db.ForeignKey('user.id'))
     snippets = db.relationship('Snippet', order_by='desc(Snippet.timestamp)', backref = 'topic', lazy = 'dynamic')
 
-    #def get_time_ordered_snippets(self):
-        #Snippet.query.join(
-
     def __repr__(self):
         return '<Topic %r>' % (self.topic)
 

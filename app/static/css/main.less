@@ -111,6 +111,10 @@ nav div.navbar-header {
 @default-rightpanel-width-narrow: 74.9%;
 @default-rightpanel-width-wide: 100%;
 @default-topicpanel-width: 25%;
+@icon-color:#999;
+@icon-color-hover:black;
+@icon-color-selected:#78be54;
+@icon-hover-color: darken(@icon-color, 15%);
 #snippetBlock {
     margin:0 15px;
 }
@@ -152,11 +156,17 @@ nav div.navbar-header {
             line-height:21px;
             font-size:1.5em;
         }
+            #topicAdd span.selected {
+                color:@icon-color-selected;
+            }
         #topicEdit {
             position:absolute;
             right:40px;
             line-height:21px;
         }
+            #topicEdit span.selected {
+                color:@icon-color-selected;
+            }
         #topicPanel ul {
             padding: 0;
         }
@@ -201,9 +211,6 @@ nav div.navbar-header {
     /*
      * Snippet Bar
      */
-    @icon-color:#999;
-    @icon-color-selected:black;
-    @icon-hover-color: darken(@icon-color, 15%);
     #snippetBar {
         position: relative;
         margin-top: 0;
@@ -231,6 +238,12 @@ nav div.navbar-header {
             #snippetAdd.hide {
                 display:none;
             }
+            #snippetAdd span.selected {
+                color:@icon-color-selected;
+            }
+            #snippetAdd span.selected:hover {
+                color:@icon-color-selected;
+            }
         #rightSnippetBar {
             position:absolute;
             right: 0;
@@ -245,7 +258,7 @@ nav div.navbar-header {
             color:@icon-color;
         }
         #rightSnippetBar span.active {
-            color:@icon-color-selected;
+            color:@icon-color-hover;
         }
         #rightSnippetBar span i {
             color:inherit;
@@ -327,7 +340,7 @@ nav div.navbar-header {
                         }
                         #snippetSave {
                             right:0;
-                            background-color:green;
+                            background-color:@icon-color-selected;
                         }
 
                     .snippetTextAreas {

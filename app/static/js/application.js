@@ -37,10 +37,12 @@ var snippet = (function() {
         var t = buildTopic(topicName, id);
 
         // Create a new snippet with the form data
-        $('#topicFormContainer').after(t);
+        // Show it right after the 'General' topic
+        $('#topicPanel .list-group li.topicGeneralItem').after(t);
 
         $('#topicForm')[0].reset();
         $('#topicFormContainer').hide();
+        $('#topicAdd span').removeClass('selected');
         isTopicAddModeEnabled = false;
     }
 
@@ -100,17 +102,15 @@ var snippet = (function() {
     }
 
     var incrementTopicCount = function() {
-        var badge = {},
+        var $badge = $('#topicPanel .list-group li.topicItem.active span.topicCounter'),
             badge_count = 0;
 
-        if ($('#topicPanel .list-group li.topicItem.active span.topicCounter').length) {
-            badge = $('#topicPanel .list-group li.topicItem.active span.topicCounter');
-        } else {
+        if ($badge.length == 0) {
             // No topic is active, so increment the General topic
-            badge = $('#topicPanel .list-group li.topicGeneralItem span.topicCounter');
+            $badge = $('#topicPanel .list-group li.topicGeneralItem span.topicCounter');
         }
-        badge_count = Number(badge.text());
-        badge.text(badge_count + 1);
+        badge_count = Number($badge.text());
+        $badge.text(badge_count + 1);
     }
 
     var updateTopicSnippets = function(snippets) {
@@ -182,6 +182,26 @@ var snippet = (function() {
         return false;
     }
 
+    var removeDeletedTopic = function(topicItem, numGeneralSnippets) {
+        var topicName = $(topicItem).find('a').clone().children().remove().end().text().replace(/^\s+|\s+$/g,'');
+
+        // Remove the topic from the topic panel
+        topicItem.remove();
+
+        // Select the 'General' element's topic counter, and increment by numGeneralSnippets
+        $generals_badge = $('#topicPanel .list-group li.topicGeneralItem span.topicCounter');
+        badge_count = Number($generals_badge.text());
+        $generals_badge.text(badge_count + numGeneralSnippets);
+
+        // If the deleted topic was displayed in the snippet panel,
+        // clear the snippet panel.
+        topicDisplayedInSnippetPanel = $('#snippetTopicSearchDisplay').text();
+        if (topicDisplayedInSnippetPanel == topicName) {
+            $('#userSnippets').empty();
+            $('#snippetTopicSearchDisplay').empty();
+        }
+    }
+
     var deleteTopic = function(topicItem) {
         /*
          * Deletes a topic from the list of topics.
@@ -189,8 +209,7 @@ var snippet = (function() {
          * - Removes the topic name from the topic panel
          */
 
-        var that = $(topicItem),
-            //topicName = $(topicItem).find('a').clone().children().remove().end().text().replace(/^\s+|\s+$/g,''),
+        var topicName = $(topicItem).find('a').clone().children().remove().end().text().replace(/^\s+|\s+$/g,''),
             topicID = $(topicItem).find('span.topicID').text();
 
         // Use AJAX to delete the new topic
@@ -199,7 +218,9 @@ var snippet = (function() {
             type: 'DELETE',
             dataType: "json",
             success: function(results) {
-                console.log("AJAX returned with success");
+                console.log("Deleted topic " + topicName + " - id " + results.id + ", added " +
+                             results.new_general_snippets + " to the General topic");
+                removeDeletedTopic(topicItem, results.new_general_snippets);
             },
             error: function(req, status, error) {
                 console.log("AJAX returned with error");
@@ -250,7 +271,7 @@ var snippet = (function() {
     };
 
 
-    var displayTopicSnippet = function(topicItem) {
+    var displayTopicSnippets = function(topicItem) {
         /*
          * Displays the selected topic in the snippet panel,
          * sends an AJAX 'GET' request to get the list of snippets
@@ -374,7 +395,7 @@ var snippet = (function() {
         createTopic:createTopic,
         deleteTopic:deleteTopic,
         createSnippet:createSnippet,
-        displayTopicSnippet:displayTopicSnippet,
+        displayTopicSnippets:displayTopicSnippets,
         showSnippetsHorizontal:showSnippetsHorizontal,
         showSnippetsVertical:showSnippetsVertical,
         showSnippetTitlesOnly:showSnippetTitlesOnly,
@@ -409,12 +430,14 @@ $(document).ready(function() {
             snippet.isTopicAddModeEnabled = !snippet.isTopicAddModeEnabled;
             if (snippet.isTopicAddModeEnabled) {
                 $('#topicFormContainer').show();
+                $(this).find('span').addClass('selected');
 
                 // Clear out the form and set the focus
                 $('#topicForm')[0].reset();
                 $('#topicNameField').focus();
             } else {
                 $('#topicFormContainer').hide();
+                $(this).find('span').removeClass('selected');
 
                 // Remove the popover if displayed
                 $('#topicNameField').popover('hide');
@@ -429,27 +452,50 @@ $(document).ready(function() {
             snippet.isTopicEditModeEnabled = !snippet.isTopicEditModeEnabled;
             if (snippet.isTopicEditModeEnabled) {
                 $('#topicPanel li span.topicDelete').show();
+                $(this).find('span').addClass('selected');
             } else {
                 $('#topicPanel li span.fa.topicDelete').hide();
+                $(this).find('span').removeClass('selected');
             }
         }
     });
 
     // Topic delete button in topic panel is clicked - will delete topic here
-    $('#topicPanel div.panel-body li.topicItem span.topicDelete').click(function() {
-        if ($(this).hasClass('topicDeleteInvisible')) {
+    $('#topicPanel').on('click', 'span.topicDelete', function() {
+        var $listItem = $(this).parent();
+        if ($listItem.hasClass('topicGeneralItem')) {
             // Don't delete the general topic
-            console.log("Don't delete this topic item");
         } else {
             // Delete the topic here
-            console.log("Delete topic item - clicked delete icon");
-            snippet.deleteTopic($(this).parent());
+            snippet.deleteTopic($listItem);
         }
     });
-    // Same as $('#topicPanel ... span.topicDelete').click(...), but used to add event to new topic
-    $('#topicPanel div.panel-body').on('click', 'li.topicItem', function() {
-        if (!snippet.isTopicEditModeEnabled) {
-            snippet.displayTopicSnippet(this);
+
+    var notifyInEditMode = function(times) {
+        $editIcon = $('#topicEdit span');
+        if (times > 0) {
+            if (times %2) {
+                $editIcon.addClass('fa-rotate-90');
+            } else {
+                $editIcon.removeClass('fa-rotate-90');
+            }
+            times -= 1;
+            setTimeout(notifyInEditMode, 50, times);
+        } else {
+            $editIcon.removeClass('fa-rotate-90');
+        }
+    }
+
+    // A topic was clicked, so display its snippets in the snippet panel
+    $('#topicPanel').on('click', 'li.topicItem', function() {
+        if (snippet.isTopicEditModeEnabled) {
+            if ($(this).hasClass('topicGeneralItem')) {
+                // User might get confused when clicking on the 'General' topic when in edit mode.
+                // So alert them somehow as to their condition
+                notifyInEditMode(7);
+            }
+        } else {
+            snippet.displayTopicSnippets(this);
         }
     });
 
@@ -479,6 +525,7 @@ $(document).ready(function() {
     $('#snippetAdd').click(function() {
         $('#snippetForm').show();
         $('#titleField').focus();
+        $(this).find('span').addClass('selected');
     });
 
     // 'Columns' icon in snippet panel is clicked
@@ -498,12 +545,14 @@ $(document).ready(function() {
     // New snippet 'save' button clicked
     $('#snippetSave').click(function() {
         snippet.createSnippet(this);
+        $('#snippetAdd').find('span').removeClass('selected');
     });
 
     // New snippet 'cancel' button clicked
     $('#snippetCancel').click(function() {
         $('#snippetForm').hide();
         $('#snippetForm')[0].reset();
+        $('#snippetAdd').find('span').removeClass('selected');
     });
 
     // Eatup the form keyboard 'enter' event, so the user must click the submit button

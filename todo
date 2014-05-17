@@ -66,9 +66,8 @@ Delete "Topics"
   - Figure out UI - DONE
     - prompt user to delete topic
   - Send request to remove the topic id resource - DONE
-    - In server, move all snippets in the topic to the General topic
-    - In server, delete the topic.
-      - Make sure the user.topics query will not return the topic in the list
+    - In server, move all snippets in the topic to the General topic - DONE
+    - In server, delete the topic. - DONE
 
 Snippet search capabilities
   - Add user snippet counter to search box upon login
