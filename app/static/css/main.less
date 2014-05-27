@@ -304,6 +304,7 @@ nav div.navbar-header {
                     position:relative;
                     float:left;
                     width:97%;
+                    border-radius:10px;
                     .make-row();
                 }
                     .snippetFade {
@@ -313,13 +314,29 @@ nav div.navbar-header {
                         width:100%;    
                         height:100%;    
                         z-index:500;
-                        background: rgba(255, 255, 255, 0.2);
+                        border-radius:10px;
+                        background: rgba(245, 245, 245, 0.4);
                     }
+                        .snippetFade .snip-it {
+                            margin-left:20px;
+                            color:#fff;
+                            font-family: 'Rochester', cursive;
+                            font-size:16px;
+                            border: 1px solid rgba(0, 0, 0, 0.4);
+                            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+                            height:27px;
+                        }
+                        .snippetFade .snippetDelete {
+                            margin-left:10px;
+                            color:#d9534f;
+                            background-image:none;
+                            font-size:14px;
+                            height:27px;
+                        }
                         .snippetFade .snippetEdit {
                             margin-left:30px;
-                            color:#555;
-                            background-color:white;
-                            cursor: pointer;
+                            border: 1px solid rgba(0, 0, 0, 0.4);
+                            background-image:none;
                         }
 
                     .snippetTitle {

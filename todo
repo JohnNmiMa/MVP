@@ -63,8 +63,8 @@ Delete "Snippets"
     - Redesign the snippet html/css - DONE
     - Add the new design - DONE
     - Add the snippet id to the snippet - DONE
-    - Add hover effect for snippet selector
-    - Add "Snip it", "Delete", and "Edit" to hover div
+    - Add hover effect for snippet selector - DONE
+    - Add "Snip it", "Delete", and "Edit" to hover div - DONE
   - Update db in server
   - Update UI to by removing the snippet from the DOM
 

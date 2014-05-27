@@ -54,8 +54,11 @@ var snippet = (function() {
         ss +=     '    </div>';
         ss +=     '    <div class="snippetContent">';
         ss +=     '        <div class="snippetFade" style="display:none">';
-        //ss +=     '            <a class="snippetEdit" href="#"><span class="fa fa-pencil-square fa-2x"></span></a>';
-        ss +=     '            <span class="fa fa-pencil-square fa-2x snippetEdit"></span>';
+        ss +=     '            <button type="button" class="btn btn-danger btn-xs snip-it">Snip it</button>';
+        ss +=     '            <button type="button" class="btn btn-default btn-xs snippetDelete">delete</button>';
+        ss +=     '            <button type="button" class="btn btn-default btn-xs snippetEdit">';
+        ss +=     '                <span class="glyphicon glyphicon-pencil"></span>';
+        ss +=     '            </button>';
         ss +=     '        </div>';
 
         // Add the snippet id in an invisible place
