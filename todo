@@ -51,23 +51,25 @@ Create "Topics"
       - if topic already exists - tell user to pick a new topic name - DONE
     - Update the UI with the new topic - DONE
 
-Delete "Snippets"
-  - Add UI to delete a snippet
-    - Redesign the snippet html/css
-    - Add the new design
-    - Add the snippet id to the snippet
-  - Update db in server
-  - Update UI to by removing the snippet from the DOM
-
-Change snippet public or private state
-  - If snippet is owned by logged in user, toggle public or private
-
 Delete "Topics"
   - Figure out UI - DONE
     - prompt user to delete topic
   - Send request to remove the topic id resource - DONE
     - In server, move all snippets in the topic to the General topic - DONE
     - In server, delete the topic. - DONE
+
+Delete "Snippets"
+  - Add UI to delete a snippet - DONE
+    - Redesign the snippet html/css - DONE
+    - Add the new design - DONE
+    - Add the snippet id to the snippet - DONE
+    - Add hover effect for snippet selector
+    - Add "Snip it", "Delete", and "Edit" to hover div
+  - Update db in server
+  - Update UI to by removing the snippet from the DOM
+
+Change snippet public or private state
+  - If snippet is owned by logged in user, toggle public or private
 
 Snippet search capabilities
   - Add user snippet counter to search box upon login
@@ -81,6 +83,9 @@ Snippet search capabilities
 Edit "Topics"
   - Figure out UI
   - if topic is renamed, update name in database
+
+Edit "Snippets"
+  - Figure out UI
 
 Associate snippet with a topic or multiple topics
   - Update database to support a many-to-many relationship

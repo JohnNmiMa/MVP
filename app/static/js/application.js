@@ -53,6 +53,10 @@ var snippet = (function() {
         ss +=     '        <a href="#"><span class="fa fa-circle-o fa-2x"></span></a>';
         ss +=     '    </div>';
         ss +=     '    <div class="snippetContent">';
+        ss +=     '        <div class="snippetFade" style="display:none">';
+        //ss +=     '            <a class="snippetEdit" href="#"><span class="fa fa-pencil-square fa-2x"></span></a>';
+        ss +=     '            <span class="fa fa-pencil-square fa-2x snippetEdit"></span>';
+        ss +=     '        </div>';
 
         // Add the snippet id in an invisible place
         ss +=     '        <span class="snippetID" style="display:none">snippet_id</span>';
@@ -86,6 +90,24 @@ var snippet = (function() {
     }
 
 
+    // Enable Bootstrap modal-popover for the snippet selector
+    var bindSnippetSelector = function(snippet) {
+
+        // Enable Bootstrap modal-popover
+        var $snippetSelector = $(snippet).find('div.snippetSelector');
+
+        // Bind a click event and its handler to the new snippet
+        //$(snippetSelector).bind('click', function() {
+        $snippetSelector.bind('mouseenter', function() {
+            console.log("Snippet Selector is selected");
+            $(snippet).find('div.snippetFade').show();
+        });
+        $(snippet).bind('mouseleave', function() {
+            console.log("Snippet Selector is NOT selected");
+            $(snippet).find('div.snippetFade').hide();
+        });
+    }
+
     var displayNewSnippet = function(snippet_id) {
         /* Adds a new snippet to the DOM */
         var title = $('#titleField').val(),
@@ -99,6 +121,10 @@ var snippet = (function() {
         
         // Create a new snippet with the form data
         $('#userSnippets').prepend(ss);
+
+        // Add a popover to the snippet selector
+        snippet = $('#userSnippets .snippet:first-child');
+        bindSnippetSelector(snippet);
     }
 
     var incrementTopicCount = function() {
@@ -131,6 +157,10 @@ var snippet = (function() {
             code = snippet.code;
             $('#userSnippets').append(buildSnippet(title, description, code));
             count += 1;
+
+            // Add a popover to the snippet selector
+            newSnippet = $('#userSnippets .snippet:last-child');
+            bindSnippetSelector(newSnippet);
         }
         return count;
     }
@@ -291,7 +321,6 @@ var snippet = (function() {
             dataType: "json",
             success: function(results) {
                 var count = updateTopicSnippets(results);
-                console.log("AJAX returned with a list of snippets");
 
                 // Update the UI to show the currently displayed topic snippets
                 $('#snippetTopicSearchDisplay').text(topicname);
@@ -538,38 +567,6 @@ $(document).ready(function() {
     $('#snippetTitleOnlyIcon').click(snippet.showSnippetTitlesOnly);
 
 
-    /* 
-     * Snippet Controls
-     */
-
-    // New snippet 'save' button clicked
-    $('#snippetSave').click(function() {
-        snippet.createSnippet(this);
-        $('#snippetAdd').find('span').removeClass('selected');
-    });
-
-    // New snippet 'cancel' button clicked
-    $('#snippetCancel').click(function() {
-        $('#snippetForm').hide();
-        $('#snippetForm')[0].reset();
-        $('#snippetAdd').find('span').removeClass('selected');
-    });
-
-    // Eatup the form keyboard 'enter' event, so the user must click the submit button
-    $("#snippetForm").bind("keyup keypress", function(event) {
-        var code = event.keyCode || event.which,
-            target = event.target.nodeName;
-
-        // Don't eat up the 'enter' key when typing in <textarea> tags.
-        if (target.toUpperCase().search('TEXTAREA') == -1) {
-            if (code == 13) {
-                event.preventDefault();
-                return false;
-            }
-        }
-    });
-
-
     var showTopicPanel = function(panelWidthRatio, callback) {
         var topicPanelWidth = $('#topicPanel').width(),
             snippetPanelWidth = $('#snippetPanel').width(),
@@ -633,6 +630,47 @@ $(document).ready(function() {
         }
     };
     $('#toggleIcon').click(updateTopicPanel);
+
+
+    /* 
+     * Snippet Form Controls
+     */
+
+    // New snippet 'save' button clicked
+    $('#snippetSave').click(function() {
+        snippet.createSnippet(this);
+        $('#snippetAdd').find('span').removeClass('selected');
+    });
+
+    // New snippet 'cancel' button clicked
+    $('#snippetCancel').click(function() {
+        $('#snippetForm').hide();
+        $('#snippetForm')[0].reset();
+        $('#snippetAdd').find('span').removeClass('selected');
+    });
+
+    // Eatup the form keyboard 'enter' event, so the user must click the submit button
+    $("#snippetForm").bind("keyup keypress", function(event) {
+        var code = event.keyCode || event.which,
+            target = event.target.nodeName;
+
+        // Don't eat up the 'enter' key when typing in <textarea> tags.
+        if (target.toUpperCase().search('TEXTAREA') == -1) {
+            if (code == 13) {
+                event.preventDefault();
+                return false;
+            }
+        }
+    });
+
+    // Snippet Selector
+    $('.snippetSelector').on('mouseenter', function() {
+        console.log("Snippet Selector is selected");
+    });
+
+    $('.snippetSelector').on('mouseleave', function() {
+        console.log("Snippet Selector is not selected");
+    });
 
 });
 
