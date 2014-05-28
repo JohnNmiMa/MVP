@@ -115,7 +115,8 @@ Bugs:
 * Title length can be created bigger than desired.
 * Title field does not wrap.
 * Topic count is not incremented when a new snippet is added - DONE
-* When new topic is added, put it in the list below the 'General' topic
+* When new topic is added, put it in the list below the 'General' topic - DONE
+* When switching topics, snippets are not displayed in the currently selected snippet layout - DONE
 
 --------
 Persistance Schema

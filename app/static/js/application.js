@@ -14,6 +14,7 @@ var snippet = (function() {
         SNIPPET_CODE_ROW =  'snippetCode-row',
         snippetDesLayout =  SNIPPET_DES_COL,
         snippetCodeLayout = SNIPPET_CODE_COL,
+        snippetNoneLayout = false;
         isTopicPopoverDisplayed = false;
         isTopicEditModeEnabled = false;
         isTopicAddModeEnabled = false;
@@ -71,7 +72,11 @@ var snippet = (function() {
 
         if (description) {
             // Only add the description section if a description was entered
-            ss += '                <div class="' + snippetDesLayout + '">';
+            if (snippetNoneLayout) {
+              ss += '                <div class="' + snippetDesLayout + '" style="display:none">';
+            } else {
+              ss += '                <div class="' + snippetDesLayout + '">';
+            }
             ss += '                    <p class="snippetDesStyle">' + description + '</p>';
             ss += '                </div>';
         } else {
@@ -80,7 +85,11 @@ var snippet = (function() {
 
         if (code) {
             // Only add the code section if a description was entered
-            ss += '                <div class="' + snippetCodeLayout + '">';
+            if (snippetNoneLayout) {
+              ss += '                <div class="' + snippetCodeLayout + '" style="display:none">';
+            } else {
+              ss += '                <div class="' + snippetCodeLayout + '">';
+            }
             ss += '                    <pre class="snippetCodeStyle">' + code + '</pre>';
             ss += '                </div>';
         }
@@ -398,6 +407,7 @@ var snippet = (function() {
         // Save away the layout state
         snippetDesLayout = SNIPPET_DES_COL;
         snippetCodeLayout = SNIPPET_CODE_COL;
+        snippetNoneLayout = false;
     };
 
     var showSnippetsVertical = function() {
@@ -415,6 +425,7 @@ var snippet = (function() {
         // Save away the layout state
         snippetDesLayout = SNIPPET_DES_ROW;
         snippetCodeLayout = SNIPPET_CODE_ROW;
+        snippetNoneLayout = false;
     };
 
     var showSnippetTitlesOnly = function() {
@@ -428,6 +439,9 @@ var snippet = (function() {
         $('#snippetColIcon span').removeClass('active');
         $('#snippetRowIcon span').removeClass('active');
         $('#snippetTitleOnlyIcon span').addClass('active');
+
+        // Save away the layout state
+        snippetNoneLayout = true;
     };
 
 
