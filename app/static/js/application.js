@@ -118,8 +118,6 @@ var snippet = (function() {
 
         // Bind the snippet delete button
         $snippet.find('button.snippetDelete').bind('click', function() {
-            var snippetID = $snippet.find('span.snippetID').text();
-            console.log("Delete the snippet id " + snippetID);
             deleteSnippet($snippet);
         });
     }

@@ -110,7 +110,7 @@ Implement text editor for description
 
 Implement Gear
   - Add "Setting" model in server
-  - When a topic is added, save away last_used_topic in settings.
+  - Save away last_used_topic in settings upon logout.
     - When the user logs in, display the last_used topic.
   - Create Settings UI
   - Set default for snippet creation to public or private

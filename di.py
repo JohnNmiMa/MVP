@@ -20,13 +20,13 @@ snipf = {
         </ul>
 """,
     "code": """
-#class Dog:
-#\"\"\" This is a docstring for the Dog class. \"\"\"
-#pass
-#<pre class='snippetCommandStyle'>
-#>>> d = Dog()
-#>>> Dog.__doc__
-#>>> ' This is a docstring for the Dog class. '
+class Dog:
+\"\"\" This is a docstring for the Dog class. \"\"\"
+    pass
+<pre class='snippetCommandStyle'>
+>>> d = Dog()
+>>> Dog.__doc__
+>>> ' This is a docstring for the Dog class. '
 """
 }
 
@@ -41,7 +41,7 @@ snipe = {
 """,
     "code": """
 class Dog:
-sound = 'bark'
+    sound = 'bark'
             <pre class="snippetCommandStyle">
 >>> print Dog.sound
 bark
