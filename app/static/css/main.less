@@ -113,7 +113,7 @@ nav div.navbar-header {
 @default-topicpanel-width: 25%;
 @icon-color:#999;
 @icon-color-hover:black;
-@icon-color-selected:#78be54;
+@icon-color-selected:@brand-success;
 @icon-hover-color: darken(@icon-color, 15%);
 #snippetBlock {
     margin:0 15px;
@@ -313,16 +313,16 @@ nav div.navbar-header {
                         top:0;
                         width:100%;    
                         height:100%;    
+                        margin:0 15px;
+                        margin-right:50px;
                         z-index:500;
-                        border-radius:10px;
-                        background: rgba(245, 245, 245, 0.4);
+                        border-radius:6px;
+                        background: rgba(245, 245, 245, 0.3);
                     }
                         .snippetFade .snip-it {
-                            margin-left:20px;
                             color:#fff;
                             font-family: 'Rochester', cursive;
                             font-size:16px;
-                            border: 1px solid rgba(0, 0, 0, 0.4);
                             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
                             height:27px;
                         }
@@ -367,7 +367,7 @@ nav div.navbar-header {
                         }
                         #snippetCancel {
                             right:50px;
-                            background-color:red;
+                            background-color:@brand-danger;
                         }
                         #snippetSave {
                             right:0;

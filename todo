@@ -68,10 +68,7 @@ Delete "Snippets"
   - Update db in server - DONE
   - Update UI to by removing the snippet from the DOM - DONE
 
-Add topic and snippet delete confirmation dialog
-
-Change snippet public or private state
-  - If snippet is owned by logged in user, toggle public or private
+Add topic and snippet delete confirmation dialogs
 
 Snippet search capabilities
   - Add user snippet counter to search box upon login
@@ -89,17 +86,27 @@ Edit "Topics"
   - if topic is renamed, update name in database
 
 Edit "Snippets"
-  - Figure out UI
+  - Add revised snippetForm
+    - add public/private icon (eye)
+    - add topic selector
+    - add language selector for jQuery ACE
+    - add cancel button
 
-Associate snippet with a topic or multiple topics
-  - Update database to support a many-to-many relationship
-  - Provide ability to move to topic
-    - Figure out UI
-    - Update db to remove old topic link and associate snippet to new topic link
-  - Provide ability to add to topic
-    - Figure out UI
-    - Update db to associate snippet to new topic link
-      - show that the snippt belongs in multiple topics
+Change snippet public or private state in Snippet Selector popup
+  - If snippet is owned by logged in user, toggle public or private
+
+Add ability to change individual snippet layout
+  - Add col and row icons to Snippet Selector layout when in Title Only mode
+  - Add title only icon to Snippet Selector layout when NOT in Title Only mode
+  - Add showSnippetHorizontal = function($snippet) {...}
+  - Add showSnippetVertical = function($snippet) {...}
+  - Add showSnippetTitleOnly = function($snippet) {...}
+
+Implement jQuery ACE for code
+  - 
+
+Implement text editor for description
+  - 
 
 Implement Gear
   - Add "Setting" model in server
@@ -109,6 +116,20 @@ Implement Gear
   - Set default for snippet creation to public or private
   - Set user snippet color
   - Set public snippet color
+
+Change DB to something that persists on Heroku (Postgres)
+
+Push to Heroku
+
+Associate snippet with a topic or multiple topics (MAYBE)
+  - Update database to support a many-to-many relationship
+  - Provide ability to move to topic
+    - Figure out UI
+    - Update db to remove old topic link and associate snippet to new topic link
+  - Provide ability to add to topic
+    - Figure out UI
+    - Update db to associate snippet to new topic link
+      - show that the snippt belongs in multiple topics
 
 --------
 Bugs:
