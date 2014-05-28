@@ -47,7 +47,7 @@ var snippet = (function() {
     }
 
 
-    var buildSnippet = function(title, description, code) {
+    var buildSnippet = function(title, description, code, id) {
         var ss =  '<div class="snippet">';
         ss +=     '    <div class="snippetSelector">';
         ss +=     '        <a href="#"><span class="fa fa-circle-o fa-2x"></span></a>';
@@ -62,7 +62,7 @@ var snippet = (function() {
         ss +=     '        </div>';
 
         // Add the snippet id in an invisible place
-        ss +=     '        <span class="snippetID" style="display:none">snippet_id</span>';
+        ss +=     '        <span class="snippetID" style="display:none">' + id + '</span>';
 
         // Always add the title, as it should always be present
         ss +=     '        <div class="snippetTitle">';
@@ -94,20 +94,24 @@ var snippet = (function() {
 
 
     // Enable Bootstrap modal-popover for the snippet selector
-    var bindSnippetSelector = function(snippet) {
+    var bindSnippetSelector = function($snippet) {
 
         // Enable Bootstrap modal-popover
-        var $snippetSelector = $(snippet).find('div.snippetSelector');
+        var $snippetSelector = $snippet.find('div.snippetSelector');
 
         // Bind a click event and its handler to the new snippet
-        //$(snippetSelector).bind('click', function() {
         $snippetSelector.bind('mouseenter', function() {
-            console.log("Snippet Selector is selected");
-            $(snippet).find('div.snippetFade').show();
+            $snippet.find('div.snippetFade').show();
         });
-        $(snippet).bind('mouseleave', function() {
-            console.log("Snippet Selector is NOT selected");
-            $(snippet).find('div.snippetFade').hide();
+        $snippet.bind('mouseleave', function() {
+            $snippet.find('div.snippetFade').hide();
+        });
+
+        // Bind the snippet delete button
+        $snippet.find('button.snippetDelete').bind('click', function() {
+            var snippetID = $snippet.find('span.snippetID').text();
+            console.log("Delete the snippet id " + snippetID);
+            deleteSnippet($snippet);
         });
     }
 
@@ -116,7 +120,7 @@ var snippet = (function() {
         var title = $('#titleField').val(),
             description = $('#desField').val(),
             code = $('#codeField').val(),
-            ss = buildSnippet(title, description, code);
+            ss = buildSnippet(title, description, code, snippet_id);
 
         // Reset form and hide it
         $('#snippetForm')[0].reset();
@@ -126,8 +130,8 @@ var snippet = (function() {
         $('#userSnippets').prepend(ss);
 
         // Add a popover to the snippet selector
-        snippet = $('#userSnippets .snippet:first-child');
-        bindSnippetSelector(snippet);
+        $snippet = $('#userSnippets .snippet:first-child');
+        bindSnippetSelector($snippet);
     }
 
     var incrementTopicCount = function() {
@@ -142,12 +146,26 @@ var snippet = (function() {
         $badge.text(badge_count + 1);
     }
 
+    var decrementTopicCount = function() {
+        var $badge = $('#topicPanel .list-group li.topicItem.active span.topicCounter'),
+            badge_count = 0;
+
+        if ($badge.length == 0) {
+            // No topic is active, so don't decrement any topic counter
+            // NOTE: This needs to be fixed. Must find all topics that contained the snippet,
+            //       and decrement each topic counter. (I think this is right)
+            //$badge = $('#topicPanel .list-group li.topicGeneralItem span.topicCounter');
+        }
+        badge_count = Number($badge.text());
+        $badge.text(badge_count - 1);
+    }
+
     var updateTopicSnippets = function(snippets) {
         /* Adds the snippets associated with a topic to the DOM */
         var count = 0,
             key,
             snippet,
-            title = '', description = '', code = '';
+            title = '', description = '', code = '', id = 0;
 
         // Clear panel to get ready to display snippets in the topic
         $('#userSnippets').empty();
@@ -158,12 +176,13 @@ var snippet = (function() {
             title = snippet.title;
             description = snippet.description;
             code = snippet.code;
-            $('#userSnippets').append(buildSnippet(title, description, code));
+            id = snippet.id;
+            $('#userSnippets').append(buildSnippet(title, description, code, id));
             count += 1;
 
             // Add a popover to the snippet selector
-            newSnippet = $('#userSnippets .snippet:last-child');
-            bindSnippetSelector(newSnippet);
+            $newSnippet = $('#userSnippets .snippet:last-child');
+            bindSnippetSelector($newSnippet);
         }
         return count;
     }
@@ -245,7 +264,7 @@ var snippet = (function() {
         var topicName = $(topicItem).find('a').clone().children().remove().end().text().replace(/^\s+|\s+$/g,''),
             topicID = $(topicItem).find('span.topicID').text();
 
-        // Use AJAX to delete the new topic
+        // Use AJAX to delete the topic
         var ajaxOptions = {
             url:'topic/' + topicID,
             type: 'DELETE',
@@ -332,6 +351,28 @@ var snippet = (function() {
                 $('#topicPanel div.panel-body li.topicItem').removeClass('active');
                 that.addClass('active');
                 that.find('a span').text(count);
+            },
+            error: function(req, status, error) {
+                console.log("AJAX returned with error");
+            }
+        };
+
+        $.ajax(ajaxOptions);
+    };
+
+
+    var deleteSnippet = function($snippet) {
+        var snippetID = $snippet.find('span.snippetID').text();
+
+        // Use AJAX to delete the snippet
+        var ajaxOptions = {
+            url:'snippets/' + snippetID,
+            type: 'DELETE',
+            dataType: "json",
+            success: function(results) {
+                console.log("Deleted snippet " + results.id);
+                $snippet.remove();
+                decrementTopicCount()
             },
             error: function(req, status, error) {
                 console.log("AJAX returned with error");

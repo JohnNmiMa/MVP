@@ -59,6 +59,9 @@ class Snippet(db.Model):
     def inc_ref(self):
         self.ref_count += 1;
 
+    def dec_ref(self):
+        self.ref_count -= 1;
+
     def __repr__(self):
         return '<title:%r, description:%r, code:%r, timestamp:%r, public:%r, ref_count:%r>' % \
                (self.title, self.description, self.code, self.timestamp, self.public, self.ref_count)

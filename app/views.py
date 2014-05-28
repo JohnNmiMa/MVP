@@ -86,7 +86,7 @@ def topic(atopic):
         return jsonify(id=atopic, new_general_snippets=snippets_added_to_general)
 
 
-@app.route('/snippets/<topic>', methods = ['POST', 'GET'])
+@app.route('/snippets/<topic>', methods = ['POST', 'GET', 'DELETE'])
 @login_required
 def snippets(topic):
     if request.method == 'POST':
@@ -123,10 +123,31 @@ def snippets(topic):
         reply = {}
         #pdb.set_trace()
         for i, snip in enumerate(snippets):
-            d = dict(title=snip.title, description=snip.description, code=snip.code)
+            d = dict(title=snip.title, description=snip.description, code=snip.code, id=snip.id)
             reply[i] = d
 
         return jsonify(reply)
+
+    elif request.method == 'DELETE':
+        snippet_id = topic
+        topics = g.user.topics
+        snippet = None
+        for topic in topics:
+            snippet = topic.snippets.filter_by(id=snippet_id).first()
+            if snippet != None:
+                break;
+        
+        if snippet == None:
+            return jsonify(error=404, text='Invalid snippet ID'), 404
+
+        if snippet.ref_count == 1:
+            db.session.delete(snippet)
+            db.session.commit()
+            return jsonify(id=snippet.id)
+        else:
+            snippet.dec_ref()
+            db.session.commit()
+            return jsonify(id=0)
 
 
 @app.route('/logout')

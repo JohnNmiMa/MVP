@@ -65,8 +65,10 @@ Delete "Snippets"
     - Add the snippet id to the snippet - DONE
     - Add hover effect for snippet selector - DONE
     - Add "Snip it", "Delete", and "Edit" to hover div - DONE
-  - Update db in server
-  - Update UI to by removing the snippet from the DOM
+  - Update db in server - DONE
+  - Update UI to by removing the snippet from the DOM - DONE
+
+Add topic and snippet delete confirmation dialog
 
 Change snippet public or private state
   - If snippet is owned by logged in user, toggle public or private
@@ -79,6 +81,8 @@ Snippet search capabilities
   - Create db query, and get results
   - Return results in JSON
   - In JavaScript, take JSON, unpack it, and for each snippet, add to page
+    - Remove topic name in snippet bar
+    - Add words "Search Results" in snippet bar
 
 Edit "Topics"
   - Figure out UI
