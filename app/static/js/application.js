@@ -56,10 +56,10 @@ var snippet = (function() {
         ss +=     '    <div class="snippetContent">';
         ss +=     '        <div class="snippetFade" style="display:none">';
         ss +=     '            <button type="button" class="btn btn-danger btn-xs snip-it">Snip it</button>';
-        ss +=     '            <button type="button" class="btn btn-default btn-xs snippetDelete">delete</button>';
         ss +=     '            <button type="button" class="btn btn-default btn-xs snippetEdit">';
-        ss +=     '                <span class="glyphicon glyphicon-pencil"></span>';
+        ss +=     '                <span class="fa fa-pencil fa-lg"></span>';
         ss +=     '            </button>';
+        ss +=     '            <button type="button" class="btn btn-default btn-xs snippetDelete">X</button>';
         ss +=     '        </div>';
 
         // Add the snippet id in an invisible place
@@ -102,7 +102,7 @@ var snippet = (function() {
     }
 
 
-    // Enable Bootstrap modal-popover for the snippet selector
+    // Setup the snippet selector for each newly displayed snippet
     var bindSnippetSelector = function($snippet) {
 
         // Enable Bootstrap modal-popover
