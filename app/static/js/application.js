@@ -59,7 +59,9 @@ var snippet = (function() {
         ss +=     '            <button type="button" class="btn btn-default btn-xs snippetEdit">';
         ss +=     '                <span class="fa fa-pencil fa-lg"></span>';
         ss +=     '            </button>';
-        ss +=     '            <button type="button" class="btn btn-default btn-xs snippetDelete">X</button>';
+        ss +=     '            <button type="button" class="btn btn-default btn-xs snippetDelete">';
+        ss +=     '                <span class="fa fa-times fa-lg"></span>';
+        ss +=     '            </button>';
         ss +=     '        </div>';
 
         // Add the snippet id in an invisible place
