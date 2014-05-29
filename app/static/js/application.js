@@ -57,7 +57,8 @@ var snippet = (function() {
         ss +=     '        <div class="snippetFade" style="display:none">';
         ss +=     '            <button type="button" class="btn btn-danger btn-xs snip-it">Snip it</button>';
         ss +=     '            <button type="button" class="btn btn-default btn-xs snippetEdit">';
-        ss +=     '                <span class="fa fa-pencil fa-lg"></span>';
+        //ss +=     '                <span class="fa fa-pencil fa-lg"></span>';
+        ss +=     '                <span class="glyphicon glyphicon-pencil"></span>';
         ss +=     '            </button>';
         ss +=     '            <button type="button" class="btn btn-default btn-xs snippetDelete">';
         ss +=     '                <span class="fa fa-times fa-lg"></span>';
