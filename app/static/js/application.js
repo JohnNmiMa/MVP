@@ -122,6 +122,7 @@ var snippet = (function() {
         $snippet.find('button.snippetDelete').bind('click', function() {
             $("#snippetDeleteDialog").data('snippetElement', $snippet);
             $("#snippetDeleteDialog").modal('show');
+            $("#snippetDoDelete").focus();
         });
     }
 
@@ -567,6 +568,7 @@ $(document).ready(function() {
             // Prompt user to see if topic should really be deleted
             $("#topicDeleteDialog").data('topicElement', $topic);
             $("#topicDeleteDialog").modal('show');
+            $("#topicDoDelete").focus();
         }
     });
 
@@ -735,6 +737,7 @@ $(document).ready(function() {
 
     // Enable Bootstrap Modal Dialog for the Snippet Selector Delete Button
     $("#snippetDeleteDialog").modal({backdrop:'static', keyboard:false, show:false});
+
     $("#snippetDoDelete").click(function() {
         var $snippet = $("#snippetDeleteDialog").data('snippetElement');
         snippet.deleteSnippet($snippet);
