@@ -68,7 +68,8 @@ Delete "Snippets"
   - Update db in server - DONE
   - Update UI to by removing the snippet from the DOM - DONE
 
-Topic and snippet delete confirmation dialogs
+Topic and snippet delete confirmation dialogs - DONE
+  - Use Bootstrap Modal Dialogs - DONE
 
 Snippet search capabilities
   - Add user snippet counter to search box upon login

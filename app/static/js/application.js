@@ -120,7 +120,8 @@ var snippet = (function() {
 
         // Bind the snippet delete button
         $snippet.find('button.snippetDelete').bind('click', function() {
-            deleteSnippet($snippet);
+            $("#snippetDeleteDialog").data('snippetElement', $snippet);
+            $("#snippetDeleteDialog").modal('show');
         });
     }
 
@@ -482,6 +483,7 @@ var snippet = (function() {
         createTopic:createTopic,
         deleteTopic:deleteTopic,
         createSnippet:createSnippet,
+        deleteSnippet:deleteSnippet,
         displayTopicSnippets:displayTopicSnippets,
         showSnippetsHorizontal:showSnippetsHorizontal,
         showSnippetsVertical:showSnippetsVertical,
@@ -547,14 +549,24 @@ $(document).ready(function() {
         }
     });
 
+    // Enable Bootstrap Modal Dialog for the Topic Delete action
+    $("#topicDeleteDialog").modal({backdrop:'static', keyboard:false, show:false});
+    $("#topicDoDelete").click(function() {
+        // Delete the topic here
+        var $topic = $("#topicDeleteDialog").data('topicElement');
+        snippet.deleteTopic($topic);
+        $("#topicDeleteDialog").modal('hide');
+    });
+
     // Topic delete button in topic panel is clicked - will delete topic here
     $('#topicPanel').on('click', 'span.topicDelete', function() {
-        var $listItem = $(this).parent();
-        if ($listItem.hasClass('topicGeneralItem')) {
+        var $topic = $(this).parent();
+        if ($topic.hasClass('topicGeneralItem')) {
             // Don't delete the general topic
         } else {
-            // Delete the topic here
-            snippet.deleteTopic($listItem);
+            // Prompt user to see if topic should really be deleted
+            $("#topicDeleteDialog").data('topicElement', $topic);
+            $("#topicDeleteDialog").modal('show');
         }
     });
 
@@ -721,13 +733,12 @@ $(document).ready(function() {
         }
     });
 
-    // Snippet Selector
-    $('.snippetSelector').on('mouseenter', function() {
-        console.log("Snippet Selector is selected");
-    });
-
-    $('.snippetSelector').on('mouseleave', function() {
-        console.log("Snippet Selector is not selected");
+    // Enable Bootstrap Modal Dialog for the Snippet Selector Delete Button
+    $("#snippetDeleteDialog").modal({backdrop:'static', keyboard:false, show:false});
+    $("#snippetDoDelete").click(function() {
+        var $snippet = $("#snippetDeleteDialog").data('snippetElement');
+        snippet.deleteSnippet($snippet);
+        $("#snippetDeleteDialog").modal('hide');
     });
 
 });
