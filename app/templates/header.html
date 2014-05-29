@@ -18,8 +18,12 @@
                 {% endif %}
                 <input type="text" id="snippetSearchField" class="form-control reset" placeholder='{{ph}}'>
                 <div id="snippetSearchSelectorDiv">
-                    <span id="personalSnippetCounter" class="badge left">5</span> /
-                    <span id="publicSnippetCounter" class="badge right">1050</span>
+                    {% if name %}
+                        <span id="personalSnippetCounter" class="badge left">5</span> /
+                        <span id="publicSnippetCounter" class="badge right">1050</span>
+                    {% else %}
+                        <span id="publicSnippetCounter" class="badge right">1050</span>
+                    {% endif %}
                 </div id="">
             </div>
         </form>
