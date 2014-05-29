@@ -85,6 +85,12 @@ Snippet search capabilities
 Edit "Topics"
   - Figure out UI
   - if topic is renamed, update name in database
+    - when clicking on name, replace with input field and add topic name
+    - upon return, grab new topic name
+    - send a PUT with new name and topic id to server
+    - in server, create PUT endpoint /topics/id with new name
+    - persist name in db and return success to client
+    - in client, remove input field, and replace with new topic name
 
 Edit "Snippets"
   - Add revised snippetForm
@@ -131,6 +137,50 @@ Associate snippet with a topic or multiple topics (MAYBE)
     - Figure out UI
     - Update db to associate snippet to new topic link
       - show that the snippt belongs in multiple topics
+
+When deleting topics, query if all snippets should get deleted, or pushed to the General topic
+
+Sort snippets in a topic (Don't sort under General topic)
+  - Sort by time, alphabetically, or custom
+  - Custom sort will require each snippet to be draggable with drag bars
+    - Add the pencil icon to do custom order when in custom sort mode
+
+Add "All" topic to show all topics. This will be useful with the language filter
+
+Implement Language Filter
+
+Add email or ability to forward to another user's inbox
+  - add Inbox, so that other users can forward snippets
+
+iPhone layout:
+* Remove topic and snippet create
+* Show only row and title only layout
+
+Desktop Layout Improvements:
+1) Make topic panel horizontally resizable
+2) Make topic panel span full height of page
+3) Make snippet description flow around code when in columnar layout
+4) Keep Topic Panel & Snippet Bar from scrolling off top of page
+   - maybe make snippet panel scrollable
+5) Make a snippet dragabble to topic
+6) Make better private vs public (eye) icons
+
+Add incremental updates for many snippets
+
+Future:
+1) Persist to local storage for offline support
+2) Figure out how to support other modules (Notes, Todos, Projects, Books, Pomodoro, Scrum-like Backlog etc)
+   - Be able to support in left panel
+   - Be able to load modules
+3) Create native iPhone app
+4) How to add features for payment
+5) Add stats page:
+   - show most used language (use overall, last year, last month, etc)
+   - snippets created over time
+   - public vs private snippets
+   - total users, topics, snippets
+6) Share topics
+7) Add multiple snippet blocks per snippet
 
 --------
 Bugs:
