@@ -9,13 +9,19 @@
             <span class="icon-bar"></span>
         </button>
         <a href="#" class="navbar-brand hidden-xs">SomeCode</a>
-        <form class="snippetSearchForm" role="search">
-            {% if name %}
-                {% set ph = 'Search personal or public snippets' %}
-            {% else %}
-                {% set ph = 'Search public snippets' %}
-            {% endif %}
-            <input type="text" class="form-control" placeholder='{{ph}}'>
+        <form id="snippetSearchForm" role="search">
+            <div id="snippetSearchDiv">
+                {% if name %}
+                    {% set ph = 'Search personal or public snippets' %}
+                {% else %}
+                    {% set ph = 'Search public snippets' %}
+                {% endif %}
+                <input type="text" id="snippetSearchField" class="form-control reset" placeholder='{{ph}}'>
+                <div id="snippetSearchSelectorDiv">
+                    <span id="personalSnippetCounter" class="badge left">5</span> /
+                    <span id="publicSnippetCounter" class="badge right">1050</span>
+                </div id="">
+            </div>
         </form>
     </div>
     <!-- Collection of nav links, forms, and other content for toggling -->

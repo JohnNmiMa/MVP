@@ -73,7 +73,9 @@ Topic and snippet delete confirmation dialogs - DONE
 
 Snippet search capabilities
   - Add user snippet counter to search box upon login
-    - /<topic>/TotalSnippets
+    - Add personal-snippets / public-snippets
+      - /snippets/personal/?...
+      - /snippets/public/?...
     - Return count in JSON
   - Send search query to server (/<user>/SearchSnippet/?<query>
   - Create db query, and get results
@@ -169,7 +171,8 @@ Add incremental updates for many snippets
 
 Future:
 1) Persist to local storage for offline support
-2) Figure out how to support other modules (Notes, Todos, Projects, Books, Pomodoro, Scrum-like Backlog etc)
+2) Figure out how to support other modules:
+   Notes, Todos, Projects, Books, Pomodoro, Scrum-like Backlog etc)
    - Be able to support in left panel
    - Be able to load modules
 3) Create native iPhone app

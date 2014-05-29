@@ -18,6 +18,7 @@ var snippet = (function() {
         isTopicPopoverDisplayed = false;
         isTopicEditModeEnabled = false;
         isTopicAddModeEnabled = false;
+        searchPersonalSnippets = true;
 
     /*
      * Local methods
@@ -490,7 +491,8 @@ var snippet = (function() {
         showSnippetsHorizontal:showSnippetsHorizontal,
         showSnippetsVertical:showSnippetsVertical,
         showSnippetTitlesOnly:showSnippetTitlesOnly,
-        showSigninDialog:showSigninDialog
+        showSigninDialog:showSigninDialog,
+        searchPersonalSnippets:searchPersonalSnippets
     };
 })();
 
@@ -745,5 +747,17 @@ $(document).ready(function() {
         $("#snippetDeleteDialog").modal('hide');
     });
 
+    $("#snippetSearchField").on("focus blur", function() {
+        $("#snippetSearchDiv").toggleClass("focused");
+    });
+
+    $("#personalSnippetCounter").click(function() {
+        snippet.searchPersonalSnippets = true;
+        $("#snippetSearchField").attr("placeholder", "Search personal snippets");
+    });
+    $("#publicSnippetCounter").click(function() {
+        snippet.searchPersonalSnippets = false;
+        $("#snippetSearchField").attr("placeholder", "Search public snippets");
+    });
 });
 
