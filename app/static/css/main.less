@@ -94,6 +94,9 @@ body {
 
 nav div.navbar-header {
 }
+    nav div.navbar-header a.navbar-brand {
+        font-weight:bold;
+    }
     nav form.snippetSearchForm {
         float:left;
         min-width:300px;
@@ -138,6 +141,7 @@ nav div.navbar-header {
         }
         #topicPanel .panel-heading {
             height:42px;
+            padding:10px 5px;
         }
         #topicPanel .panel-body {
             padding:5px 5px;
@@ -145,14 +149,20 @@ nav div.navbar-header {
         #topicPanel .panel-body #topicForm #topicNameField {
             padding:3px 6px;
         }
+        #topicPanel .panel-body span.badge.sit-right {
+            position:absolute;
+            top:4px;
+            right:5px;
+        }
         #topicTitle {
             position:absolute;
             line-height:21px;
             vertical-align:center;
+            font-weight:bold;
         }
         #topicAdd {
             position:absolute;
-            right:10px;
+            right:5px;
             line-height:21px;
             font-size:1.5em;
         }

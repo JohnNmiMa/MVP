@@ -27,7 +27,7 @@ var snippet = (function() {
         var t  = '<li class="list-group-item topicItem">';
             t += '    <span class="fa fa-minus-circle topicDelete" style="display:none"></span>';
             t += '    <a href="#" class="topicName">' + topicName + '</a>';
-            t += '    <span class="badge pull-right topicCounter">0</span>';
+            t += '    <span class="badge sit-right topicCounter">0</span>';
             t += '    <span class="topicID" style="display:none">' + id + '</span>';
             t += '</li>';
 
