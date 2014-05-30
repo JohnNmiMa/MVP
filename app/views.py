@@ -47,8 +47,13 @@ def signin(social):
 @app.route('/user')
 #@login_required
 def user():
-    topics = g.user.topics.all()
-    return render_template('user.html', name=g.user.name, topics = topics, page='home')
+    topics = g.user.topics
+    personal_count = 0
+    for topic in topics:
+        personal_count += topic.snippets.count()
+    
+    return render_template('user.html', name=g.user.name, topics = topics.all(),
+                           page='home', personal_count=personal_count)
 
 
 @app.route('/topic/<atopic>', methods = ['POST', 'DELETE'])

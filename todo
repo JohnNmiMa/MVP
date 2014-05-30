@@ -73,10 +73,9 @@ Topic and snippet delete confirmation dialogs - DONE
 
 Snippet search capabilities
   - Add user snippet counter to search box upon login
-    - Add personal-snippets / public-snippets
-      - /snippets/personal/?...
+    - Add personal-snippets / public-snippets - DONE
+      - /snippets/personal/?... - DONE
       - /snippets/public/?...
-    - Return count in JSON
   - Send search query to server (/<user>/SearchSnippet/?<query>
   - Create db query, and get results
   - Return results in JSON

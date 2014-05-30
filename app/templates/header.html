@@ -19,7 +19,7 @@
                 <input type="text" id="snippetSearchField" class="form-control reset" placeholder='{{ph}}'>
                 <div id="snippetSearchSelectorDiv">
                     {% if name %}
-                        <span id="personalSnippetCounter" class="badge left">5</span> /
+                    <span id="personalSnippetCounter" class="badge left">{{personal_count}}</span> /
                         <span id="publicSnippetCounter" class="badge right">1050</span>
                     {% else %}
                         <span id="publicSnippetCounter" class="badge right">1050</span>
