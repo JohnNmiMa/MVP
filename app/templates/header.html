@@ -12,14 +12,14 @@
         <form id="snippetSearchForm" role="search">
             <div id="snippetSearchDiv">
                 {% if name %}
-                    {% set ph = 'Search personal or public snippets' %}
+                    {% set ph = 'Search personal snippets' %}
                 {% else %}
                     {% set ph = 'Search public snippets' %}
                 {% endif %}
                 <input type="text" id="snippetSearchField" class="form-control reset" placeholder='{{ph}}'>
                 <div id="snippetSearchSelectorDiv">
                     {% if name %}
-                    <span id="personalSnippetCounter" class="badge left">{{personal_count}}</span> /
+                    <span id="personalSnippetCounter" class="badge left selected">{{personal_count}}</span> /
                         <span id="publicSnippetCounter" class="badge right">1050</span>
                     {% else %}
                         <span id="publicSnippetCounter" class="badge right">1050</span>

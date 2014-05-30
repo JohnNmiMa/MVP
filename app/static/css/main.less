@@ -121,7 +121,7 @@ nav div.navbar-header {
             }
             nav #snippetSearchField {
                 float:left;
-                width:210px;
+                width:200px;
                 border-radius:17px;
             }
                 nav #snippetSearchField.reset {
@@ -146,11 +146,17 @@ nav div.navbar-header {
                         color:#5e5e5e;
                         background-color:@user-snippet-code-color;
                     }
+                        nav #snippetSearchSelectorDiv span.left.selected {
+                            border:1px solid #5e5e5e;
+                        }
                     nav #snippetSearchSelectorDiv span.right {
                         margin-right:12px;
                         color:#5e5e5e;
                         background-color:@public-snippet-code-color;
                     }
+                        nav #snippetSearchSelectorDiv span.right.selected {
+                            border:1px solid #5e5e5e;
+                        }
 
     .glyphicon {
         font-size:1.5em;

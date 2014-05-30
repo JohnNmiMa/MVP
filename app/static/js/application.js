@@ -149,7 +149,9 @@ var snippet = (function() {
 
     var incrementTopicCount = function() {
         var $badge = $('#topicPanel .list-group li.topicItem.active span.topicCounter'),
-            badge_count = 0;
+            badge_count = 0,
+            $personal_badge = $('#personalSnippetCounter'),
+            personal_badge_count = 0;
 
         if ($badge.length == 0) {
             // No topic is active, so increment the General topic
@@ -157,11 +159,16 @@ var snippet = (function() {
         }
         badge_count = Number($badge.text());
         $badge.text(badge_count + 1);
+
+        personal_badge_count = Number($personal_badge.text());
+        $personal_badge.text(personal_badge_count + 1);
     }
 
     var decrementTopicCount = function() {
         var $badge = $('#topicPanel .list-group li.topicItem.active span.topicCounter'),
-            badge_count = 0;
+            badge_count = 0,
+            $personal_badge = $('#personalSnippetCounter'),
+            personal_badge_count = 0;
 
         if ($badge.length == 0) {
             // No topic is active, so don't decrement any topic counter
@@ -171,6 +178,9 @@ var snippet = (function() {
         }
         badge_count = Number($badge.text());
         $badge.text(badge_count - 1);
+
+        personal_badge_count = Number($personal_badge.text());
+        $personal_badge.text(personal_badge_count - 1);
     }
 
     var updateTopicSnippets = function(snippets) {
@@ -754,10 +764,14 @@ $(document).ready(function() {
     $("#personalSnippetCounter").click(function() {
         snippet.searchPersonalSnippets = true;
         $("#snippetSearchField").attr("placeholder", "Search personal snippets");
+        $(this).addClass('selected');
+        $("#publicSnippetCounter").removeClass('selected');
     });
     $("#publicSnippetCounter").click(function() {
         snippet.searchPersonalSnippets = false;
         $("#snippetSearchField").attr("placeholder", "Search public snippets");
+        $(this).addClass('selected');
+        $("#personalSnippetCounter").removeClass('selected');
     });
 });
 

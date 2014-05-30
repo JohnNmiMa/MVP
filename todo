@@ -191,6 +191,7 @@ Bugs:
 * Topic count is not incremented when a new snippet is added - DONE
 * When new topic is added, put it in the list below the 'General' topic - DONE
 * When switching topics, snippets are not displayed in the currently selected snippet layout - DONE
+* When logging in, don't default to showing no topic. If first time, show the General topic
 
 --------
 Persistance Schema
