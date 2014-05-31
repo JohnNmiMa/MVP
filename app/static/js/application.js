@@ -18,7 +18,7 @@ var snippet = (function() {
         isTopicPopoverDisplayed = false;
         isTopicEditModeEnabled = false;
         isTopicAddModeEnabled = false;
-        searchPersonalSnippets = true;
+        isPersonalSnippetSearchEnabled = false;
 
     /*
      * Local methods
@@ -346,6 +346,34 @@ var snippet = (function() {
     };
 
 
+    var searchSnippets = function(form) {
+        // Get search string
+
+        searchAccess = (isPersonalSnippetSearchEnabled === true) ? "personal" : "public";
+
+        // Use AJAX to GET a list searched snippets
+        var ajaxOptions = {
+            url:'snippets/search/' + searchAccess,
+            type: 'GET',
+            dataType: "json",
+            data: $(form).serialize(),
+            success: function(results) {
+                //var count = updateSearchSnippets(results);
+
+                // Update the UI to show the currently displayed search snippets
+                //$('#snippetTopicSearchDisplay').text(searchString);
+            },
+            error: function(req, status, error) {
+                console.log("AJAX returned with error");
+            }
+        };
+
+        $.ajax(ajaxOptions);
+        $('#snippetSearchForm')[0].reset();
+        return false;
+    }
+
+
     var displayTopicSnippets = function(topicItem) {
         /*
          * Displays the selected topic in the snippet panel,
@@ -486,23 +514,25 @@ var snippet = (function() {
 
     return {
         // Exported getters and setters
-        get isTopicPopoverDisplayed()     { return isTopicPopoverDisplayed; },
-        set isTopicPopoverDisplayed(bool) { isTopicPopoverDisplayed = bool; },
-        get isTopicEditModeEnabled()      { return isTopicEditModeEnabled; },
-        set isTopicEditModeEnabled(bool)  { isTopicEditModeEnabled = bool; },
-        get isTopicAddModeEnabled()       { return isTopicAddModeEnabled; },
-        set isTopicAddModeEnabled(bool)   { isTopicAddModeEnabled = bool; },
+        get isTopicPopoverDisplayed()            { return isTopicPopoverDisplayed; },
+        set isTopicPopoverDisplayed(bool)        { isTopicPopoverDisplayed = bool; },
+        get isTopicEditModeEnabled()             { return isTopicEditModeEnabled; },
+        set isTopicEditModeEnabled(bool)         { isTopicEditModeEnabled = bool; },
+        get isTopicAddModeEnabled()              { return isTopicAddModeEnabled; },
+        set isTopicAddModeEnabled(bool)          { isTopicAddModeEnabled = bool; },
+        get isPersonalSnippetSearchEnabled()     { return isPersonalSnippetSearchEnabled; },
+        set isPersonalSnippetSearchEnabled(bool) { isPersonalSnippetSearchEnabled = bool; },
 
         createTopic:createTopic,
         deleteTopic:deleteTopic,
         createSnippet:createSnippet,
         deleteSnippet:deleteSnippet,
+        searchSnippets:searchSnippets,
         displayTopicSnippets:displayTopicSnippets,
         showSnippetsHorizontal:showSnippetsHorizontal,
         showSnippetsVertical:showSnippetsVertical,
         showSnippetTitlesOnly:showSnippetTitlesOnly,
-        showSigninDialog:showSigninDialog,
-        searchPersonalSnippets:searchPersonalSnippets
+        showSigninDialog:showSigninDialog
     };
 })();
 
@@ -762,16 +792,20 @@ $(document).ready(function() {
     });
 
     $("#personalSnippetCounter").click(function() {
-        snippet.searchPersonalSnippets = true;
+        snippet.isPersonalSnippetSearchEnabled = true;
         $("#snippetSearchField").attr("placeholder", "Search personal snippets");
         $(this).addClass('selected');
         $("#publicSnippetCounter").removeClass('selected');
     });
     $("#publicSnippetCounter").click(function() {
-        snippet.searchPersonalSnippets = false;
+        snippet.isPersonalSnippetSearchEnabled = false;
         $("#snippetSearchField").attr("placeholder", "Search public snippets");
         $(this).addClass('selected');
         $("#personalSnippetCounter").removeClass('selected');
+    }).trigger('click');
+
+    $('#signout').click(function() {
+        snippet.isPersonalSnippetSearchEnabled = false;
     });
 });
 

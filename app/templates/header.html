@@ -9,14 +9,14 @@
             <span class="icon-bar"></span>
         </button>
         <a href="#" class="navbar-brand hidden-xs">SomeCode</a>
-        <form id="snippetSearchForm" role="search">
+        <form id="snippetSearchForm" name="snippetSearchForm" role="search" onSubmit="return snippet.searchSnippets(this)">
             <div id="snippetSearchDiv">
                 {% if name %}
                     {% set ph = 'Search personal snippets' %}
                 {% else %}
                     {% set ph = 'Search public snippets' %}
                 {% endif %}
-                <input type="text" id="snippetSearchField" class="form-control reset" placeholder='{{ph}}'>
+                <input type="text" id="snippetSearchField" class="form-control reset" name="q" autocomplete="off" placeholder='{{ph}}'>
                 <div id="snippetSearchSelectorDiv">
                     {% if name %}
                     <span id="personalSnippetCounter" class="badge left selected">{{personal_count}}</span> /

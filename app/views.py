@@ -45,7 +45,6 @@ def signin(social):
 
 
 @app.route('/user')
-#@login_required
 def user():
     topics = g.user.topics
     personal_count = 0
@@ -153,6 +152,20 @@ def snippets(topic):
             snippet.dec_ref()
             db.session.commit()
             return jsonify(id=0)
+
+
+@app.route('/snippets/search/personal', methods = ['GET'])
+@login_required
+def search_personal():
+    #pdb.set_trace()
+    print("Sent a personal search request to find '" + request.args['q'] +"'")
+    return jsonify()
+
+@app.route('/snippets/search/public', methods = ['GET'])
+def search_public():
+    #pdb.set_trace()
+    print("Sent a public search request to find '" + request.args['q'] +"'")
+    return jsonify()
 
 
 @app.route('/logout')
