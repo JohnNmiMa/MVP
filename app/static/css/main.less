@@ -313,21 +313,25 @@ nav div.navbar-header {
             position:absolute;
             right: 0;
         }
-        #rightSnippetBar li a {
-            padding-left:0;
-        }
-        #rightSnippetBar .fa-square-o, #rightSnippetBar .fa-plus {
-            margin:2px 0 !important;
-        }
-        #rightSnippetBar span {
-            color:@icon-color;
-        }
-        #rightSnippetBar span.active {
-            color:@icon-color-hover;
-        }
-        #rightSnippetBar span i {
-            color:inherit;
-        }
+            #rightSnippetBar li a {
+                padding-left:0;
+            }
+                #rightSnippetBar li#snippetColIcon a {
+                }
+                    #rightSnippetBar li#snippetColIcon a span.fa-stack {
+                    }
+                        #rightSnippetBar li#snippetColIcon a span i.fa-square-o {
+                            margin-left:1px;
+                        }
+            #rightSnippetBar li a span {
+                color:@icon-color;
+            }
+                #rightSnippetBar li a span.active {
+                    color:@icon-color-hover;
+                }
+                #rightSnippetBar li a span i {
+                    color:inherit;
+                }
 
         #snippetTopicSearchDisplay {
             margin: 16px 0;
