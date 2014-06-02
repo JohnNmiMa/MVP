@@ -82,7 +82,7 @@ Snippet search capabilities
   - Return results in JSON - DONE
   - In JavaScript, take JSON, unpack it, and for each snippet, add to page - DONE
     - Remove topic name in snippet bar - DONE
-    - Add words "Search Results" in snippet bar - DONE
+    - Add words '"the search str" search' in snippet bar - DONE
 
 Edit "Topics"
   - Figure out UI

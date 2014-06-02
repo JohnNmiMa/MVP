@@ -1,15 +1,9 @@
 <!-- SNIPPET BAR -->
 <div id='snippetBar'>
     <ul id='leftSnippetBar' class="nav nav-pills">
-        {% if page == 'index' %}
-            {% set searchString = 'class search' %}
-            {% set active = 'deactivate' %}
-            {% set rotate = '' %}
-        {% else %}
-            {% set astring = 'Python OO topic' %}
-            {% set rotate = 'fa-rotate-90' %}
+        {% if page == 'home' %}
+            <li id='toggleIcon' class={{active}}><a href="#" class={{active}}><span class="fa fa-align-justify fa-2x fa-rotate-90"></span></a></li>
         {% endif %}
-        <li id='toggleIcon' class={{active}}><a href="#" class={{active}}><span class="fa fa-align-justify fa-2x {{rotate}}"></span></a></li>
         <li><h5 id='snippetTopicSearchDisplay'></h5></li>
     </ul>
     <ul id='rightSnippetBar' class="nav nav-pills">
