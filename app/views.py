@@ -81,7 +81,7 @@ def topic(atopic):
         for snippet in snippets:
             snippets_added_to_general += 1
             snippet.topic = general_topic
-            print('Snippet in {} is {}').format(topic.topic, snippet.id)
+            #print('Snippet in {} is {}').format(topic.topic, snippet.id)
 
         db.session.delete(topic)
         db.session.commit()
@@ -163,9 +163,18 @@ def search_personal():
 
 @app.route('/snippets/search/public', methods = ['GET'])
 def search_public():
+    query = request.args['q']
+
+    # Get all snippets that match the search
+    snippets = Snippet.query.whoosh_search(query).all()
+    reply = {}
     #pdb.set_trace()
-    print("Sent a public search request to find '" + request.args['q'] +"'")
-    return jsonify()
+    for i, snip in enumerate(snippets):
+        d = dict(title=snip.title, description=snip.description, code=snip.code, id=snip.id)
+        reply[i] = d
+
+    print("Sent a public search request to find '" + query)
+    return jsonify(reply)
 
 
 @app.route('/logout')

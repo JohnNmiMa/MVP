@@ -1,4 +1,5 @@
 from app import db, app
+import flask.ext.whooshalchemy as whooshalchemy
 
 ROLE_USER = 0
 ROLE_ADMIN = 1
@@ -38,6 +39,8 @@ class Topic(db.Model):
         return '<Topic %r>' % (self.topic)
 
 class Snippet(db.Model):
+    __searchable__ = ['title']
+
     id =          db.Column(db.Integer, primary_key = True)
     title =       db.Column(db.String(256))
     description = db.Column(db.Text)
@@ -65,3 +68,5 @@ class Snippet(db.Model):
     def __repr__(self):
         return '<title:%r, description:%r, code:%r, timestamp:%r, public:%r, ref_count:%r>' % \
                (self.title, self.description, self.code, self.timestamp, self.public, self.ref_count)
+
+whooshalchemy.whoosh_index(app, Snippet)

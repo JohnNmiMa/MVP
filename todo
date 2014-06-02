@@ -72,16 +72,17 @@ Topic and snippet delete confirmation dialogs - DONE
   - Use Bootstrap Modal Dialogs - DONE
 
 Snippet search capabilities
-  - Add user snippet counter to search box upon login
+  - Add user snippet counter to search box upon login - DONE
     - Add personal-snippets / public-snippets - DONE
       - /snippets/personal/?... - DONE
-      - /snippets/public/?...
-  - Send search query to server (/<user>/SearchSnippet/?<query>
-  - Create db query, and get results
-  - Return results in JSON
-  - In JavaScript, take JSON, unpack it, and for each snippet, add to page
-    - Remove topic name in snippet bar
-    - Add words "Search Results" in snippet bar
+      - /snippets/public/?... - DONE
+  - Send search query to server (/snippets/search/<public> or <personal> - DONE
+  - Create db query, and get results for public search - DONE
+  - Create db query, and get results for personal search
+  - Return results in JSON - DONE
+  - In JavaScript, take JSON, unpack it, and for each snippet, add to page - DONE
+    - Remove topic name in snippet bar - DONE
+    - Add words "Search Results" in snippet bar - DONE
 
 Edit "Topics"
   - Figure out UI

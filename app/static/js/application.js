@@ -183,7 +183,11 @@ var snippet = (function() {
         $personal_badge.text(personal_badge_count - 1);
     }
 
-    var updateTopicSnippets = function(snippets) {
+    var displaySnippets = function(snippets) {
+    }
+
+
+    var displaySnippets = function(snippets) {
         /* Adds the snippets associated with a topic to the DOM */
         var count = 0,
             key,
@@ -350,6 +354,7 @@ var snippet = (function() {
         // Get search string
 
         searchAccess = (isPersonalSnippetSearchEnabled === true) ? "personal" : "public";
+        searchString = '"' + form.q.value + '"' + ' search';
 
         // Use AJAX to GET a list searched snippets
         var ajaxOptions = {
@@ -358,10 +363,13 @@ var snippet = (function() {
             dataType: "json",
             data: $(form).serialize(),
             success: function(results) {
-                //var count = updateSearchSnippets(results);
+                var count = displaySnippets(results);
 
                 // Update the UI to show the currently displayed search snippets
-                //$('#snippetTopicSearchDisplay').text(searchString);
+                $('#snippetTopicSearchDisplay').text(searchString);
+
+                // Deselect any topic currently selected
+                $('#topicPanel div.panel-body li.topicItem').removeClass('active');
             },
             error: function(req, status, error) {
                 console.log("AJAX returned with error");
@@ -393,7 +401,7 @@ var snippet = (function() {
             type: 'GET',
             dataType: "json",
             success: function(results) {
-                var count = updateTopicSnippets(results);
+                var count = displaySnippets(results);
 
                 // Update the UI to show the currently displayed topic snippets
                 $('#snippetTopicSearchDisplay').text(topicname);

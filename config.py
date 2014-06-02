@@ -8,6 +8,8 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'app.db')
 # Where the slqalchemy-migrate data files are stored
 SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
+# WhooshAlchemy for db searches
+WHOOSH_BASE = os.path.join(basedir, 'search.db')
 
 # OAuth stuff
 FACEBOOK_APP_ID = '493837160742216'
