@@ -18,7 +18,6 @@ var snippet = (function() {
         isTopicPopoverDisplayed = false;
         isTopicEditModeEnabled = false;
         isTopicAddModeEnabled = false;
-        isPersonalSnippetSearchEnabled = false;
 
     /*
      * Local methods
@@ -353,7 +352,7 @@ var snippet = (function() {
     var searchSnippets = function(form) {
         // Get search string
 
-        searchAccess = (isPersonalSnippetSearchEnabled === true) ? "personal" : "public";
+        searchAccess = $('#personalSnippetCounter').hasClass('selected') ? "personal" : "public";
         searchString = '"' + form.q.value + '"' + ' search';
 
         // Use AJAX to GET a list searched snippets
@@ -442,7 +441,7 @@ var snippet = (function() {
     };
 
 
-    var showSnippetsHorizontal = function() {
+    var showSnippetsInColumns = function() {
         // Update snippet description and code have columnar layout
         $('.snippetDes-row').toggleClass('snippetDes-row snippetDes-col');
         $('.snippetCode-row').toggleClass('snippetCode-row snippetCode-col');
@@ -460,7 +459,7 @@ var snippet = (function() {
         snippetNoneLayout = false;
     };
 
-    var showSnippetsVertical = function() {
+    var showSnippetsInRows = function() {
         // Update snippet description and code have row layout
         $('.snippetDes-col').toggleClass('snippetDes-col snippetDes-row');
         $('.snippetCode-col').toggleClass('snippetCode-col snippetCode-row');
@@ -528,8 +527,6 @@ var snippet = (function() {
         set isTopicEditModeEnabled(bool)         { isTopicEditModeEnabled = bool; },
         get isTopicAddModeEnabled()              { return isTopicAddModeEnabled; },
         set isTopicAddModeEnabled(bool)          { isTopicAddModeEnabled = bool; },
-        get isPersonalSnippetSearchEnabled()     { return isPersonalSnippetSearchEnabled; },
-        set isPersonalSnippetSearchEnabled(bool) { isPersonalSnippetSearchEnabled = bool; },
 
         createTopic:createTopic,
         deleteTopic:deleteTopic,
@@ -537,8 +534,8 @@ var snippet = (function() {
         deleteSnippet:deleteSnippet,
         searchSnippets:searchSnippets,
         displayTopicSnippets:displayTopicSnippets,
-        showSnippetsHorizontal:showSnippetsHorizontal,
-        showSnippetsVertical:showSnippetsVertical,
+        showSnippetsInColumns:showSnippetsInColumns,
+        showSnippetsInRows:showSnippetsInRows,
         showSnippetTitlesOnly:showSnippetTitlesOnly,
         showSigninDialog:showSigninDialog
     };
@@ -681,10 +678,10 @@ $(document).ready(function() {
     });
 
     // 'Columns' icon in snippet panel is clicked
-    $('#snippetColIcon').click(snippet.showSnippetsHorizontal);
+    $('#snippetColIcon').click(snippet.showSnippetsInColumns);
 
     // 'Rows' icon in snippet panel is clicked
-    $('#snippetRowIcon').click(snippet.showSnippetsVertical);
+    $('#snippetRowIcon').click(snippet.showSnippetsInRows);
 
     // 'Title Only' icon in snippet panel is clicked
     $('#snippetTitleOnlyIcon').click(snippet.showSnippetTitlesOnly);
@@ -800,20 +797,17 @@ $(document).ready(function() {
     });
 
     $("#personalSnippetCounter").click(function() {
-        snippet.isPersonalSnippetSearchEnabled = true;
         $("#snippetSearchField").attr("placeholder", "Search personal snippets");
         $(this).addClass('selected');
         $("#publicSnippetCounter").removeClass('selected');
     });
     $("#publicSnippetCounter").click(function() {
-        snippet.isPersonalSnippetSearchEnabled = false;
         $("#snippetSearchField").attr("placeholder", "Search public snippets");
         $(this).addClass('selected');
         $("#personalSnippetCounter").removeClass('selected');
-    }).trigger('click');
+    });
 
     $('#signout').click(function() {
-        snippet.isPersonalSnippetSearchEnabled = false;
     });
 });
 

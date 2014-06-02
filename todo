@@ -78,7 +78,7 @@ Snippet search capabilities
       - /snippets/public/?... - DONE
   - Send search query to server (/snippets/search/<public> or <personal> - DONE
   - Create db query, and get results for public search - DONE
-  - Create db query, and get results for personal search
+  - Create db query, and get results for personal search - DONE
   - Return results in JSON - DONE
   - In JavaScript, take JSON, unpack it, and for each snippet, add to page - DONE
     - Remove topic name in snippet bar - DONE
