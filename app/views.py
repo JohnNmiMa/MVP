@@ -170,7 +170,6 @@ def search_personal():
             reply[i] = d
             i += 1;
 
-    print("Sent a personal search request to find '" + request.args['q'] +"'")
     return jsonify(reply)
 
 @app.route('/snippets/search/public', methods = ['GET'])
@@ -185,7 +184,6 @@ def search_public():
         d = dict(title=snip.title, description=snip.description, code=snip.code, id=snip.id)
         reply[i] = d
 
-    print("Sent a public search request to find '" + query)
     return jsonify(reply)
 
 
