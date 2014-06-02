@@ -158,8 +158,7 @@ def add_snips():
     for snip in snippets:
         #pdb.set_trace()
         s = models.Snippet(title = snip['title'], description = snip['des'], code = snip['code'],
-                           timestamp = datetime.utcnow(),
-                           topic=gt, access=snip['access'])
+                           timestamp = datetime.utcnow(), topic=gt, access=snip['access'])
         db.session.add(s)
     db.session.commit()
 

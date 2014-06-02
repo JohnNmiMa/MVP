@@ -41,7 +41,7 @@ class Topic(db.Model):
         return '<Topic %r>' % (self.topic)
 
 class Snippet(db.Model):
-    __searchable__ = ['title']
+    __searchable__ = ['title', 'description', 'code']
 
     id =          db.Column(db.Integer, primary_key = True)
     title =       db.Column(db.String(256))
