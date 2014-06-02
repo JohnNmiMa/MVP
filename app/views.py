@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, session, request, g, jsonify
 from flask.ext.login import login_user, logout_user, current_user, login_required
-from models import User, Topic, Snippet, ROLE_USER, ROLE_ADMIN
+from models import User, Topic, Snippet, ROLE_USER, ROLE_ADMIN, ACCESS_PRIVATE, ACCESS_PUBLIC
 from app import app, db, login_manager, oauth
 from facebook_oauth import facebook
 from twitter_oauth import twitter
@@ -110,7 +110,7 @@ def snippets(topic):
         #pdb.set_trace()
         snippet = Snippet(title = title, description = description, code = code,
                           timestamp=datetime.utcnow(),
-                          topic=topic, public = False)
+                          topic=topic, access = ACCESS_PRIVATE)
         db.session.add(snippet)
         db.session.commit()
         return jsonify(id=snippet.id)
@@ -157,18 +157,30 @@ def snippets(topic):
 @app.route('/snippets/search/personal', methods = ['GET'])
 @login_required
 def search_personal():
-    #pdb.set_trace()
+    topics = g.user.topics
+    query = request.args['q']
+
+    # Get all user's snippets that match the search
+    reply = {}
+    i = 0;
+    for topic in topics:
+        snippets = Snippet.query.filter_by(topic_id=topic.id).whoosh_search(query).all()
+        for snip in snippets:
+            d = dict(title=snip.title, description=snip.description, code=snip.code, id=snip.id)
+            reply[i] = d
+            i += 1;
+
     print("Sent a personal search request to find '" + request.args['q'] +"'")
-    return jsonify()
+    return jsonify(reply)
 
 @app.route('/snippets/search/public', methods = ['GET'])
 def search_public():
     query = request.args['q']
 
-    # Get all snippets that match the search
-    snippets = Snippet.query.whoosh_search(query).all()
-    reply = {}
+    # Get all public snippets that match the search
     #pdb.set_trace()
+    snippets = Snippet.query.whoosh_search(query).filter_by(access=ACCESS_PUBLIC).all()
+    reply = {}
     for i, snip in enumerate(snippets):
         d = dict(title=snip.title, description=snip.description, code=snip.code, id=snip.id)
         reply[i] = d

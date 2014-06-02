@@ -9,6 +9,7 @@ import json
 import pdb
 
 snipf = {
+    'access': models.ACCESS_PUBLIC,
     'title': 'Class Definition',
     "des": """
         <p>Classes are used to create user defined datatypes.</p>
@@ -31,6 +32,7 @@ class Dog:
 }
 
 snipe = {
+    'access': models.ACCESS_PUBLIC,
     'title': 'Class Variables',
     "des": """
         <p>Class variables in python are shared among all of the class instances.</p>
@@ -59,6 +61,7 @@ growl yip</pre>
 }
 
 snipd = {
+    'access': models.ACCESS_PUBLIC,
     'title': 'Built-in Class Attributes',
     "des": """
         <ul>
@@ -73,6 +76,7 @@ snipd = {
 }
 
 snipc = {
+    'access': models.ACCESS_PRIVATE,
     'title': 'Built-in Instance Attributes',
     "des": """
         <ul class="snippetTextAlone">
@@ -84,18 +88,21 @@ snipc = {
 }
 
 snipb = {
+    'access': models.ACCESS_PRIVATE,
     'title': 'Instance Variables/Methods, Ctor/Dtor',
     "des": '',
     "code": ''
 }
 
 snipa = {
+    'access': models.ACCESS_PRIVATE,
     'title': 'Inheritance, Public/Private Attrs',
     "des": '',
     "code": ''
 }
 
 snipt = {
+    'access': models.ACCESS_PRIVATE,
     'title': 'Class Definition',
     "des": """
 """,
@@ -152,7 +159,7 @@ def add_snips():
         #pdb.set_trace()
         s = models.Snippet(title = snip['title'], description = snip['des'], code = snip['code'],
                            timestamp = datetime.utcnow(),
-                           topic=gt, public=True)
+                           topic=gt, access=snip['access'])
         db.session.add(s)
     db.session.commit()
 

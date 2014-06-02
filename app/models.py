@@ -3,6 +3,8 @@ import flask.ext.whooshalchemy as whooshalchemy
 
 ROLE_USER = 0
 ROLE_ADMIN = 1
+ACCESS_PRIVATE = 0
+ACCESS_PUBLIC = 1
 
 class User(db.Model):
     id =         db.Column(db.Integer, primary_key = True)
@@ -46,16 +48,16 @@ class Snippet(db.Model):
     description = db.Column(db.Text)
     code =        db.Column(db.Text)
     timestamp =   db.Column(db.DateTime)
-    public =      db.Column(db.Boolean)
+    access =      db.Column(db.Boolean)
     ref_count =   db.Column(db.Integer)
     topic_id  =   db.Column(db.Integer, db.ForeignKey('topic.id'))
 
-    def __init__(self, title, description, code, timestamp, topic, public=False):
+    def __init__(self, title, description, code, timestamp, topic, access=ACCESS_PRIVATE):
         self.title = title
         self.description = description
         self.code = code
         self.timestamp = timestamp
-        self.public = public
+        self.access = access
         self.ref_count = 1
         self.topic = topic
 
@@ -66,7 +68,7 @@ class Snippet(db.Model):
         self.ref_count -= 1;
 
     def __repr__(self):
-        return '<title:%r, description:%r, code:%r, timestamp:%r, public:%r, ref_count:%r>' % \
-               (self.title, self.description, self.code, self.timestamp, self.public, self.ref_count)
+        return '<title:%r, description:%r, code:%r, timestamp:%r, access:%r, ref_count:%r>' % \
+               (self.title, self.description, self.code, self.timestamp, self.access, self.ref_count)
 
 whooshalchemy.whoosh_index(app, Snippet)
