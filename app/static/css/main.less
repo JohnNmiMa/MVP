@@ -452,20 +452,15 @@ nav div.navbar-header {
                             background-color:@icon-color-selected;
                         }
 
-                    .snippetTextAreas {
+                    #formContent.snippetTextAreas {
                         .make-row();
+                        margin-top:34px;
                     }
-                        .snippetTextAreas textarea {
+                        #formContent.snippetTextAreas textarea {
                             margin:5px 0;
+                            /*Make the textarea resizers only work vertically*/
+                            resize:vertical;
                         }
-
-                        #formContent.snippetTextAreas {
-                            margin-top:34px;
-                        }
-                            #formContent.snippetTextAreas textarea {
-                                /*Make the textarea resizers only work vertically*/
-                                resize:vertical;
-                            }
 
                         .snippetDes-col {
                             .make-sm-column(6);
