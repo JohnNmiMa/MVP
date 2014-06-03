@@ -85,14 +85,14 @@ Snippet search capabilities
     - Add words '"the search str" search' in snippet bar - DONE
 
 Edit "Topics"
-  - Figure out UI
-  - if topic is renamed, update name in database
-    - when clicking on name, replace with input field and add topic name
-    - upon return, grab new topic name
-    - send a PUT with new name and topic id to server
-    - in server, create PUT endpoint /topics/id with new name
-    - persist name in db and return success to client
-    - in client, remove input field, and replace with new topic name
+  - Figure out UI - DONE
+  - if topic is renamed, update name in database - DONE
+    - when clicking on name, replace with input field and add topic name - DONE
+    - upon return, grab new topic name - DONE
+    - send a PUT with new name and topic id to server - DONE
+    - in server, create PUT endpoint /topics/id with new name - DONE
+    - persist name in db and return success to client - DONE
+    - in client, remove input field, and replace with new topic name - DONE
 
 Edit "Snippets"
   - Add revised snippetForm
@@ -140,7 +140,7 @@ Associate snippet with a topic or multiple topics (MAYBE)
     - Update db to associate snippet to new topic link
       - show that the snippt belongs in multiple topics
 
-When deleting topics, query if all snippets should get deleted, or pushed to the General topic
+When deleting topics, query if all snippets should get deleted, or pushed to the General/another topic
 
 Sort snippets in a topic (Don't sort under General topic)
   - Sort by time, alphabetically, or custom
@@ -201,43 +201,28 @@ Persistance Schema
 * Snippet data: Topic, Title, Description, Code, snippetID, topicID (One "Snippet" to many "Topics")
 * Topic list: Topic, User, topicID (One "Topic" to many "Snippets"
 * Refresh main snippet page where no snippets are displayed, then
-  Select a layout,
-  then click a topic to get snippets on the page. They are not in the layout.
-
-
-To search all user's snippets:
-  - for each topic:
-    - for each snippet in topic:
-      - search snippet for string
-
-To search all snippets:
-  - for each user:
-      - for each topic:
-        - for each snippet in topic:
-          - search snippet for string
-
-To find a particular snippet:
-  - given user:
-    - for each topic:
-      - for each snippet"
-        return when given snippet found
+  Select a layout, then click a topic to get snippets on the page. They are not in the layout.
 
 --------
 URLs:
+# web-page without logging in - can search all public snippets
 / or /index.html    - create a page when not logged in
 
 /signin/<social>    - sign in using OAuth to some social site
 
 /user               - create logged in user page
 
+# Create, edit, and delet topics
 POST   /topic/<atopic> - create a new topic with name 'atopic'. Return the new topic id.
 PUT    /topic/<atopic> - update a topic with topic ID 'atopic'. Return the topic id that was changed.
 DELETE /topic/<atopic> - delete a topic with topic ID 'atopic'. Return the number of topics added to the General list.
 
+# Create, edit, and delet snippets
 POST   /snippets/<topic> - create a new snippet under topic 'atopic'. Return the new snippet id.
 GET    /snippets/<topic> - get all snippets in topic 'atopic'. Return the list of snippets.
 DELETE /snippets/<topic> - delete a snippet with snippet ID of '<topic>'
 
+# Search Snippets
 GET    /snippets/search/personal - get all of a user's personal snippets matching a search string
 GET    /snippets/search/public   - get all public snippets matching a search string
 
