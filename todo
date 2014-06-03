@@ -222,3 +222,23 @@ To find a particular snippet:
       - for each snippet"
         return when given snippet found
 
+--------
+URLs:
+/ or /index.html    - create a page when not logged in
+
+/signin/<social>    - sign in using OAuth to some social site
+
+/user               - create logged in user page
+
+POST   /topic/<atopic> - create a new topic with name 'atopic'. Return the new topic id.
+PUT    /topic/<atopic> - update a topic with topic ID 'atopic'. Return the topic id that was changed.
+DELETE /topic/<atopic> - delete a topic with topic ID 'atopic'. Return the number of topics added to the General list.
+
+POST   /snippets/<topic> - create a new snippet under topic 'atopic'. Return the new snippet id.
+GET    /snippets/<topic> - get all snippets in topic 'atopic'. Return the list of snippets.
+DELETE /snippets/<topic> - delete a snippet with snippet ID of '<topic>'
+
+GET    /snippets/search/personal - get all of a user's personal snippets matching a search string
+GET    /snippets/search/public   - get all public snippets matching a search string
+
+/logout - log the user out

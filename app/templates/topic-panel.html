@@ -14,10 +14,14 @@
         <ul class='list-group'>
             <li id='topicFormContainer' class='list-group-item' style='display:none'>
                 <form id='topicForm' name='topicForm' role='form' method='post' onSubmit='return snippet.createTopic(this)'>
-                        <input id='topicNameField' type="text" name="topicName" class="form-control"
-                               maxlength="30" autocomplete="off" autofocus="on" placeholder="New topic title">
+                    <input id='topicNameField' type="text" name="topicName" class="form-control"
+                     maxlength="30" autocomplete="off" autofocus="on" placeholder="New topic title">
                 </form>
             </li>
+            <form id="topicEditForm" name="topicEditForm" role="form" method='PUT' onSubmit="return snippet.updateTopic(this)" style="display:none">
+                <input id="topicEditNameField" type="text" name="topicEditName" class="form-control"
+                 maxlength="30" autocomplete="off" autofocus="on">
+            </form>
             {% for topic in topics %}
                 {% if topic.topic == 'General' %}
                     <li class='list-group-item topicItem topicGeneralItem'>

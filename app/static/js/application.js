@@ -18,6 +18,7 @@ var snippet = (function() {
         isTopicPopoverDisplayed = false;
         isTopicEditModeEnabled = false;
         isTopicAddModeEnabled = false;
+        topicEditReset = function() {};
 
     /*
      * Local methods
@@ -219,7 +220,7 @@ var snippet = (function() {
      */
 
     var createTopic = function(form) {
-        var topicName = form.topicName.value.replace(/^\s+|\s+$/g,''),
+        var topicName = $('input#topicNameField').val(),
             duplicateNameFound = false;
         console.log("Saving a new topic named " + topicName);
 
@@ -242,8 +243,7 @@ var snippet = (function() {
         // Name can't be empty
         if (!topicName) return false;
 
-        // Use AJAX to persist the new topic
-        // Use AJAX to POST the new snippet
+        // Use AJAX to POST the new topic
         var ajaxOptions = {
             url:'topic/' + topicName,
             type: 'POST',
@@ -258,6 +258,97 @@ var snippet = (function() {
 
         $.ajax(ajaxOptions);
         return false;
+    }
+
+    var updateTopic = function(form) {
+        var $topicEditFormItem = $('form#topicEditForm'),
+            topicName = $('input#topicEditNameField').val(),
+            topicID = parseInt($topicEditFormItem.parent().find('span.topicID').text(), 10);
+            data = $(form).serialize(),
+            duplicateNameFound = false;
+        console.log("Updating a topic named " + topicName);
+        if (!topicName) return false;
+        if (topicID <= 0) return false;
+
+        // Make sure the topic doesn't already exist
+        $('#topicPanel .topicItem a').each(function() {
+            var tmpTopicName = $(this).clone().children().remove().end().text().replace(/^\s+|\s+$/g,'');
+            if (topicName.toUpperCase() === tmpTopicName.toUpperCase()) {
+                duplicateNameFound = true;
+                return;
+            }
+        });
+
+        if (duplicateNameFound) {
+            // Let user know the name already exists
+            $('#topicEditNameField').popover('show');
+            isTopicPopoverDisplayed = true;
+            return false;
+        }
+
+        // Use AJAX to update a topic name
+        var ajaxOptions = {
+            url:'topic/' + topicID,
+            type: 'PUT',
+            dataType: "json",
+            data: $(form).serialize(),
+            //data: data,
+            success: function(results) {
+                var $topicNameItem = $topicEditFormItem.parent().find('a.topicName');
+
+                // Update topic with new name
+                $topicNameItem.text(topicName);
+
+                // Hide the topic edit form and show <a class='topicName'></a> element
+                topicEditReset();
+            },
+            error: function(req, status, error) {
+                topicEditReset();
+                console.log("AJAX returned with error");
+            }
+        };
+
+        $.ajax(ajaxOptions);
+        return false;
+    }
+
+    var resetTopicEdit = function(topicItem) {
+        var $topicNameItem = $(topicItem).find('a.topicName'),
+            $topicEditFormItem = $('form#topicEditForm'),
+            $topicEditNameFieldItem = $('input#topicEditNameField');
+
+        var topicFormReset = function() {
+            $topicEditFormItem.hide();
+            $topicNameItem.show();
+        }
+        return topicFormReset;
+    }
+
+    var editTopic = function(topicItem) {
+        var $topicNameItem = $(topicItem).find('a.topicName'),
+            $topicEditFormItem = $('form#topicEditForm'),
+            $topicEditNameFieldItem = $('input#topicEditNameField'),
+            $topicDeleteItem = $(topicItem).find('span.topicDelete'),
+            topicName = $topicNameItem.clone().children().remove().end().text().replace(/^\s+|\s+$/g,'');
+        if (!topicName) return;
+
+        // Call the old topic form resetter - it is idempotent, so calling multiple times is okay
+        topicEditReset();
+        // Create a resetter function to undo the following form actions for the particular topic item
+        topicEditReset = resetTopicEdit(topicItem);
+
+        // Hide element with the topic name
+        $topicNameItem.hide();
+
+        // Move/Put the form element to the same place where the topic name was shown
+        // Rather than poping up a whole new edit dialog, it is nice just to be able
+        // to edit the name of the topic in place. So, that is why we are hiding the 
+        // topic name, and adding an input form element to change the name.
+        $topicDeleteItem.after($topicEditFormItem);
+        $topicEditNameFieldItem.val(topicName);
+        $topicEditFormItem.show();
+
+        console.log("Editing topic " + topicName);
     }
 
     var removeDeletedTopic = function(topicItem, numGeneralSnippets) {
@@ -533,6 +624,8 @@ var snippet = (function() {
         set isTopicAddModeEnabled(bool)          { isTopicAddModeEnabled = bool; },
 
         createTopic:createTopic,
+        editTopic:editTopic,
+        updateTopic:updateTopic,
         deleteTopic:deleteTopic,
         createSnippet:createSnippet,
         deleteSnippet:deleteSnippet,
@@ -598,6 +691,13 @@ $(document).ready(function() {
             } else {
                 $('#topicPanel li span.fa.topicDelete').hide();
                 $(this).find('span').removeClass('selected');
+
+                // Remove the topic edit form if displayed
+                topicEditReset();
+
+                // Remove the popover if displayed
+                $('#topicEditNameField').popover('hide');
+                snippet.isTopicPopoverDisplayed = false;
             }
         }
     });
@@ -640,34 +740,42 @@ $(document).ready(function() {
     }
 
     // A topic was clicked, so display its snippets in the snippet panel
-    $('#topicPanel').on('click', 'li.topicItem', function() {
+    $('#topicPanel').on('click', 'li.topicItem a.topicName', function(event) {
+        var $topicItem = $(this).parent();
+
         if (snippet.isTopicEditModeEnabled) {
-            if ($(this).hasClass('topicGeneralItem')) {
+            if ($topicItem.hasClass('topicGeneralItem')) {
                 // User might get confused when clicking on the 'General' topic when in edit mode.
                 // So alert them somehow as to their condition
                 notifyInEditMode(7);
+            } else {
+                snippet.editTopic($topicItem);
             }
         } else {
-            snippet.displayTopicSnippets(this);
+            snippet.displayTopicSnippets($topicItem);
         }
     });
 
     // Enable Bootstrap popover for the topic name input field
-    $('#topicNameField').popover({container:'body', trigger:'manual', toggle:'popover', placement:'right',
-                                  content:"This name already exists. Please type another name."});
-    // Dismiss the popover upon click
-    $('#topicNameField').click(function() {
-        if (snippet.isTopicPopoverDisplayed) {
-            $(this).popover('hide');
-            snippet.isTopicPopoverDisplayed = false;
-        }
-    });
-    $('#topicNameField').on('input', function() {
-        if (snippet.isTopicPopoverDisplayed) {
-            $(this).popover('hide');
-            snippet.isTopicPopoverDisplayed = false;
-        }
-    });
+    var enablePopover = function($element) {
+        $element.popover({container:'body', trigger:'manual', toggle:'popover', placement:'right',
+                                      content:"This name already exists. Please type another name."});
+        // Dismiss the popover upon click
+        $element.click(function() {
+            if (snippet.isTopicPopoverDisplayed) {
+                $(this).popover('hide');
+                snippet.isTopicPopoverDisplayed = false;
+            }
+        });
+        $element.on('input', function() {
+            if (snippet.isTopicPopoverDisplayed) {
+                $(this).popover('hide');
+                snippet.isTopicPopoverDisplayed = false;
+            }
+        });
+    }
+    enablePopover($('#topicNameField'));
+    enablePopover($('#topicEditNameField'));
 
 
     /* 

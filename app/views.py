@@ -55,7 +55,7 @@ def user():
                            page='home', personal_count=personal_count)
 
 
-@app.route('/topic/<atopic>', methods = ['POST', 'DELETE'])
+@app.route('/topic/<atopic>', methods = ['POST', 'PUT', 'DELETE'])
 @login_required
 def topic(atopic):
     if request.method == 'POST':
@@ -64,10 +64,21 @@ def topic(atopic):
         db.session.commit()
         return jsonify(id=t.id)
 
-    elif request.method == 'DELETE':
-        print('Delete topic ' + atopic)
+    elif request.method == 'PUT':
+        topic_id = atopic
+        topic_name = ""
+        if (request.form):
+            form = request.form.to_dict()
+            topic_name = form['topicEditName']
 
-        #pdb.set_trace()
+        topic = g.user.topics.filter_by(id=topic_id).first()
+        topic.topic = topic_name
+        db.session.commit()
+        print('Update topic: new name = {}, id = {}').format(topic_name, topic_id);
+
+        return jsonify(id=topic.id)
+
+    elif request.method == 'DELETE':
         topic = g.user.topics.filter_by(id=atopic).first()
         if topic is None:
             return jsonify(error=404, text='Invalid topic id'), 404
