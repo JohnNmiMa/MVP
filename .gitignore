@@ -9,14 +9,7 @@ venv
 *.*.swo
 *.*.*.swo
 *.db
-
 EE-Gospel
-
-
 *.html~
-
-*.html~
-
 todo~
-
 app/templates/header.html~
