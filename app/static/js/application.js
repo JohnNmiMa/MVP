@@ -49,7 +49,8 @@ var snippet = (function() {
 
 
     var buildSnippet = function(title, description, code, id) {
-        var ss =  '<div class="snippet">';
+        var codeClass = isLoggedIn() ? "personal" : "public",
+            ss =  '<div class="snippet">';
         ss +=     '    <div class="snippetSelector">';
         ss +=     '        <a href="#"><span class="fa fa-circle-o fa-2x"></span></a>';
         ss +=     '    </div>';
@@ -93,7 +94,7 @@ var snippet = (function() {
             } else {
               ss += '                <div class="' + snippetCodeLayout + '">';
             }
-            ss += '                    <pre class="snippetCodeStyle">' + code + '</pre>';
+            ss += '                    <pre class="snippetCodeStyle ' + codeClass + '">' + code + '</pre>';
             ss += '                </div>';
         }
         ss +=     '            </div>';
@@ -181,10 +182,6 @@ var snippet = (function() {
         personal_badge_count = Number($personal_badge.text());
         $personal_badge.text(personal_badge_count - 1);
     }
-
-    var displaySnippets = function(snippets) {
-    }
-
 
     var displaySnippets = function(snippets) {
         /* Adds the snippets associated with a topic to the DOM */
@@ -349,10 +346,14 @@ var snippet = (function() {
     };
 
 
+    var isLoggedIn = function() {
+        return $('#personalSnippetCounter').hasClass('selected');
+    }
+
     var searchSnippets = function(form) {
         // Get search string
 
-        searchAccess = $('#personalSnippetCounter').hasClass('selected') ? "personal" : "public";
+        searchAccess = isLoggedIn() ? "personal" : "public";
         searchString = '"' + form.q.value + '"' + ' search';
 
         // Use AJAX to GET a list searched snippets

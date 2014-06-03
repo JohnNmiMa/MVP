@@ -501,18 +501,23 @@ nav div.navbar-header {
                             .snippetCodeStyle {
                                 font-family:@code-font-family;
                                 font-size: x-small;
-                                background-color:@user-snippet-code-color;
                                 border: none;
                                 margin-bottom:0;
                             }
+                                .snippetCodeStyle.personal {
+                                    background-color:@user-snippet-code-color;
+                                }
+                                .snippetCodeStyle.public {
+                                    background-color:@public-snippet-code-color;
+                                }
                             .snippetCommandStyle {
                                 font-size: x-small;
-                                background-color:@user-snippet-code-color;
                                 border: none;
                                 border-top: 1px solid #bbb;
                                 padding-bottom:0;
                                 padding-left:0;
                                 margin-bottom:0;
+                                background-color:inherit;
                             }
 
 .modal-backdrop.in {
