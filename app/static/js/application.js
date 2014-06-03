@@ -48,8 +48,8 @@ var snippet = (function() {
     }
 
 
-    var buildSnippet = function(title, description, code, id) {
-        var codeClass = isLoggedIn() ? "personal" : "public",
+    var buildSnippet = function(title, description, code, id, isLoggedIn) {
+        var codeClass = isLoggedIn ? "personal" : "public",
             ss =  '<div class="snippet">';
         ss +=     '    <div class="snippetSelector">';
         ss +=     '        <a href="#"><span class="fa fa-circle-o fa-2x"></span></a>';
@@ -133,7 +133,7 @@ var snippet = (function() {
         var title = $('#titleField').val(),
             description = $('#desField').val(),
             code = $('#codeField').val(),
-            ss = buildSnippet(title, description, code, snippet_id);
+            ss = buildSnippet(title, description, code, snippet_id, isLoggedIn());
 
         // Reset form and hide it
         $('#snippetForm')[0].reset();
@@ -186,6 +186,7 @@ var snippet = (function() {
     var displaySnippets = function(snippets) {
         /* Adds the snippets associated with a topic to the DOM */
         var count = 0,
+            isUserLoggedIn = false,
             key,
             snippet,
             title = '', description = '', code = '', id = 0;
@@ -193,14 +194,16 @@ var snippet = (function() {
         // Clear panel to get ready to display snippets in the topic
         $('#userSnippets').empty();
 
-        // Show the new snippets
         for (key in snippets) {
+            if (count == 0) {
+                isUserLoggedIn = isLoggedIn();
+            }
             snippet = snippets[key];
             title = snippet.title;
             description = snippet.description;
             code = snippet.code;
             id = snippet.id;
-            $('#userSnippets').append(buildSnippet(title, description, code, id));
+            $('#userSnippets').append(buildSnippet(title, description, code, id, isUserLoggedIn));
             count += 1;
 
             // Add a popover to the snippet selector
@@ -347,7 +350,7 @@ var snippet = (function() {
 
 
     var isLoggedIn = function() {
-        return $('#personalSnippetCounter').hasClass('selected');
+        return ($('#personalSnippetCounter').length) > 0 ? true : false;
     }
 
     var searchSnippets = function(form) {
