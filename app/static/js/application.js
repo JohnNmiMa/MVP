@@ -448,7 +448,7 @@ var snippet = (function() {
         // Get search string
 
         var searchAccess =  $('#personalSnippetCounter').hasClass('selected') ? "personal" : "public",
-            searchString = '"' + form.q.value + '"' + ' search';
+            searchString = form.q.value;
 
         // Use AJAX to GET a list searched snippets
         var ajaxOptions = {
@@ -457,10 +457,11 @@ var snippet = (function() {
             dataType: "json",
             data: $(form).serialize(),
             success: function(results) {
-                var count = displaySnippets(results);
+                var headerString = '"' + searchString + '"' + ' search',
+                    count = displaySnippets(results);
 
                 // Update the UI to show the currently displayed search snippets
-                $('#snippetTopicSearchDisplay').text(searchString);
+                $('#snippetTopicSearchDisplay').text(headerString);
 
                 // Deselect any topic currently selected
                 $('#topicPanel div.panel-body li.topicItem').removeClass('active');
@@ -486,21 +487,22 @@ var snippet = (function() {
 
         var that = $(topicItem),
             // Get only the "li a" element text, not the children span's badge "count" text
-            topicname = $(topicItem).find('a').clone().children().remove().end().text().replace(/^\s+|\s+$/g,'');
-        if (!topicname) return;
+            topicName = $(topicItem).find('a').clone().children().remove().end().text().replace(/^\s+|\s+$/g,'');
+        if (!topicName) return;
 
         // Use AJAX to GET a list snippets
         var ajaxOptions = {
-            url:'snippets/' + topicname,
+            url:'snippets/' + topicName,
             type: 'GET',
             dataType: "json",
             success: function(results) {
-                var count = displaySnippets(results);
+                var headerString = '"' + topicName + '"' + ' topic',
+                    count = displaySnippets(results);
 
                 // Update the UI to show the currently displayed topic snippets
-                $('#snippetTopicSearchDisplay').text(topicname);
+                $('#snippetTopicSearchDisplay').text(headerString);
 
-                // Select topic in topic panel
+                // Select topic in topic panel and increment its badge
                 $('#topicPanel div.panel-body li.topicItem').removeClass('active');
                 that.addClass('active');
                 that.find('a span').text(count);
