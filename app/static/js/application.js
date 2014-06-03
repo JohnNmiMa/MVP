@@ -356,8 +356,8 @@ var snippet = (function() {
     var searchSnippets = function(form) {
         // Get search string
 
-        searchAccess = isLoggedIn() ? "personal" : "public";
-        searchString = '"' + form.q.value + '"' + ' search';
+        var searchAccess =  $('#personalSnippetCounter').hasClass('selected') ? "personal" : "public",
+            searchString = '"' + form.q.value + '"' + ' search';
 
         // Use AJAX to GET a list searched snippets
         var ajaxOptions = {
