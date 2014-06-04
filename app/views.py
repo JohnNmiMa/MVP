@@ -22,7 +22,7 @@ def before_request():
 @app.route('/index')
 def index():
     public_count = Snippet.query.filter_by(access=ACCESS_PUBLIC).count()
-    return render_template('index.html', page='index', public_count=public_count)
+    return render_template('index.html', user_id = -1, page = 'index', public_count = public_count)
 
 
 @app.route('/signin/<social>')
@@ -53,8 +53,9 @@ def user():
         personal_count += topic.snippets.count()
     public_count = Snippet.query.filter_by(access=ACCESS_PUBLIC).count()
     
-    return render_template('user.html', name=g.user.name, topics = topics.all(),
-                           page='home', personal_count=personal_count, public_count=public_count)
+    return render_template('user.html', name = g.user.name, user_id = g.user.id,
+                           topics = topics.all(), page = 'home',
+                           personal_count = personal_count, public_count = public_count)
 
 
 @app.route('/topic/<atopic>', methods = ['POST', 'PUT', 'DELETE'])
@@ -94,13 +95,12 @@ def topic(atopic):
         for snippet in snippets:
             snippets_added_to_general += 1
             snippet.topic = general_topic
-            #print('Snippet in {} is {}').format(topic.topic, snippet.id)
 
         db.session.delete(topic)
         db.session.commit()
 
         # Return the number of topics added to the 'General' list
-        return jsonify(id=atopic, new_general_snippets=snippets_added_to_general)
+        return jsonify(id = atopic, new_general_snippets = snippets_added_to_general)
 
 
 @app.route('/snippets/<topic>', methods = ['POST', 'GET', 'DELETE'])
@@ -120,13 +120,12 @@ def snippets(topic):
         code = form['code']
 
         # Persist the snippet to the users topic
-        #pdb.set_trace()
         snippet = Snippet(title = title, description = description, code = code,
-                          timestamp=datetime.utcnow(),
-                          topic=topic, access = ACCESS_PRIVATE)
+                          timestamp = datetime.utcnow(), topic = topic,
+                          creator_id = g.user.id, access = ACCESS_PRIVATE)
         db.session.add(snippet)
         db.session.commit()
-        return jsonify(id=snippet.id)
+        return jsonify(id = snippet.id, creator_id = snippet.creator_id, access = snippet.access)
 
     elif request.method == 'GET':
         # Find the topic
@@ -135,12 +134,11 @@ def snippets(topic):
             return jsonify(error=404, text='Invalid topic name'), 404
 
         # Get all snippets in the topic
-        #snippets = topic.snippets.all()
         snippets = topic.snippets.order_by(Snippet.timestamp.desc()).all()
         reply = {}
-        #pdb.set_trace()
         for i, snip in enumerate(snippets):
-            d = dict(title=snip.title, description=snip.description, code=snip.code, id=snip.id)
+            d = dict(title = snip.title, description = snip.description, code = snip.code,
+                     access = snip.access, creator_id = snip.creator_id, id = snip.id)
             reply[i] = d
 
         return jsonify(reply)
@@ -179,7 +177,8 @@ def search_personal():
     for topic in topics:
         snippets = Snippet.query.filter_by(topic_id=topic.id).whoosh_search(query).all()
         for snip in snippets:
-            d = dict(title=snip.title, description=snip.description, code=snip.code, id=snip.id)
+            d = dict(title = snip.title, description = snip.description, code = snip.code,
+                     access = snip.access, creator_id = snip.creator_id, id = snip.id)
             reply[i] = d
             i += 1;
 
@@ -194,7 +193,8 @@ def search_public():
     snippets = Snippet.query.whoosh_search(query).filter_by(access=ACCESS_PUBLIC).all()
     reply = {}
     for i, snip in enumerate(snippets):
-        d = dict(title=snip.title, description=snip.description, code=snip.code, id=snip.id)
+        d = dict(title = snip.title, description = snip.description, code = snip.code,
+                 access = snip.access, creator_id = snip.creator_id, id = snip.id)
         reply[i] = d
 
     return jsonify(reply)
@@ -232,7 +232,10 @@ def facebook_authorized(resp):
     user = User.query.filter_by(email = me.data['email']).first()
     if user is None:
         # Save new user and the 'General' topic in the db
-        user = User(fb_id = me.data['id'], name = me.data['username'], email = me.data['email'], role = ROLE_USER)
+        name = me.data['username']
+        if (name == ""):
+            name = 'Unknown'
+        user = User(fb_id = me.data['id'], name = name, email = me.data['email'], role = ROLE_USER)
         db.session.add(user)
         topic = Topic(topic = 'General', author = user)
         db.session.add(topic)
@@ -241,6 +244,12 @@ def facebook_authorized(resp):
         fb_id = user.fb_id
         if fb_id is None:
             user.fb_id = me.data['id']
+            db.session.commit()
+
+        # Update name if it changed
+        fb_name = user.name
+        if (fb_name !=  me.data['username']):
+            user.name = me.data['username']
             db.session.commit()
 
     # Log the user in
@@ -273,17 +282,25 @@ def twitter_authorized(resp):
     twitter_id = resp['user_id']
     session['twitter_user'] = screen_name
     #print("response user_id and screen_name = {} and {}").format(resp['user_id'], resp['screen_name'])
-    #pdb.set_trace()
 
     # See if user is already in the db
     user = User.query.filter_by(twitter_id = twitter_id).first()
     if user is None:
         # Save new user in the db
-        user = User(twitter_id = twitter_id, name = screen_name, role = ROLE_USER)
+        name = screen_name
+        if (name == ""):
+            name = 'Unknown'
+        user = User(twitter_id = twitter_id, name = name, role = ROLE_USER)
         db.session.add(user)
         topic = Topic(topic = 'General', author = user)
         db.session.add(topic)
         db.session.commit()
+    else:
+        # Update name if it changed
+        twitter_name = user.name
+        if (twitter_name != screen_name):
+            user.name = screen_name
+            db.session.commit()
 
     # Log the user in
     login_user(user)
@@ -311,8 +328,7 @@ def google_authorized(resp):
 
     access_token = resp['access_token']
     headers = {'Authorization': 'OAuth '+access_token}
-    req = Request('https://www.googleapis.com/oauth2/v1/userinfo',
-                  None, headers)
+    req = Request('https://www.googleapis.com/oauth2/v1/userinfo', None, headers)
     try:
         response = urlopen(req)
     except HTTPError as e:
@@ -332,7 +348,10 @@ def google_authorized(resp):
     user = User.query.filter_by(email = me['email']).first()
     if user is None:
         # Save new user in the db
-        user = User(google_id = me['id'], name = me['given_name'], email = me['email'], role = ROLE_USER)
+        name = me['given_name']
+        if (name == ""):
+            name = 'Unknown'
+        user = User(google_id = me['id'], name = name, email = me['email'], role = ROLE_USER)
         topic = Topic(topic = 'General', author = user)
         db.session.add(user)
         db.session.add(topic)
@@ -341,6 +360,12 @@ def google_authorized(resp):
         google_id = user.google_id
         if google_id is None:
             user.google_id = me['id']
+            db.session.commit()
+
+        # Update name if it changed
+        google_name = user.name
+        if (google_name != me['given_name']):
+            user.name = me['given_name']
             db.session.commit()
 
     # Log the user in

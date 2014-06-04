@@ -29,7 +29,8 @@ class User(db.Model):
         return unicode(self.id)
 
     def __repr__(self):
-        return '<User %r, email %r, google_id %r, fb_id %r, twitter_id %r, role %r>' % (self.name, self.email, self.google_id, self.fb_id, self.twitter_id, self.role)
+        return '<ID:%r, User:%r, email:%r, google_id:%r, fb_id:%r, twitter_id:%r, role:%r>' % \
+                (self.id, self.name, self.email, self.google_id, self.fb_id, self.twitter_id, self.role)
 
 class Topic(db.Model):
     id =       db.Column(db.Integer, primary_key = True)
@@ -38,7 +39,7 @@ class Topic(db.Model):
     snippets = db.relationship('Snippet', order_by='desc(Snippet.timestamp)', backref = 'topic', lazy = 'dynamic')
 
     def __repr__(self):
-        return '<Topic %r>' % (self.topic)
+        return '<ID:%r, Topic:%r>' % (self.id, self.topic)
 
 class Snippet(db.Model):
     __searchable__ = ['title', 'description', 'code']
@@ -48,17 +49,19 @@ class Snippet(db.Model):
     description = db.Column(db.Text)
     code =        db.Column(db.Text)
     timestamp =   db.Column(db.DateTime)
-    access =      db.Column(db.Boolean)
     ref_count =   db.Column(db.Integer)
+    access =      db.Column(db.Boolean)
+    creator_id =  db.Column(db.Integer)
     topic_id  =   db.Column(db.Integer, db.ForeignKey('topic.id'))
 
-    def __init__(self, title, description, code, timestamp, topic, access=ACCESS_PRIVATE):
+    def __init__(self, title, description, code, timestamp, topic, creator_id, access=ACCESS_PRIVATE):
         self.title = title
         self.description = description
         self.code = code
         self.timestamp = timestamp
-        self.access = access
         self.ref_count = 1
+        self.access = access
+        self.creator_id = creator_id
         self.topic = topic
 
     def inc_ref(self):
@@ -68,7 +71,7 @@ class Snippet(db.Model):
         self.ref_count -= 1;
 
     def __repr__(self):
-        return '<title:%r, description:%r, code:%r, timestamp:%r, access:%r, ref_count:%r>' % \
-               (self.title, self.description, self.code, self.timestamp, self.access, self.ref_count)
+        return '<ID:%r, title:%r, description:%r, code:%r, timestamp:%r, ref_count:%r, access:%r, creator_id:%r>' % \
+                (self.id, self.title, self.description, self.code, self.timestamp, self.ref_count, self.access, self.creator_id)
 
 whooshalchemy.whoosh_index(app, Snippet)

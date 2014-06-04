@@ -49,9 +49,23 @@ var snippet = (function() {
     }
 
 
-    var buildSnippet = function(title, description, code, id, isLoggedIn) {
-        var codeClass = isLoggedIn ? "personal" : "public",
-            ss =  '<div class="snippet">';
+    var buildSnippet = function(title, description, code, id, creatorId, access, isLoggedIn) {
+        var userId = Number($('#userID').text()),
+            codeClass = "personal",
+            accessStr = "",
+            ss = "";
+
+        if (isLoggedIn) {
+            if (creatorId == userId) {
+                codeClass = "personal";
+            } else {
+                codeClass = "public";
+            }
+        } else {
+            codeClass = "public";
+        }
+
+        ss +=     '<div class="snippet">';
         ss +=     '    <div class="snippetSelector">';
         ss +=     '        <a href="#"><span class="fa fa-circle-o fa-2x"></span></a>';
         ss +=     '    </div>';
@@ -66,9 +80,6 @@ var snippet = (function() {
         ss +=     '                <span class="fa fa-times fa-lg"></span>';
         ss +=     '            </button>';
         ss +=     '        </div>';
-
-        // Add the snippet id in an invisible place
-        ss +=     '        <span class="snippetID" style="display:none">' + id + '</span>';
 
         // Always add the title, as it should always be present
         ss +=     '        <div class="snippetTitle">';
@@ -101,6 +112,16 @@ var snippet = (function() {
         ss +=     '            </div>';
         ss +=     '        </div>';
         ss +=     '    </div>';
+
+        // Add snippet meta-data
+        // - snippet access (public or private)
+        accessStr = access ? "public" : "private";
+        ss +=     '    <span class="snippetAccess" style="display:none">' + accessStr + '</span>';
+        // - snippet id in an invisible place
+        ss +=     '    <span class="snippetID" style="display:none">' + id + '</span>';
+        // - snippet creator id
+        ss +=     '    <span class="snippetCreatorID" style="display:none">' + creatorId + '</span>';
+
         ss +=     '</div>';
 
         return ss;
@@ -129,12 +150,12 @@ var snippet = (function() {
         });
     }
 
-    var displayNewSnippet = function(snippet_id) {
+    var displayNewSnippet = function(snippetId, creatorId, access) {
         /* Adds a new snippet to the DOM */
         var title = $('#titleField').val(),
             description = $('#desField').val(),
             code = $('#codeField').val(),
-            ss = buildSnippet(title, description, code, snippet_id, isLoggedIn());
+            ss = buildSnippet(title, description, code, snippetId, creatorId, access, isLoggedIn());
 
         // Reset form and hide it
         $('#snippetForm')[0].reset();
@@ -204,7 +225,9 @@ var snippet = (function() {
             description = snippet.description;
             code = snippet.code;
             id = snippet.id;
-            $('#userSnippets').append(buildSnippet(title, description, code, id, isUserLoggedIn));
+            creator_id = snippet.creator_id;
+            access = snippet.access;
+            $('#userSnippets').append(buildSnippet(title, description, code, id, creator_id, access, isUserLoggedIn));
             count += 1;
 
             // Add a popover to the snippet selector
@@ -409,25 +432,25 @@ var snippet = (function() {
         var that = $(snippetAddButton),
             title = $('#titleField').val(),
             data = $("#snippetForm").serialize(),
-            topicname = $('#snippetTopicSearchDisplay').text();
+            topicName = $('#topicPanel .topicItem.active').find('a').clone().children().remove().end().text().replace(/^\s+|\s+$/g,'');
 
         // Must have at least a snippet title
         if (!title) return false;
 
         // Let the snippet get added to the "General" topic if no topic is current selected.
         // The user always has the "General" topic
-        if (!topicname) {
-            topicname = 'General'
+        if (!topicName) {
+            topicName = 'General'
         }
 
         // Use AJAX to POST the new snippet
         var ajaxOptions = {
-            url:'snippets/' + topicname,
+            url:'snippets/' + topicName,
             type: 'POST',
             dataType: "json",
             data: data,
             success: function(results) {
-                displayNewSnippet(results['id']);
+                displayNewSnippet(results['id'], results['creator_id'], results['access']);
                 incrementTopicCount();
             },
             error: function(req, status, error) {

@@ -125,6 +125,7 @@ def create_db():
 jfb = {'fb_id': '100002423206916', 'name':'JohnMarksJr', 'email': 'johnmarksjr@gmail.com', 'role':models.ROLE_USER}
 jgoog = {'google_id': '106697488228998596996', 'name':'John', 'email': 'johnmarksjr@gmail.com', 'role':models.ROLE_USER}
 jtwit = {'twitter_id': '1860746486', 'name':'jettagozoom', 'email': None, 'role':models.ROLE_USER}
+scgoog = {'google_id': '113145721600593244417', 'name':'SomeCode', 'email': 'somecodeapp@gmail.com', 'role':models.ROLE_USER}
 users = [jfb, jgoog, jtwit]
 
 def add_users():
@@ -152,13 +153,13 @@ def add_users():
 
 def add_snips():
     # Get the 'General' topic
-    gt = models.Topic.query.first()
+    user = models.User.query.first()
+    gt = user.topics.filter_by(topic='General').first()
 
     # Create and add the snippets
     for snip in snippets:
-        #pdb.set_trace()
         s = models.Snippet(title = snip['title'], description = snip['des'], code = snip['code'],
-                           timestamp = datetime.utcnow(), topic=gt, access=snip['access'])
+                           timestamp = datetime.utcnow(), topic=gt, creator_id=user.id, access=snip['access'])
         db.session.add(s)
     db.session.commit()
 
@@ -196,6 +197,25 @@ def qsnips():
     for snip in snips:
         print '*****************'
         print snip
+    return snips
+def qscsnips():
+    """ Find all of a SomeCode's snippets - order by timestamp """
+    user = models.User.query.filter_by(name='SomeCode').first()
+    topic = user.topics.filter_by(topic='General').first()
+    snips = topic.snippets.all()
+    for snip in snips:
+        print '*****************'
+        print snip
+    return snips
+def scsnips_public():
+    user = models.User.query.filter_by(name='SomeCode').first()
+    topic = user.topics.filter_by(topic='General').first()
+    snips = topic.snippets.all()
+    for snip in snips:
+        snip.access = models.ACCESS_PUBLIC
+        print '*****************'
+        print snip
+    db.session.commit()
     return snips
 def qsnips2():
     """ Find all snippets in db (all users) - no ordering """
