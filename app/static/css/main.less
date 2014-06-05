@@ -419,6 +419,39 @@ nav div.navbar-header {
                                 vertical-alilgn:center;
                             }
 
+                    #snippetFormBar {
+                        .make-xs-column(12);
+                        position:relative;
+                        height:34px;
+                        margin-bottom:2px;
+                    }
+                        #snippetForm .snippetSelector {
+                            padding:5px;
+                        }
+                        #snippetSave, #snippetCancel {
+                            float:right;
+                            width:60px;
+                            height:24px;
+                            margin-top:5px;
+                            border:none;
+                            border-radius: 4px;
+                            color:#fff;
+                            font-size:small;
+                        }
+                        #snippetCancel {
+                            margin-right:10px;
+                            background-color:@brand-danger;
+                        }
+                            #snippetCancel:hover {
+                                background-color:darken(@brand-danger, 9%);
+                            }
+                        #snippetSave {
+                            background-color:@icon-color-selected;
+                        }
+                            #snippetSave:hover {
+                                background-color:darken(@icon-color-selected, 9%);
+                            }
+
                     .snippetTitle {
                         .make-xs-column(12);
                     }
@@ -435,24 +468,6 @@ nav div.navbar-header {
                             font-weight: bold;
                             font-size: 14px;
                             font-family: inherit;
-                        }
-                        #snippetSave, #snippetCancel {
-                            position:absolute;
-                            line-height:34px;
-                            width:40px;
-                            height:24px;
-                            margin-top:5px;
-                            border:none;
-                            border-radius: 4px;
-                        }
-                        #snippetCancel {
-                            right:50px;
-                            background-color:@brand-danger;
-                        }
-                        #snippetSave {
-                            right:0;
-                            margin-right:5px;
-                            background-color:@icon-color-selected;
                         }
 
                     #formContent.snippetTextAreas {
