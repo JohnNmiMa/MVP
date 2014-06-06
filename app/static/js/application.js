@@ -19,6 +19,7 @@ var snippet = (function() {
         isTopicEditModeEnabled = false;
         isTopicAddModeEnabled = false;
         topicEditReset = function() {};
+        snippetEditReset = function() {};
 
     /*
      * Local methods
@@ -73,7 +74,6 @@ var snippet = (function() {
         ss +=     '        <div class="snippetFade" style="display:none">';
         ss +=     '            <button type="button" class="btn btn-danger btn-xs snip-it">Snip it</button>';
         ss +=     '            <button type="button" class="btn btn-default btn-xs snippetEdit">';
-        //ss +=     '                <span class="fa fa-pencil fa-lg"></span>';
         ss +=     '                <span class="glyphicon glyphicon-pencil"></span>';
         ss +=     '            </button>';
         ss +=     '            <button type="button" class="btn btn-default btn-xs snippetDelete">';
@@ -83,15 +83,15 @@ var snippet = (function() {
 
         // Always add the title, as it should always be present
         ss +=     '        <div class="snippetTitle">';
-        ss +=     '            <h5>' + title + '</h5>';
+        ss +=     '            <h5 class="snippetTitleText">' + title + '</h5>';
         ss +=     '            <div class="snippetTextAreas">';
 
         if (description) {
             // Only add the description section if a description was entered
             if (snippetNoneLayout) {
-              ss += '                <div class="' + snippetDesLayout + '" style="display:none">';
+              ss += '                <div class="snippetDesText ' + snippetDesLayout + '" style="display:none">';
             } else {
-              ss += '                <div class="' + snippetDesLayout + '">';
+              ss += '                <div class="snippetDesText ' + snippetDesLayout + '">';
             }
             ss += '                    <p class="snippetDesStyle">' + description + '</p>';
             ss += '                </div>';
@@ -102,9 +102,9 @@ var snippet = (function() {
         if (code) {
             // Only add the code section if a description was entered
             if (snippetNoneLayout) {
-              ss += '                <div class="' + snippetCodeLayout + '" style="display:none">';
+              ss += '                <div class=snippetCodeText "' + snippetCodeLayout + '" style="display:none">';
             } else {
-              ss += '                <div class="' + snippetCodeLayout + '">';
+              ss += '                <div class=snippetCodeText "' + snippetCodeLayout + '">';
             }
             ss += '                    <pre class="snippetCodeStyle ' + codeClass + '">' + code + '</pre>';
             ss += '                </div>';
@@ -128,6 +128,13 @@ var snippet = (function() {
     }
 
 
+    var resetSnippetEdit = function($snippet) {
+        var snippetFormReset = function() {
+            $snippet.show();
+        }
+        return snippetFormReset;
+    }
+
     // Setup the snippet selector for each newly displayed snippet
     var bindSnippetSelector = function($snippet) {
 
@@ -140,6 +147,24 @@ var snippet = (function() {
         });
         $snippet.bind('mouseleave', function() {
             $snippet.find('div.snippetFade').hide();
+        });
+
+        // Bind the snippet edit button
+        $snippet.find('button.snippetEdit').on('click', function() {
+            var titleText = $snippet.find('.snippetContent .snippetTitleText').clone().children().remove().end().text();
+                //desText   = $snippet.find('.snippetContent .snippetDesText').html(),
+                //codeText  = $snippet.find('.snippetContent .snippetCodeText').html();
+
+            snippetEditReset = resetSnippetEdit($snippet);
+            $snippet.hide();
+
+            // Relocate the snippetForm to the top of the displayed snippet list
+            $snippetFormItem = $('#snippetForm');
+            $("form #titleField").val(titleText);
+            //$("form #desField").val(desText);
+            //$("form #codeField").val(codeText);
+            $snippet.before($snippetFormItem);
+            $snippetFormItem.show();
         });
 
         // Bind the snippet delete button
@@ -910,6 +935,9 @@ $(document).ready(function() {
         $snippetFormItem.hide();
         $snippetFormItem[0].reset();
         $('#snippetAdd').find('span').removeClass('selected');
+
+        // If a snippet was being edited, be sure to show the original snippet again.
+        snippetEditReset();
     });
 
     // Eatup the form keyboard 'enter' event, so the user must click the submit button
@@ -926,6 +954,10 @@ $(document).ready(function() {
         }
     });
 
+    /* 
+     * Snippet Selector Controls
+     */
+
     // Enable Bootstrap Modal Dialog for the Snippet Selector Delete Button
     $("#snippetDeleteDialog").modal({backdrop:'static', keyboard:false, show:false});
 
@@ -938,6 +970,10 @@ $(document).ready(function() {
     $("#snippetSearchField").on("focus blur", function() {
         $("#snippetSearchDiv").toggleClass("focused");
     });
+
+    /* 
+     * Snippet Search Controls
+     */
 
     $("#personalSnippetCounter").click(function() {
         $("#snippetSearchField").attr("placeholder", "Search personal snippets");

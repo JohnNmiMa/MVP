@@ -100,15 +100,15 @@ Edit "Snippets"
     - add public/private icon (eye)
     - add topic selector
     - add language selector for jQuery ACE
-  - Make snippetForm relocatable
+  - Make snippetForm relocatable - DONE
   - Hookup up "Snippet Edit"
-    - Print out to console when edit button is clicked
+    - Print out to console when edit button is clicked - DONE
     - Add snippetEdit function:
-      - add snippet data into snippetForm
-      - show form in correct place in DOM
+      - add snippet data into snippetForm - DONE
+      - show form in correct place in DOM - DONE
       - call snippetUpdate()
-    - Add snippetUpdate function to send AJAX request to PUT snippet update
-  - Hide and reset snippetForm is "Cancel" is called
+    - Add snippetUpdate function to send AJAX PUT request to update snippet
+  - Hide and reset snippetForm if "Cancel" is called - DONE
 
 Change snippet public or private state in Snippet Selector popup
   - If snippet is owned by logged in user, toggle public or private
