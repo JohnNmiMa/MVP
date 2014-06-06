@@ -158,8 +158,9 @@ var snippet = (function() {
             ss = buildSnippet(title, description, code, snippetId, creatorId, access, isLoggedIn());
 
         // Reset form and hide it
-        $('#snippetForm')[0].reset();
-        $('#snippetForm').hide();
+        $snippetFormItem = $('#snippetForm');
+        $snippetFormItem.hide();
+        $snippetFormItem[0].reset();
         
         // Create a new snippet with the form data
         $('#userSnippets').prepend(ss);
@@ -809,7 +810,11 @@ $(document).ready(function() {
 
     // Snippet 'add' button is clicked
     $('#snippetAdd').click(function() {
-        $('#snippetForm').show();
+        // Relocate the snippetForm to the top of the displayed snippet list
+        $snippetFormItem = $('#snippetForm');
+        $('#userSnippets').before($snippetFormItem);
+        $snippetFormItem.show();
+
         $('#titleField').focus();
         $(this).find('span').addClass('selected');
     });
@@ -901,8 +906,9 @@ $(document).ready(function() {
 
     // New snippet 'cancel' button clicked
     $('#snippetCancel').click(function() {
-        $('#snippetForm').hide();
-        $('#snippetForm')[0].reset();
+        $snippetFormItem = $('#snippetForm');
+        $snippetFormItem.hide();
+        $snippetFormItem[0].reset();
         $('#snippetAdd').find('span').removeClass('selected');
     });
 

@@ -95,11 +95,20 @@ Edit "Topics"
     - in client, remove input field, and replace with new topic name - DONE
 
 Edit "Snippets"
-  - Add revised snippetForm
+  - Update snippetForm to have snippetFormBar - DONE
+    - add cancel button - DONE
     - add public/private icon (eye)
     - add topic selector
     - add language selector for jQuery ACE
-    - add cancel button
+  - Make snippetForm relocatable
+  - Hookup up "Snippet Edit"
+    - Print out to console when edit button is clicked
+    - Add snippetEdit function:
+      - add snippet data into snippetForm
+      - show form in correct place in DOM
+      - call snippetUpdate()
+    - Add snippetUpdate function to send AJAX request to PUT snippet update
+  - Hide and reset snippetForm is "Cancel" is called
 
 Change snippet public or private state in Snippet Selector popup
   - If snippet is owned by logged in user, toggle public or private
