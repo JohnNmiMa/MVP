@@ -240,3 +240,36 @@ GET    /snippets/search/personal - get all of a user's personal snippets matchin
 GET    /snippets/search/public   - get all public snippets matching a search string
 
 /logout - log the user out
+
+Ubiquitous Language:
+Public Snippet - Any user can search and view the snippet
+  - All snippets viewed in the logged out page are public.
+  - Only public snippets can be search from the logged out page.
+  - Public snippets have the open-eye icon.
+  - Is modeled as "access==ACCESS_PUBLIC" in the User model.
+
+Private Snippet - Only the owner can search and view the snippet
+  - Public snippets have the closed-eye icon.
+  - Is modeled as "access==ACCESS_PRIVATE" in the User model.
+
+Owned Snippet - The snippet creator id == the currently logged in user id
+  - Owned snippets have a different color than non-owned snippets. This can be
+    useful to differentiate a user's own created snippets vs those snippets
+    that are linked/snipped in from another user.
+  - Is modeled as creator_id in the Snippet model. Just compare the
+    current user id with the creator id, and if the same, they it is
+    owned by current user.
+  - When there is no logged in user, there is no way to determine snippet ownership.
+    Therefore all snippets will be colored as non-owned color.
+
+Personal Snippet - The user has the snippet in some topic
+  - The snippet could be "owned" by another user
+  - Can be both public or private
+  - personal snippets (user's snippets) can be searched searched independently
+    from public snippets
+  - Only personal snippets can be edited and deleted
+  - Only when logged in can snippets can be edited and deleted
+  - All owned snippets are personal snippets
+  - Linked snippets that are owned by another user, but are linked in a topic
+    are also personal snippets. There is no way to detect this yet when building the snippet.
+

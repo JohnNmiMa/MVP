@@ -52,18 +52,18 @@ var snippet = (function() {
 
     var buildSnippet = function(title, description, code, id, creatorId, access, isLoggedIn) {
         var userId = Number($('#userID').text()),
-            codeClass = "personal",
-            accessStr = "",
+            codeClass = "",
+            accessStr = access ? "public" : "private",
             ss = "";
 
         if (isLoggedIn) {
             if (creatorId == userId) {
-                codeClass = "personal";
+                codeClass = "owned";
             } else {
-                codeClass = "public";
+                codeClass = "notOwned";
             }
         } else {
-            codeClass = "public";
+            codeClass = "notOwned";
         }
 
         ss +=     '<div class="snippet">';
@@ -73,12 +73,14 @@ var snippet = (function() {
         ss +=     '    <div class="snippetContent">';
         ss +=     '        <div class="snippetFade" style="display:none">';
         ss +=     '            <button type="button" class="btn btn-danger btn-xs snip-it">Snip it</button>';
-        ss +=     '            <button type="button" class="btn btn-default btn-xs snippetEdit">';
-        ss +=     '                <span class="glyphicon glyphicon-pencil"></span>';
-        ss +=     '            </button>';
-        ss +=     '            <button type="button" class="btn btn-default btn-xs snippetDelete">';
-        ss +=     '                <span class="fa fa-times fa-lg"></span>';
-        ss +=     '            </button>';
+        if (isLoggedIn) {
+            ss += '            <button type="button" class="btn btn-default btn-xs snippetEdit">';
+            ss += '                <span class="glyphicon glyphicon-pencil"></span>';
+            ss += '            </button>';
+            ss += '            <button type="button" class="btn btn-default btn-xs snippetDelete">';
+            ss += '                <span class="fa fa-times fa-lg"></span>';
+            ss += '            </button>';
+        }
         ss +=     '        </div>';
 
         // Always add the title, as it should always be present
@@ -102,9 +104,9 @@ var snippet = (function() {
         if (code) {
             // Only add the code section if a description was entered
             if (snippetNoneLayout) {
-              ss += '                <div class=snippetCodeText "' + snippetCodeLayout + '" style="display:none">';
+              ss += '                <div class="snippetCodeText ' + snippetCodeLayout + '" style="display:none">';
             } else {
-              ss += '                <div class=snippetCodeText "' + snippetCodeLayout + '">';
+              ss += '                <div class="snippetCodeText ' + snippetCodeLayout + '">';
             }
             ss += '                    <pre class="snippetCodeStyle ' + codeClass + '">' + code + '</pre>';
             ss += '                </div>';
@@ -115,7 +117,6 @@ var snippet = (function() {
 
         // Add snippet meta-data
         // - snippet access (public or private)
-        accessStr = access ? "public" : "private";
         ss +=     '    <span class="snippetAccess" style="display:none">' + accessStr + '</span>';
         // - snippet id in an invisible place
         ss +=     '    <span class="snippetID" style="display:none">' + id + '</span>';
