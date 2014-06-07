@@ -92,6 +92,10 @@ body {
  * Setup header
  */
 
+nav.navbar {
+    z-index:6000;
+}
+
 nav div.navbar-header {
 }
     nav div.navbar-header a.navbar-brand {
@@ -318,18 +322,23 @@ nav div.navbar-header {
             #rightSnippetBar li a {
                 padding-left:0;
             }
-            #rightSnippetBar li a span {
-                color:@icon-color;
-            }
+                #rightSnippetBar li#snippetColIcon,
+                #rightSnippetBar li#snippetRowIcon,
+                #rightSnippetBar li#snippetTitleOnlyIcon {
+                    z-index:5100;
+                }
+                #rightSnippetBar li a span {
+                    color:@icon-color;
+                }
                 #rightSnippetBar li#snippetColIcon a span {
                     margin-top:-2px;
                 }
-                #rightSnippetBar li a span.active {
-                    color:@icon-color-hover;
-                }
-                #rightSnippetBar li a span i {
-                    color:inherit;
-                }
+                    #rightSnippetBar li a span.active {
+                        color:@icon-color-hover;
+                    }
+                    #rightSnippetBar li a span i {
+                        color:inherit;
+                    }
 
         #snippetTopicSearchDisplay {
             margin: 16px 0;
@@ -374,86 +383,94 @@ nav div.navbar-header {
                     border-radius:10px;
                     .make-row();
                 }
+                    
                     .snippetFade {
                         position:absolute;
                         left:0;
                         top:0;
                         width:100%;    
                         height:100%;    
-                        //height:27px;    
                         margin:0 15px;
                         margin-right:50px;
                         z-index:700;
                         border-radius:6px;
                         background: rgba(245, 245, 245, 0.3);
-                        //background: rgba(0, 0, 0, 0.5);
                     }
-                        .snippetFade .snip-it {
-                            margin-top:1px;
-                            color:#fff;
-                            font-family: 'Rochester', cursive;
-                            font-size:16px;
-                            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-                            line-height:23px;
-                        }
-                        .snippetFade .snippetEdit {
-                            margin-top:1px;
+                        .snippetFade div.layout {
+                            float:left;
                             margin-left:5px;
-                            border: 1px solid rgba(0, 0, 0, 0.4);
-                            background-image:none;
-                            //line-height:23px;
+                            background-color:#fff !important;
+                            vertical-align:center;
+                            cursor: pointer;
                         }
-                            .snippetFade .snippetEdit span {
-                                color:#555;
-                                font-size:15px;
-                                font-weight:bold;
-                                vertical-alilgn:center;
-                                line-height:22px;
+                            .snippetFade button.layout.snip-it {
+                                float:left;
+                                color:#fff;
+                                font-family: 'Rochester', cursive;
+                                font-size:14px;
+                                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
                             }
+                                .snippetFade div.layout span {
+                                    vertical-align:center;
+                                    color:darken(@icon-color, 15%);
+                                }
+                                .snippetFade div.layout.snippetColLayout span {
+                                    margin-top:-2px;
+                                    margin-left:10px;
+                                }
+                                .snippetFade div.layout.snippetEdit span {
+                                    margin-left:10px;
+                                }
+                                .snippetFade div.layout.snippetDelete span {
+                                    margin-top:-2px;
+                                    margin-left:10px;
+                                }
+                                    .snippetFade div.layout span:hover {
+                                        color:darken(@icon-hover-color, 100%);
+                                    }
                         .snippetFade .snippetDelete {
-                            margin-top:1px;
-                            margin-left:20px;
-                            background-image:none;
-                            line-height:23px;
+                            margin-left:10px;
                         }
-                            .snippetFade .snippetDelete span {
-                                color:#555;
-                                font-size:18px;
-                                vertical-alilgn:center;
-                            }
 
-                    #snippetFormBar {
-                        .make-xs-column(12);
-                        position:relative;
-                        height:34px;
-                        margin-bottom:2px;
+                    #snippetForm {
                     }
-                        #snippetForm .snippetSelector {
-                            padding:5px;
+                        #snippetForm .snippetContent {
+                            z-index: 5100;
                         }
-                        #snippetSave, #snippetCancel {
-                            float:right;
-                            width:46px;
-                            height:24px;
-                            margin-top:5px;
-                            border:none;
-                            border-radius: 4px;
-                            color:#fff;
-                            font-size:11px;
-                        }
-                        #snippetCancel {
-                            margin-right:10px;
-                            background-color:@brand-danger;
-                        }
-                            #snippetCancel:hover {
-                                background-color:darken(@brand-danger, 9%);
+                            #snippetFormBar {
+                                .make-xs-column(12);
+                                position:relative;
+                                height:34px;
+                                margin-bottom:2px;
                             }
-                        #snippetSave {
-                            background-color:@icon-color-selected;
-                        }
-                            #snippetSave:hover {
-                                background-color:darken(@icon-color-selected, 9%);
-                            }
+                                #snippetForm .snippetSelector {
+                                    padding:5px;
+                                }
+                                #snippetSave, #snippetCancel {
+                                    float:right;
+                                    width:46px;
+                                    height:24px;
+                                    margin-top:5px;
+                                    border:none;
+                                    border-radius: 4px;
+                                    color:#fff;
+                                    font-size:11px;
+                                }
+                                #snippetCancel {
+                                    margin-right:10px;
+                                    background-color:@brand-danger;
+                                }
+                                    #snippetCancel:hover {
+                                        background-color:darken(@brand-danger, 9%);
+                                    }
+                                #snippetSave {
+                                    background-color:@icon-color-selected;
+                                }
+                                    #snippetSave:hover {
+                                        background-color:darken(@icon-color-selected, 9%);
+                                    }
+                                #snippetForm .snippetTitle {
+                                }
 
                     .snippetTitle {
                         .make-xs-column(12);
@@ -538,6 +555,16 @@ nav div.navbar-header {
                                 margin-bottom:0;
                                 background-color:inherit;
                             }
+#modalCover {
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background: rgba(245, 245, 245, 0.3);
+    z-index:5000;
+    pointer-events:visible;
+}
 
 .modal-backdrop.in {
     background-color: #ebebeb;

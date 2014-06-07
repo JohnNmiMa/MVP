@@ -18,12 +18,23 @@ var snippet = (function() {
         isTopicPopoverDisplayed = false;
         isTopicEditModeEnabled = false;
         isTopicAddModeEnabled = false;
-        topicEditReset = function() {};
-        snippetEditReset = function() {};
+        isSnippetEditModeEnabled = false;
+        topicEditReset   = function() {};
+        snippetFormReset = function() {};
 
     /*
      * Local methods
      */
+
+    var isSnippetFormEnabled = function() {
+        snippetFormDisplayState = $('#snippetForm').css('display');
+        if (snippetFormDisplayState == 'none' ||
+            snippetFormDisplayState == undefined) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 
     var buildTopic = function(topicName, id) {
         var t  = '<li class="list-group-item topicItem">';
@@ -72,14 +83,25 @@ var snippet = (function() {
         ss +=     '    </div>';
         ss +=     '    <div class="snippetContent">';
         ss +=     '        <div class="snippetFade" style="display:none">';
-        ss +=     '            <button type="button" class="btn btn-danger btn-xs snip-it">Snip it</button>';
-        if (isLoggedIn) {
-            ss += '            <button type="button" class="btn btn-default btn-xs snippetEdit">';
-            ss += '                <span class="glyphicon glyphicon-pencil"></span>';
-            ss += '            </button>';
-            ss += '            <button type="button" class="btn btn-default btn-xs snippetDelete">';
-            ss += '                <span class="fa fa-times fa-lg"></span>';
-            ss += '            </button>';
+        if (codeClass == "owned") {
+            ss += '            <button type="button" class="btn btn-danger btn-xs layout snip-it">Snip it</button>';
+        }
+        ss +=     '            <div class="layout snippetColLayout">';
+        ss +=     '                <span class="fa fa-minus-square-o fa-rotate-90 fa-2x">';
+        ss +=     '            </div>';
+        ss +=     '            <div class="layout snippetRowLayout">';
+        ss +=     '                <span class="fa fa-minus-square-o fa-2x"></span>';
+        ss +=     '            </div>';
+        ss +=     '            <div class="layout snippetTitleOnlyLayout">';
+        ss +=     '                <span class="fa fa-square-o fa-2x"></span>';
+        ss +=     '            </div>';
+        if (codeClass == "owned") {
+            ss += '            <div class="layout snippetEdit">';
+            ss += '                <span class="fa fa-pencil-square-o fa-2x"></span>';
+            ss += '            </div>';
+            ss += '            <div class="layout snippetDelete">';
+            ss += '                <span class="fa fa-times fa-2x"></span>';
+            ss += '            </div>';
         }
         ss +=     '        </div>';
 
@@ -129,13 +151,6 @@ var snippet = (function() {
     }
 
 
-    var resetSnippetEdit = function($snippet) {
-        var snippetFormReset = function() {
-            $snippet.show();
-        }
-        return snippetFormReset;
-    }
-
     // Setup the snippet selector for each newly displayed snippet
     var bindSnippetSelector = function($snippet) {
 
@@ -151,12 +166,17 @@ var snippet = (function() {
         });
 
         // Bind the snippet edit button
-        $snippet.find('button.snippetEdit').on('click', function() {
+        $snippet.find('.snippetEdit').on('click', function() {
             var titleText = $snippet.find('.snippetContent .snippetTitleText').clone().children().remove().end().text();
                 //desText   = $snippet.find('.snippetContent .snippetDesText').html(),
                 //codeText  = $snippet.find('.snippetContent .snippetCodeText').html();
 
-            snippetEditReset = resetSnippetEdit($snippet);
+            isSnippetEditModeEnabled = true;
+
+            // Display modal window to force user to click the snippetForm's cancel button
+            $('#modalCover').show();
+
+            snippetFormReset = resetSnippetForm($snippet);
             $snippet.hide();
 
             // Relocate the snippetForm to the top of the displayed snippet list
@@ -169,7 +189,7 @@ var snippet = (function() {
         });
 
         // Bind the snippet delete button
-        $snippet.find('button.snippetDelete').bind('click', function() {
+        $snippet.find('.snippetDelete').bind('click', function() {
             $("#snippetDeleteDialog").data('snippetElement', $snippet);
             $("#snippetDeleteDialog").modal('show');
             $("#snippetDoDelete").focus();
@@ -183,11 +203,8 @@ var snippet = (function() {
             code = $('#codeField').val(),
             ss = buildSnippet(title, description, code, snippetId, creatorId, access, isLoggedIn());
 
-        // Reset form and hide it
-        $snippetFormItem = $('#snippetForm');
-        $snippetFormItem.hide();
-        $snippetFormItem[0].reset();
-        
+        snippetFormReset();
+
         // Create a new snippet with the form data
         $('#userSnippets').prepend(ss);
 
@@ -268,6 +285,28 @@ var snippet = (function() {
     /*
      * Public methods
      */
+
+    var resetSnippetForm = function($snippet) {
+        var snippetFormReset = function() {
+            var $snippetFormItem = $('#snippetForm');
+
+            // Relocate the snippetForm somewhere outside of #userSnippets
+            // so it won't get deleted when the #userSnippets area is refreshed.
+            $snippetFormItem.hide();
+            $snippetFormItem[0].reset();
+            $('#userSnippets').after($snippetFormItem);
+            isSnippetEditModeEnabled = false;
+
+
+            // If a snippet was being edited, display it again
+            if ($snippet != undefined) {
+                $snippet.show();
+            }
+
+            $('#modalCover').hide();
+        }
+        return snippetFormReset;
+    }
 
     var createTopic = function(form) {
         var topicName = $('input#topicNameField').val(),
@@ -449,14 +488,27 @@ var snippet = (function() {
         $.ajax(ajaxOptions);
     }
 
-    var createSnippet = function(snippetAddButton) {
+    var enterNewSnippet = function() {
+        // Create the reset closure function to clear and hide the form when finished
+        $('#modalCover').show();
+        snippetFormReset = snippet.resetSnippetForm(undefined);
+
+        // Relocate the snippetForm to the top of the displayed snippet list
+        $snippetFormItem = $('#snippetForm');
+        $('#userSnippets').before($snippetFormItem);
+        $snippetFormItem.show();
+
+        $('#titleField').focus();
+    }
+
+    var saveNewSnippet = function(snippetSaveButton) {
         /*
          * Creates a new snippet from the snippet form control,
          * sends an AJAX request to persist the new snippet,
          * and adds the new snippet to the DOM
          */
 
-        var that = $(snippetAddButton),
+        var that = $(snippetSaveButton),
             title = $('#titleField').val(),
             data = $("#snippetForm").serialize(),
             topicName = $('#topicPanel .topicItem.active').find('a').clone().children().remove().end().text().replace(/^\s+|\s+$/g,'');
@@ -489,14 +541,22 @@ var snippet = (function() {
         return false;
     };
 
+    var saveEditedSnippet = function(snippetSaveButton) {
+        snippetFormReset();
+    }
+
 
     var isLoggedIn = function() {
         return ($('#personalSnippetCounter').length) > 0 ? true : false;
     }
 
     var searchSnippets = function(form) {
-        // Get search string
+        if (isSnippetFormEnabled() == true) {
+            $('#snippetSearchForm')[0].reset();
+            return false;
+        }
 
+        // Get search string
         var searchAccess =  $('#personalSnippetCounter').hasClass('selected') ? "personal" : "public",
             searchString = form.q.value;
 
@@ -587,6 +647,10 @@ var snippet = (function() {
         $.ajax(ajaxOptions);
     };
 
+    var cancelSnippet = function() {
+        snippetFormReset();
+    }
+
 
     var showSnippetsInColumns = function() {
         // Update snippet description and code have columnar layout
@@ -674,13 +738,19 @@ var snippet = (function() {
         set isTopicEditModeEnabled(bool)         { isTopicEditModeEnabled = bool; },
         get isTopicAddModeEnabled()              { return isTopicAddModeEnabled; },
         set isTopicAddModeEnabled(bool)          { isTopicAddModeEnabled = bool; },
+        get isSnippetEditModeEnabled()           { return isSnippetEditModeEnabled; },
+        set isSnippetEditModeEnabled(bool)       { isSnippetEditModeEnabled = bool; },
 
+        resetSnippetForm:resetSnippetForm,
         createTopic:createTopic,
         editTopic:editTopic,
         updateTopic:updateTopic,
         deleteTopic:deleteTopic,
-        createSnippet:createSnippet,
+        enterNewSnippet:enterNewSnippet,
+        saveNewSnippet:saveNewSnippet,
+        saveEditedSnippet:saveEditedSnippet,
         deleteSnippet:deleteSnippet,
+        cancelSnippet:cancelSnippet,
         searchSnippets:searchSnippets,
         displayTopicSnippets:displayTopicSnippets,
         showSnippetsInColumns:showSnippetsInColumns,
@@ -836,12 +906,7 @@ $(document).ready(function() {
 
     // Snippet 'add' button is clicked
     $('#snippetAdd').click(function() {
-        // Relocate the snippetForm to the top of the displayed snippet list
-        $snippetFormItem = $('#snippetForm');
-        $('#userSnippets').before($snippetFormItem);
-        $snippetFormItem.show();
-
-        $('#titleField').focus();
+        snippet.enterNewSnippet();
         $(this).find('span').addClass('selected');
     });
 
@@ -926,19 +991,18 @@ $(document).ready(function() {
 
     // New snippet 'save' button clicked
     $('#snippetSave').click(function() {
-        snippet.createSnippet(this);
-        $('#snippetAdd').find('span').removeClass('selected');
+        if (isSnippetEditModeEnabled === true) {
+            snippet.saveEditedSnippet(this);
+        } else {
+            snippet.saveNewSnippet(this);
+            $('#snippetAdd').find('span').removeClass('selected');
+        }
     });
 
     // New snippet 'cancel' button clicked
     $('#snippetCancel').click(function() {
-        $snippetFormItem = $('#snippetForm');
-        $snippetFormItem.hide();
-        $snippetFormItem[0].reset();
+        snippet.cancelSnippet();
         $('#snippetAdd').find('span').removeClass('selected');
-
-        // If a snippet was being edited, be sure to show the original snippet again.
-        snippetEditReset();
     });
 
     // Eatup the form keyboard 'enter' event, so the user must click the submit button
