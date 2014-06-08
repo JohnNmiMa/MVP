@@ -13,12 +13,12 @@
     <div class='panel-body'>
         <ul class='list-group'>
             <li id='topicFormContainer' class='list-group-item' style='display:none'>
-                <form id='topicForm' name='topicForm' role='form' method='post' onSubmit='return snippet.createTopic(this)'>
+                <form id='topicForm' name='topicForm' role='form' method='post' onSubmit='return viewUtils.createTopic(this)'>
                     <input id='topicNameField' type="text" name="topicName" class="form-control"
                      maxlength="30" autocomplete="off" autofocus="on" placeholder="New topic title">
                 </form>
             </li>
-            <form id="topicEditForm" name="topicEditForm" role="form" method='PUT' onSubmit="return snippet.updateTopic(this)" style="display:none">
+            <form id="topicEditForm" name="topicEditForm" role="form" method='PUT' onSubmit="return viewUtils.updateTopic(this)" style="display:none">
                 <input id="topicEditNameField" type="text" name="topicEditName" class="form-control"
                  maxlength="30" autocomplete="off" autofocus="on">
             </form>

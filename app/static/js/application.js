@@ -7,7 +7,7 @@ Utils.numberWithCommas = function(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-var snippet = (function() {
+var viewUtils = (function() {
     var SNIPPET_DES_COL =   'snippetDes-col',
         SNIPPET_DES_ROW =   'snippetDes-row',
         SNIPPET_CODE_COL =  'snippetCode-col',
@@ -491,7 +491,7 @@ var snippet = (function() {
     var enterNewSnippet = function() {
         // Create the reset closure function to clear and hide the form when finished
         $('#modalCover').show();
-        snippetFormReset = snippet.resetSnippetForm(undefined);
+        snippetFormReset = viewUtils.resetSnippetForm(undefined);
 
         // Relocate the snippetForm to the top of the displayed snippet list
         $snippetFormItem = $('#snippetForm');
@@ -541,7 +541,7 @@ var snippet = (function() {
         return false;
     };
 
-    var saveEditedSnippet = function(snippetSaveButton) {
+    var saveEditedSnippet = function(snippetID) {
         snippetFormReset();
     }
 
@@ -774,7 +774,7 @@ $(document).ready(function() {
      */
 
     // 'Sign In' link is clicked
-    $('#signin').click(snippet.showSigninDialog);
+    $('#signin').click(viewUtils.showSigninDialog);
 
 
     /* 
@@ -783,9 +783,9 @@ $(document).ready(function() {
 
     // Topic 'add' button is clicked
     $('#topicAdd').click(function() {
-        if (!snippet.isTopicEditModeEnabled) {
-            snippet.isTopicAddModeEnabled = !snippet.isTopicAddModeEnabled;
-            if (snippet.isTopicAddModeEnabled) {
+        if (!viewUtils.isTopicEditModeEnabled) {
+            viewUtils.isTopicAddModeEnabled = !viewUtils.isTopicAddModeEnabled;
+            if (viewUtils.isTopicAddModeEnabled) {
                 $('#topicFormContainer').show();
                 $(this).find('span').addClass('selected');
 
@@ -798,16 +798,16 @@ $(document).ready(function() {
 
                 // Remove the popover if displayed
                 $('#topicNameField').popover('hide');
-                snippet.isTopicPopoverDisplayed = false;
+                viewUtils.isTopicPopoverDisplayed = false;
             }
         }
     });
 
     // Topic 'edit' button is clicked - enable delete buttons on each topic name
     $('#topicEdit').click(function() {
-        if (!snippet.isTopicAddModeEnabled) {
-            snippet.isTopicEditModeEnabled = !snippet.isTopicEditModeEnabled;
-            if (snippet.isTopicEditModeEnabled) {
+        if (!viewUtils.isTopicAddModeEnabled) {
+            viewUtils.isTopicEditModeEnabled = !viewUtils.isTopicEditModeEnabled;
+            if (viewUtils.isTopicEditModeEnabled) {
                 $('#topicPanel li span.topicDelete').show();
                 $(this).find('span').addClass('selected');
             } else {
@@ -819,7 +819,7 @@ $(document).ready(function() {
 
                 // Remove the popover if displayed
                 $('#topicEditNameField').popover('hide');
-                snippet.isTopicPopoverDisplayed = false;
+                viewUtils.isTopicPopoverDisplayed = false;
             }
         }
     });
@@ -829,7 +829,7 @@ $(document).ready(function() {
     $("#topicDoDelete").click(function() {
         // Delete the topic here
         var $topic = $("#topicDeleteDialog").data('topicElement');
-        snippet.deleteTopic($topic);
+        viewUtils.deleteTopic($topic);
         $("#topicDeleteDialog").modal('hide');
     });
 
@@ -865,16 +865,16 @@ $(document).ready(function() {
     $('#topicPanel').on('click', 'li.topicItem a.topicName', function(event) {
         var $topicItem = $(this).parent();
 
-        if (snippet.isTopicEditModeEnabled) {
+        if (viewUtils.isTopicEditModeEnabled) {
             if ($topicItem.hasClass('topicGeneralItem')) {
                 // User might get confused when clicking on the 'General' topic when in edit mode.
                 // So alert them somehow as to their condition
                 notifyInEditMode(7);
             } else {
-                snippet.editTopic($topicItem);
+                viewUtils.editTopic($topicItem);
             }
         } else {
-            snippet.displayTopicSnippets($topicItem);
+            viewUtils.displayTopicSnippets($topicItem);
         }
     });
 
@@ -884,15 +884,15 @@ $(document).ready(function() {
                                       content:"This name already exists. Please type another name."});
         // Dismiss the popover upon click
         $element.click(function() {
-            if (snippet.isTopicPopoverDisplayed) {
+            if (viewUtils.isTopicPopoverDisplayed) {
                 $(this).popover('hide');
-                snippet.isTopicPopoverDisplayed = false;
+                viewUtils.isTopicPopoverDisplayed = false;
             }
         });
         $element.on('input', function() {
-            if (snippet.isTopicPopoverDisplayed) {
+            if (viewUtils.isTopicPopoverDisplayed) {
                 $(this).popover('hide');
-                snippet.isTopicPopoverDisplayed = false;
+                viewUtils.isTopicPopoverDisplayed = false;
             }
         });
     }
@@ -906,18 +906,18 @@ $(document).ready(function() {
 
     // Snippet 'add' button is clicked
     $('#snippetAdd').click(function() {
-        snippet.enterNewSnippet();
+        viewUtils.enterNewSnippet();
         $(this).find('span').addClass('selected');
     });
 
     // 'Columns' icon in snippet panel is clicked
-    $('#snippetColIcon').click(snippet.showSnippetsInColumns);
+    $('#snippetColIcon').click(viewUtils.showSnippetsInColumns);
 
     // 'Rows' icon in snippet panel is clicked
-    $('#snippetRowIcon').click(snippet.showSnippetsInRows);
+    $('#snippetRowIcon').click(viewUtils.showSnippetsInRows);
 
     // 'Title Only' icon in snippet panel is clicked
-    $('#snippetTitleOnlyIcon').click(snippet.showSnippetTitlesOnly);
+    $('#snippetTitleOnlyIcon').click(viewUtils.showSnippetTitlesOnly);
 
 
     var showTopicPanel = function(panelWidthRatio, callback) {
@@ -992,16 +992,16 @@ $(document).ready(function() {
     // New snippet 'save' button clicked
     $('#snippetSave').click(function() {
         if (isSnippetEditModeEnabled === true) {
-            snippet.saveEditedSnippet(this);
+            viewUtils.saveEditedSnippet(this);
         } else {
-            snippet.saveNewSnippet(this);
+            viewUtils.saveNewSnippet(this);
             $('#snippetAdd').find('span').removeClass('selected');
         }
     });
 
     // New snippet 'cancel' button clicked
     $('#snippetCancel').click(function() {
-        snippet.cancelSnippet();
+        viewUtils.cancelSnippet();
         $('#snippetAdd').find('span').removeClass('selected');
     });
 
@@ -1028,7 +1028,7 @@ $(document).ready(function() {
 
     $("#snippetDoDelete").click(function() {
         var $snippet = $("#snippetDeleteDialog").data('snippetElement');
-        snippet.deleteSnippet($snippet);
+        viewUtils.deleteSnippet($snippet);
         $("#snippetDeleteDialog").modal('hide');
     });
 
