@@ -310,7 +310,8 @@ var viewUtils = (function() {
 
     var createTopic = function(form) {
         var topicName = $('input#topicNameField').val(),
-            duplicateNameFound = false;
+            duplicateNameFound = false,
+            success = function() {}, error = function() {};
         console.log("Saving a new topic named " + topicName);
 
         // Make sure the topic doesn't already exist
@@ -332,20 +333,14 @@ var viewUtils = (function() {
         // Name can't be empty
         if (!topicName) return false;
 
-        // Use AJAX to POST the new topic
-        var ajaxOptions = {
-            url:'topic/' + topicName,
-            type: 'POST',
-            dataType: "json",
-            success: function(results) {
-                displayNewTopic(topicName, results['id']);
-            },
-            error: function(req, status, error) {
-                console.log("AJAX returned with error");
-            }
+        success = function(results) {
+            displayNewTopic(topicName, results['id']);
+        };
+        error = function(req, status, error) {
+            console.log("AJAX returned with error");
         };
 
-        $.ajax(ajaxOptions);
+        snippetService.createTopic(topicName, success, error);
         return false;
     }
 
@@ -354,7 +349,9 @@ var viewUtils = (function() {
             topicName = $('input#topicEditNameField').val(),
             topicID = parseInt($topicEditFormItem.parent().find('span.topicID').text(), 10);
             data = $(form).serialize(),
-            duplicateNameFound = false;
+            duplicateNameFound = false,
+            success = function() {}, error = function() {};
+
         console.log("Updating a topic named " + topicName);
         if (!topicName) return false;
         if (topicID <= 0) return false;
@@ -375,29 +372,21 @@ var viewUtils = (function() {
             return false;
         }
 
-        // Use AJAX to update a topic name
-        var ajaxOptions = {
-            url:'topic/' + topicID,
-            type: 'PUT',
-            dataType: "json",
-            data: $(form).serialize(),
-            //data: data,
-            success: function(results) {
-                var $topicNameItem = $topicEditFormItem.parent().find('a.topicName');
+        success = function(results) {
+            var $topicNameItem = $topicEditFormItem.parent().find('a.topicName');
 
-                // Update topic with new name
-                $topicNameItem.text(topicName);
+            // Update topic with new name
+            $topicNameItem.text(topicName);
 
-                // Hide the topic edit form and show <a class='topicName'></a> element
-                topicEditReset();
-            },
-            error: function(req, status, error) {
-                topicEditReset();
-                console.log("AJAX returned with error");
-            }
+            // Hide the topic edit form and show <a class='topicName'></a> element
+            topicEditReset();
+        };
+        error = function(req, status, error) {
+            topicEditReset();
+            console.log("AJAX returned with error");
         };
 
-        $.ajax(ajaxOptions);
+        snippetService.updateTopic(topicID, data, success, error);
         return false;
     }
 
@@ -468,24 +457,17 @@ var viewUtils = (function() {
          */
 
         var topicName = $(topicItem).find('a').clone().children().remove().end().text().replace(/^\s+|\s+$/g,''),
-            topicID = $(topicItem).find('span.topicID').text();
+            topicID = $(topicItem).find('span.topicID').text(),
+            success = function() {}, error = function() {};
 
-        // Use AJAX to delete the topic
-        var ajaxOptions = {
-            url:'topic/' + topicID,
-            type: 'DELETE',
-            dataType: "json",
-            success: function(results) {
-                console.log("Deleted topic " + topicName + " - id " + results.id + ", added " +
-                             results.new_general_snippets + " to the General topic");
-                removeDeletedTopic(topicItem, results.new_general_snippets);
-            },
-            error: function(req, status, error) {
-                console.log("AJAX returned with error");
-            }
+        success = function(results) {
+            removeDeletedTopic(topicItem, results.new_general_snippets);
+        };
+        error = function(req, status, error) {
+            console.log("AJAX returned with error");
         };
 
-        $.ajax(ajaxOptions);
+        snippetService.deleteTopic(topicID, success, error);
     }
 
     var enterNewSnippet = function() {
@@ -504,14 +486,15 @@ var viewUtils = (function() {
     var saveNewSnippet = function(snippetSaveButton) {
         /*
          * Creates a new snippet from the snippet form control,
-         * sends an AJAX request to persist the new snippet,
+         * sends an AJAX request to persist the new snippet
          * and adds the new snippet to the DOM
          */
 
         var that = $(snippetSaveButton),
             title = $('#titleField').val(),
             data = $("#snippetForm").serialize(),
-            topicName = $('#topicPanel .topicItem.active').find('a').clone().children().remove().end().text().replace(/^\s+|\s+$/g,'');
+            topicName = $('#topicPanel .topicItem.active').find('a').clone().children().remove().end().text().replace(/^\s+|\s+$/g,''),
+            success = function() {}, error = function() {};
 
         // Must have at least a snippet title
         if (!title) return false;
@@ -522,28 +505,44 @@ var viewUtils = (function() {
             topicName = 'General'
         }
 
-        // Use AJAX to POST the new snippet
-        var ajaxOptions = {
-            url:'snippets/' + topicName,
-            type: 'POST',
-            dataType: "json",
-            data: data,
-            success: function(results) {
-                displayNewSnippet(results['id'], results['creator_id'], results['access']);
-                incrementTopicCount();
-            },
-            error: function(req, status, error) {
-                console.log("AJAX returned with error");
-            }
+        success = function(results) {
+            displayNewSnippet(results['id'], results['creator_id'], results['access']);
+            incrementTopicCount();
+        };
+        error = function(req, status, error) {
+            console.log("AJAX returned with error");
         };
 
-        $.ajax(ajaxOptions);
+        snippetService.saveNewSnippet(topicName, data, success, error);
         return false;
     };
+
 
     var saveEditedSnippet = function(snippetID) {
         snippetFormReset();
     }
+
+
+    var deleteSnippet = function($snippet) {
+        var snippetID = $snippet.find('span.snippetID').text(),
+            success = function() {}, error = function() {};
+
+        success = function(results) {
+            $snippet.remove();
+            decrementTopicCount()
+        },
+        error = function(req, status, error) {
+            console.log("AJAX returned with error");
+        }
+
+        snippetService.deleteSnippet(snippetID, success, error);
+    };
+
+
+    var cancelSnippet = function() {
+        snippetFormReset();
+    }
+
 
 
     var isLoggedIn = function() {
@@ -558,30 +557,26 @@ var viewUtils = (function() {
 
         // Get search string
         var searchAccess =  $('#personalSnippetCounter').hasClass('selected') ? "personal" : "public",
-            searchString = form.q.value;
+            searchString = form.q.value,
+            data = $(form).serialize(),
+            success = function() {}, error = function() {};
 
-        // Use AJAX to GET a list searched snippets
-        var ajaxOptions = {
-            url:'snippets/search/' + searchAccess,
-            type: 'GET',
-            dataType: "json",
-            data: $(form).serialize(),
-            success: function(results) {
-                var headerString = '"' + searchString + '"' + ' search',
-                    count = displaySnippets(results);
+        success = function(results) {
+            var headerString = '"' + searchString + '"' + ' search',
+                count = displaySnippets(results);
 
-                // Update the UI to show the currently displayed search snippets
-                $('#snippetTopicSearchDisplay').text(headerString);
+            // Update the UI to show the currently displayed search snippets
+            $('#snippetTopicSearchDisplay').text(headerString);
 
-                // Deselect any topic currently selected
-                $('#topicPanel div.panel-body li.topicItem').removeClass('active');
-            },
-            error: function(req, status, error) {
-                console.log("AJAX returned with error");
-            }
+            // Deselect any topic currently selected
+            $('#topicPanel div.panel-body li.topicItem').removeClass('active');
+        };
+        error = function(req, status, error) {
+            console.log("AJAX returned with error");
         };
 
-        $.ajax(ajaxOptions);
+        snippetService.searchSnippets(searchAccess, data, success, error);
+
         $('#snippetSearchForm')[0].reset();
         return false;
     }
@@ -597,59 +592,29 @@ var viewUtils = (function() {
 
         var that = $(topicItem),
             // Get only the "li a" element text, not the children span's badge "count" text
-            topicName = $(topicItem).find('a').clone().children().remove().end().text().replace(/^\s+|\s+$/g,'');
+            topicName = $(topicItem).find('a').clone().children().remove().end().text().replace(/^\s+|\s+$/g,''),
+            success = function() {}, error = function() {};
+
         if (!topicName) return;
 
-        // Use AJAX to GET a list snippets
-        var ajaxOptions = {
-            url:'snippets/' + topicName,
-            type: 'GET',
-            dataType: "json",
-            success: function(results) {
-                var headerString = '"' + topicName + '"' + ' topic',
-                    count = displaySnippets(results);
+        success = function(results) {
+            var headerString = '"' + topicName + '"' + ' topic',
+                count = displaySnippets(results);
 
-                // Update the UI to show the currently displayed topic snippets
-                $('#snippetTopicSearchDisplay').text(headerString);
+            // Update the UI to show the currently displayed topic snippets
+            $('#snippetTopicSearchDisplay').text(headerString);
 
-                // Select topic in topic panel and increment its badge
-                $('#topicPanel div.panel-body li.topicItem').removeClass('active');
-                that.addClass('active');
-                that.find('a span').text(count);
-            },
-            error: function(req, status, error) {
-                console.log("AJAX returned with error");
-            }
+            // Select topic in topic panel and increment its badge
+            $('#topicPanel div.panel-body li.topicItem').removeClass('active');
+            that.addClass('active');
+            that.find('a span').text(count);
+        };
+        error = function(req, status, error) {
+            console.log("AJAX returned with error");
         };
 
-        $.ajax(ajaxOptions);
+        snippetService.displayTopicSnippets(topicName, success, error);
     };
-
-
-    var deleteSnippet = function($snippet) {
-        var snippetID = $snippet.find('span.snippetID').text();
-
-        // Use AJAX to delete the snippet
-        var ajaxOptions = {
-            url:'snippets/' + snippetID,
-            type: 'DELETE',
-            dataType: "json",
-            success: function(results) {
-                console.log("Deleted snippet " + results.id);
-                $snippet.remove();
-                decrementTopicCount()
-            },
-            error: function(req, status, error) {
-                console.log("AJAX returned with error");
-            }
-        };
-
-        $.ajax(ajaxOptions);
-    };
-
-    var cancelSnippet = function() {
-        snippetFormReset();
-    }
 
 
     var showSnippetsInColumns = function() {
