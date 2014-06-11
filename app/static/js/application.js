@@ -313,7 +313,7 @@ var viewUtils = (function() {
                 $snippetFade.find('.layout.snippetRowLayout span').removeClass('active');
                 $snippetFade.find('.layout.snippetTitleOnlyLayout span').removeClass('active');
                 $snippetFade.find('.layout.snippetColLayout span').addClass('active');
-            } else if ($snippetDesRow.length > 0 && $snippetDesCol.css('display') != 'none') {
+            } else if ($snippetDesRow.length > 0 && $snippetDesRow.css('display') != 'none') {
                 // Highlight the row layout button
                 $snippetFade.find('.layout.snippetColLayout span').removeClass('active');
                 $snippetFade.find('.layout.snippetTitleOnlyLayout span').removeClass('active');
