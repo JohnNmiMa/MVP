@@ -85,15 +85,14 @@ var viewUtils = (function() {
         $codeField.css({'resize':'vertical'});
     }
 
-    var resetSnippetForm = function($snippet) {
+    var snippetFormResetter = function($snippet, $snippetForm) {
         var snippetFormReset = function() {
-            var $snippetFormItem = $('#snippetForm'),
-                $desField = $snippetFormItem.find('#desField'),
-                $codeField = $snippetFormItem.find('#codeField');
+            var $desField = $snippetForm.find('#desField'),
+                $codeField = $snippetForm.find('#codeField');
 
             // Hide and reset the form, and set textarea row size to 1
-            $snippetFormItem.hide();
-            $snippetFormItem[0].reset();
+            $snippetForm.hide();
+            $snippetForm[0].reset();
 
             $desField.css('height', 'auto'); // auto allow textarea 'rows' attribute to work again
             $desField.attr('rows', 1);
@@ -103,7 +102,7 @@ var viewUtils = (function() {
 
             // Relocate the snippetForm somewhere outside of #userSnippets
             // so it won't get deleted when the #userSnippets area is refreshed.
-            $('#userSnippets').after($snippetFormItem);
+            $('#userSnippets').after($snippetForm);
             isSnippetEditModeEnabled = false;
 
             // If a snippet was being edited, display it again
@@ -297,6 +296,17 @@ var viewUtils = (function() {
         highlightSnippetLayout($snippetFade, 'snippetTitleOnlyLayout');
     }
 
+    var setupSnippetForm = function($snippet, titleText, desHtml, codeHtml, snippetID) {
+        var $snippetForm = $('#snippetForm');
+
+        $("form #titleField").val(titleText);
+        $("form #desField").val(desHtml);
+        $("form #codeField").val(codeHtml);
+        $snippetForm.data('snippetID', snippetID); // save the snippet id in the form for later use
+
+        return $snippetForm;
+    }
+
     // Setup the snippet selector for each newly displayed snippet
     var bindSnippetSelector = function($snippet) {
 
@@ -338,22 +348,19 @@ var viewUtils = (function() {
 
             isSnippetEditModeEnabled = true;
 
-            // Display modal window to force user to click the snippetForm's cancel button
-            $('#modalCover').show();
+            // Prepare the snippet form
+            $snippetForm = setupSnippetForm($snippet, titleText, desHtml, codeHtml, snippetID);
 
+            // Create the snippet updater and form resetter
             updateSnippet = snippetUpdater($snippet);
-            snippetFormReset = resetSnippetForm($snippet);
-            $snippet.hide();
+            snippetFormReset = snippetFormResetter($snippet, $snippetForm);
 
-            // Relocate the snippetForm to the top of the displayed snippet list
-            $snippetFormItem = $('#snippetForm');
-            $("form #titleField").val(titleText);
-            $("form #desField").val(desHtml);
-            $("form #codeField").val(codeHtml);
-            $snippetFormItem.data('snippetID', snippetID); // save the snippet id in the form for later use
-            $snippet.before($snippetFormItem);
-            $snippetFormItem.show();
-            setFormTextAreaHeight($snippetFormItem);
+            // Hide the snippet and show the form in the correct location
+            $('#modalCover').show();              // modal window to focus attention to snippet form
+            $snippet.hide();                      // hide the currenlty edited snippet
+            $snippet.before($snippetForm);        // place the form right before the snippet in the DOM
+            $snippetForm.show();                  // show the form
+            setFormTextAreaHeight($snippetForm);  // set the textareas in the form to a useful size
         });
 
         // Bind the snippet delete button
@@ -622,14 +629,15 @@ var viewUtils = (function() {
     }
 
     var enterNewSnippet = function() {
+        var $snippetForm = $('#snippetForm');
+
         // Create the reset closure function to clear and hide the form when finished
-        $('#modalCover').show();
-        snippetFormReset = resetSnippetForm(undefined);
+        snippetFormReset = snippetFormResetter(undefined, $snippetForm);
 
         // Relocate the snippetForm to the top of the displayed snippet list
-        $snippetFormItem = $('#snippetForm');
-        $('#userSnippets').before($snippetFormItem);
-        $snippetFormItem.show();
+        $('#modalCover').show();
+        $('#userSnippets').before($snippetForm);
+        $snippetForm.show();
 
         $('#titleField').focus();
     }
