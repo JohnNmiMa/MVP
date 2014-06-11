@@ -406,25 +406,31 @@ nav div.navbar-header {
                             .snippetFade button.layout.snip-it {
                                 float:left;
                                 color:#fff;
-                                font-family: 'Rochester', cursive;
+                                //font-family: 'Rochester', cursive;
+                                font-family: cursive;
                                 font-size:14px;
                                 box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
                             }
-                                .snippetFade div.layout span {
+                                .snippetFade .layout span {
                                     vertical-align:center;
                                     color:darken(@icon-color, 15%);
                                 }
-                                .snippetFade div.layout.snippetColLayout span {
+                                .snippetFade .layout.snippetColLayout span {
                                     margin-top:-2px;
                                     margin-left:10px;
                                 }
-                                .snippetFade div.layout.snippetEdit span {
+                                .snippetFade .layout.snippetEdit span {
                                     margin-left:10px;
                                 }
-                                .snippetFade div.layout.snippetDelete span {
+                                .snippetFade .layout.snippetDelete span {
                                     margin-top:-2px;
                                     margin-left:10px;
                                 }
+                                    .snippetFade .layout.snippetColLayout span.active,
+                                    .snippetFade .layout.snippetRowLayout span.active,
+                                    .snippetFade .layout.snippetTitleOnlyLayout span.active {
+                                        color:@icon-color-hover;
+                                    }
                                     .snippetFade div.layout span:hover {
                                         color:darken(@icon-hover-color, 100%);
                                     }

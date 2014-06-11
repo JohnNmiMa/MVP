@@ -239,6 +239,62 @@ var viewUtils = (function() {
         return ss;
     }
 
+    var showSnippetCol = function(event) {
+        var $snippet = event.data.snippet,
+            $snippetDesRow  = $snippet.find('.snippetContent .snippetDes-row'),
+            $snippetCodeRow = $snippet.find('.snippetContent .snippetCode-row'),
+            $snippetFade    = $snippet.find('div.snippetFade');
+
+        // Set the layout of the snippet to columnar
+        $snippetDesRow.toggleClass('snippetDes-row snippetDes-col');
+        $snippetCodeRow.toggleClass('snippetCode-row snippetCode-col');
+        $snippet.find('.snippetContent .snippetDes-col').css('display', 'block');
+        $snippet.find('.snippetContent .snippetCode-col').css('display', 'block');
+
+        // Make the columnar layout icon active
+        $snippetFade.find('.layout.snippetRowLayout span').removeClass('active');
+        $snippetFade.find('.layout.snippetTitleOnlyLayout span').removeClass('active');
+        $snippetFade.find('.layout.snippetColLayout span').addClass('active');
+    }
+
+    var showSnippetRow = function(event) {
+        var $snippet = event.data.snippet,
+            $snippetDesCol  = $snippet.find('.snippetContent .snippetDes-col'),
+            $snippetCodeCol = $snippet.find('.snippetContent .snippetCode-col'),
+            $snippetFade    = $snippet.find('div.snippetFade');
+
+        // Set the layout of the snippet to rows
+        $snippetDesCol.toggleClass('snippetDes-col snippetDes-row');
+        $snippetCodeCol.toggleClass('snippetCode-col snippetCode-row');
+        $snippet.find('.snippetContent .snippetDes-row').css('display', 'block');
+        $snippet.find('.snippetContent .snippetCode-row').css('display', 'block');
+
+        // Make the row layout icon active
+        $snippetFade.find('.layout.snippetColLayout span').removeClass('active');
+        $snippetFade.find('.layout.snippetTitleOnlyLayout span').removeClass('active');
+        $snippetFade.find('.layout.snippetRowLayout span').addClass('active');
+    }
+
+    var showSnippetTitleOnly = function(event) {
+        var $snippet = event.data.snippet,
+            $snippetDesCol  = $snippet.find('.snippetContent .snippetDes-col'),
+            $snippetDesRow  = $snippet.find('.snippetContent .snippetDes-row'),
+            $snippetCodeCol = $snippet.find('.snippetContent .snippetCode-col'),
+            $snippetCodeRow = $snippet.find('.snippetContent .snippetCode-row'),
+            $snippetFade    = $snippet.find('div.snippetFade');
+
+        // Set the layout of the snippet to title only
+        $snippetDesCol.css('display', 'none');
+        $snippetDesRow.css('display', 'none');
+        $snippetCodeCol.css('display', 'none');
+        $snippetCodeRow.css('display', 'none');
+
+        // Make the title only layout icon active
+        $snippetFade.find('.layout.snippetColLayout span').removeClass('active');
+        $snippetFade.find('.layout.snippetRowLayout span').removeClass('active');
+        $snippetFade.find('.layout.snippetTitleOnlyLayout span').addClass('active');
+    }
+
     // Setup the snippet selector for each newly displayed snippet
     var bindSnippetSelector = function($snippet) {
 
@@ -247,14 +303,41 @@ var viewUtils = (function() {
 
         // Bind a click event and its handler to the new snippet
         $snippetSelector.bind('mouseenter', function() {
-            $snippet.find('div.snippetFade').show();
+            var $snippetFade = $snippet.find('div.snippetFade'),
+                $snippetDesCol = $snippet.find('.snippetContent .snippetDes-col'),
+                $snippetDesRow = $snippet.find('.snippetContent .snippetDes-row');
+
+            // Make the correct layout control active
+            if ($snippetDesCol.length > 0 && $snippetDesCol.css('display') != 'none') {
+                // Highlight the columnar layout button
+                $snippetFade.find('.layout.snippetRowLayout span').removeClass('active');
+                $snippetFade.find('.layout.snippetTitleOnlyLayout span').removeClass('active');
+                $snippetFade.find('.layout.snippetColLayout span').addClass('active');
+            } else if ($snippetDesRow.length > 0 && $snippetDesCol.css('display') != 'none') {
+                // Highlight the row layout button
+                $snippetFade.find('.layout.snippetColLayout span').removeClass('active');
+                $snippetFade.find('.layout.snippetTitleOnlyLayout span').removeClass('active');
+                $snippetFade.find('.layout.snippetRowLayout span').addClass('active');
+            } else {
+                // Highlight the TitleOnly layout button
+                $snippetFade.find('.layout.snippetColLayout span').removeClass('active');
+                $snippetFade.find('.layout.snippetRowLayout span').removeClass('active');
+                $snippetFade.find('.layout.snippetTitleOnlyLayout span').addClass('active');
+            }
+
+            $snippetFade.show();
         });
         $snippet.bind('mouseleave', function() {
             $snippet.find('div.snippetFade').hide();
         });
 
+        // Bind the snippet layout buttons
+        $snippet.find('.layout.snippetColLayout').on('click', {snippet:$snippet}, showSnippetCol);
+        $snippet.find('.layout.snippetRowLayout').on('click', {snippet:$snippet}, showSnippetRow);
+        $snippet.find('.layout.snippetTitleOnlyLayout').on('click', {snippet:$snippet}, showSnippetTitleOnly);
+
         // Bind the snippet edit button
-        $snippet.find('.snippetEdit').on('click', function() {
+        $snippet.find('.layout.snippetEdit').on('click', function() {
             var titleText = $snippet.find('.snippetContent .snippetTitleText').clone().children().remove().end().text(),
                 desHtml   = $snippet.find('.snippetContent .snippetDesText').html(),
                 codeHtml  = $snippet.find('.snippetContent .snippetCodeText').html(),
@@ -281,7 +364,7 @@ var viewUtils = (function() {
         });
 
         // Bind the snippet delete button
-        $snippet.find('.snippetDelete').on('click', function() {
+        $snippet.find('.layout.snippetDelete').on('click', function() {
             $("#snippetDeleteDialog").data('snippetElement', $snippet);
             $("#snippetDeleteDialog").modal('show');
             $("#snippetDoDelete").focus();
