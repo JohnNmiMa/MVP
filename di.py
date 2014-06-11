@@ -13,21 +13,20 @@ snipf = {
     'title': 'Class Definition',
     "des": """
         <p>Classes are used to create user defined datatypes.</p>
-        <ul class='snippetDesStyle'>
+        <ul>
             <li>By convention, they are capitalized.</li>
             <li>A class is a python object, and is a template used to create class instances. A class instance is created by instantiation <em>(inst = class()</em>).</li>
             <li>Classes can have docstrings.</li>
             <li>Use the <em>pass</em> statement to define a null class.</li>
         </ul>
 """,
-    "code": """
+    "code": """<pre>
 class Dog:
 \"\"\" This is a docstring for the Dog class. \"\"\"
     pass
-<pre class='snippetCommandStyle'>
 >>> d = Dog()
 >>> Dog.__doc__
->>> ' This is a docstring for the Dog class. '
+>>> ' This is a docstring for the Dog class. '</pre>
 """
 }
 
@@ -41,10 +40,9 @@ snipe = {
             <li>If you change the variable through a class instance <em>(big_dog.sound = 'growl')</em> a local variable is created for that instance and added to the instance's dictionary.</li>
         </ul>
 """,
-    "code": """
+    "code": """<pre>
 class Dog:
     sound = 'bark'
-            <pre class="snippetCommandStyle">
 >>> print Dog.sound
 bark
 >>> big_dog = Dog()

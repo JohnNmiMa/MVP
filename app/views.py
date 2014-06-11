@@ -103,10 +103,11 @@ def topic(atopic):
         return jsonify(id = atopic, new_general_snippets = snippets_added_to_general)
 
 
-@app.route('/snippets/<topic>', methods = ['POST', 'GET', 'DELETE'])
+@app.route('/snippets/<topic>', methods = ['POST', 'PUT', 'GET', 'DELETE'])
 @login_required
 def snippets(topic):
     if request.method == 'POST':
+        """ Save a new snippet """
         # See if the topic exists
         topic = g.user.topics.filter_by(topic=topic).first()
         if topic is None:
@@ -127,7 +128,34 @@ def snippets(topic):
         db.session.commit()
         return jsonify(id = snippet.id, creator_id = snippet.creator_id, access = snippet.access)
 
+    elif request.method == 'PUT':
+        """ Update an existing snippet """
+        snippet_id = topic
+        topics = g.user.topics
+        snippet = None
+        for topic in topics:
+            snippet = topic.snippets.filter_by(id=snippet_id).first()
+            if snippet != None:
+                break;
+
+        if snippet == None:
+            return jsonify(error=404, text='Invalid snippet ID'), 404
+
+        if (request.form):
+            form = request.form.to_dict()
+        title = form['title']
+        description = form['description']
+        code = form['code']
+
+        snippet.title = title;
+        snippet.description = description;
+        snippet.code = code;
+        #pdb.set_trace()
+        db.session.commit()
+        return jsonify(id = snippet.id)
+
     elif request.method == 'GET':
+        """ Find all snippets associated with a topic """
         # Find the topic
         topic = g.user.topics.filter_by(topic=topic).first()
         if topic is None:
@@ -144,6 +172,7 @@ def snippets(topic):
         return jsonify(reply)
 
     elif request.method == 'DELETE':
+        """ Delete a snippet """
         snippet_id = topic
         topics = g.user.topics
         snippet = None

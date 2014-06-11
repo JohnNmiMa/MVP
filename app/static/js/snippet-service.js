@@ -13,6 +13,20 @@ var snippetService = (function() {
         $.ajax(ajaxOptions);
     }
 
+    var saveEditedSnippet = function(snippetID, data, success, error) {
+        // Use AJAX to PUT/update a new snippet
+        var ajaxOptions = {
+            url:'snippets/' + snippetID,
+            type: 'PUT',
+            dataType: "json",
+            data: data,
+            success:success,
+            error:error
+        };
+
+        $.ajax(ajaxOptions);
+    }
+
     var deleteSnippet = function(snippetID, success, error) {
         // Use AJAX to delete a snippet
         var ajaxOptions = {
@@ -95,6 +109,7 @@ var snippetService = (function() {
 
     return {
         saveNewSnippet:saveNewSnippet,
+        saveEditedSnippet:saveEditedSnippet,
         deleteSnippet:deleteSnippet,
         createTopic:createTopic,
         updateTopic:updateTopic,

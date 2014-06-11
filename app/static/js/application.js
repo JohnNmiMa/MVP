@@ -14,17 +14,68 @@ var viewUtils = (function() {
         SNIPPET_CODE_ROW =  'snippetCode-row',
         snippetDesLayout =  SNIPPET_DES_COL,
         snippetCodeLayout = SNIPPET_CODE_COL,
-        snippetNoneLayout = false;
-        isTopicPopoverDisplayed = false;
-        isTopicEditModeEnabled = false;
-        isTopicAddModeEnabled = false;
-        isSnippetEditModeEnabled = false;
-        topicEditReset   = function() {};
-        snippetFormReset = function() {};
+        snippetNoneLayout = false,
+        isTopicPopoverDisplayed = false,
+        isTopicEditModeEnabled = false,
+        isTopicAddModeEnabled = false,
+        isSnippetEditModeEnabled = false,
+        topicEditReset   = function() {},
+        snippetFormReset = function() {},
+        updateSnippet = function() {};
 
     /*
-     * Local methods
+     * Private methods
      */
+
+    var snippetUpdater = function($snippet) {
+        var updateSnippet = function(title, description, code) {
+            $snippet.find('.snippetTitleText').text(title);
+
+            $snippet.find('.snippetContent .snippetDesText').html(description);
+            if (description) {
+                // Add code layout class - columnar or row, and display it
+                $snippet.find('.snippetTextAreas .snippetDesText').addClass(snippetDesLayout);
+                $snippet.find('.snippetTextAreas .snippetDesText').show();
+            } else {
+                // Remove code layout class - columnar or row, and hide it
+                $snippet.find('.snippetTextAreas .snippetDesText').removeClass(snippetDesLayout);
+                $snippet.find('.snippetTextAreas .snippetDesText').hide();
+            }
+
+            $snippet.find('.snippetContent .snippetCodeText').html(code);
+            if (code) {
+                // Add code layout class - columnar or row, and display it
+                $snippet.find('.snippetTextAreas .snippetCodeText').addClass(snippetCodeLayout);
+                $snippet.find('.snippetTextAreas .snippetCodeText').show();
+            } else {
+                // Remove code layout class - columnar or row, and display it
+                $snippet.find('.snippetTextAreas .snippetCodeText').removeClass(snippetCodeLayout);
+                $snippet.find('.snippetTextAreas .snippetCodeText').hide();
+            }
+        }
+        return updateSnippet;
+    }
+
+    var resetSnippetForm = function($snippet) {
+        var snippetFormReset = function() {
+            var $snippetFormItem = $('#snippetForm');
+
+            // Relocate the snippetForm somewhere outside of #userSnippets
+            // so it won't get deleted when the #userSnippets area is refreshed.
+            $snippetFormItem.hide();
+            $snippetFormItem[0].reset();
+            $('#userSnippets').after($snippetFormItem);
+            isSnippetEditModeEnabled = false;
+
+            // If a snippet was being edited, display it again
+            if ($snippet != undefined) {
+                $snippet.show();
+            }
+
+            $('#modalCover').hide();
+        }
+        return snippetFormReset;
+    }
 
     var isSnippetFormEnabled = function() {
         snippetFormDisplayState = $('#snippetForm').css('display');
@@ -113,27 +164,26 @@ var viewUtils = (function() {
         if (description) {
             // Only add the description section if a description was entered
             if (snippetNoneLayout) {
-              ss += '                <div class="snippetDesText ' + snippetDesLayout + '" style="display:none">';
+              ss += '              <div class="snippetDesText snippetDesStyle ' + snippetDesLayout + '" style="display:none">';
             } else {
-              ss += '                <div class="snippetDesText ' + snippetDesLayout + '">';
+              ss += '              <div class="snippetDesText snippetDesStyle ' + snippetDesLayout + '">';
             }
-            ss += '                    <p class="snippetDesStyle">' + description + '</p>';
-            ss += '                </div>';
+            ss += description + '</div>';
         } else {
-            ss += '                <div class="' + snippetDesLayout + '"></div>';
+            ss += '                <div class="snippetDesText snippetDesStyle ' + snippetDesLayout + '"></div>';
         }
 
         if (code) {
             // Only add the code section if a description was entered
             if (snippetNoneLayout) {
-              ss += '                <div class="snippetCodeText ' + snippetCodeLayout + '" style="display:none">';
+                ss += '            <div class="snippetCodeText snippetCodeStyle ' + snippetCodeLayout + ' ' + codeClass + '" style="display:none">';
             } else {
-              ss += '                <div class="snippetCodeText ' + snippetCodeLayout + '">';
+                ss += '            <div class="snippetCodeText snippetCodeStyle ' + snippetCodeLayout + ' ' + codeClass + '">';
             }
-            ss += '                    <pre class="snippetCodeStyle ' + codeClass + '">' + code + '</pre>';
-            ss += '                </div>';
+            ss += code + '</div>';
+        } else {
+            ss += '                <div class="snippetCodeText snippetCodeStyle ' + codeClass + '" style="display:none"></div>';
         }
-        ss +=     '            </div>';
         ss +=     '        </div>';
         ss +=     '    </div>';
 
@@ -167,29 +217,32 @@ var viewUtils = (function() {
 
         // Bind the snippet edit button
         $snippet.find('.snippetEdit').on('click', function() {
-            var titleText = $snippet.find('.snippetContent .snippetTitleText').clone().children().remove().end().text();
-                //desText   = $snippet.find('.snippetContent .snippetDesText').html(),
-                //codeText  = $snippet.find('.snippetContent .snippetCodeText').html();
+            var titleText = $snippet.find('.snippetContent .snippetTitleText').clone().children().remove().end().text(),
+                desHtml   = $snippet.find('.snippetContent .snippetDesText').html(),
+                codeHtml  = $snippet.find('.snippetContent .snippetCodeText').html(),
+                snippetID = $snippet.find('span.snippetID').clone().children().remove().end().text();
 
             isSnippetEditModeEnabled = true;
 
             // Display modal window to force user to click the snippetForm's cancel button
             $('#modalCover').show();
 
+            updateSnippet = snippetUpdater($snippet);
             snippetFormReset = resetSnippetForm($snippet);
             $snippet.hide();
 
             // Relocate the snippetForm to the top of the displayed snippet list
             $snippetFormItem = $('#snippetForm');
             $("form #titleField").val(titleText);
-            //$("form #desField").val(desText);
-            //$("form #codeField").val(codeText);
+            $("form #desField").val(desHtml);
+            $("form #codeField").val(codeHtml);
+            $snippetFormItem.data('snippetID', snippetID); // save the snippet id in the form for later use
             $snippet.before($snippetFormItem);
             $snippetFormItem.show();
         });
 
         // Bind the snippet delete button
-        $snippet.find('.snippetDelete').bind('click', function() {
+        $snippet.find('.snippetDelete').on('click', function() {
             $("#snippetDeleteDialog").data('snippetElement', $snippet);
             $("#snippetDeleteDialog").modal('show');
             $("#snippetDoDelete").focus();
@@ -286,37 +339,17 @@ var viewUtils = (function() {
      * Public methods
      */
 
-    var resetSnippetForm = function($snippet) {
-        var snippetFormReset = function() {
-            var $snippetFormItem = $('#snippetForm');
-
-            // Relocate the snippetForm somewhere outside of #userSnippets
-            // so it won't get deleted when the #userSnippets area is refreshed.
-            $snippetFormItem.hide();
-            $snippetFormItem[0].reset();
-            $('#userSnippets').after($snippetFormItem);
-            isSnippetEditModeEnabled = false;
-
-
-            // If a snippet was being edited, display it again
-            if ($snippet != undefined) {
-                $snippet.show();
-            }
-
-            $('#modalCover').hide();
-        }
-        return snippetFormReset;
-    }
-
     var createTopic = function(form) {
         var topicName = $('input#topicNameField').val(),
             duplicateNameFound = false,
             success = function() {}, error = function() {};
+
         console.log("Saving a new topic named " + topicName);
 
         // Make sure the topic doesn't already exist
         $('#topicPanel .topicItem a').each(function() {
-            tmpTopicName = $(this).clone().children().remove().end().text().replace(/^\s+|\s+$/g,'');
+            var tmpTopicName = $(this).clone().children().remove().end().text().replace(/^\s+|\s+$/g,'');
+
             if (topicName.toUpperCase() === tmpTopicName.toUpperCase()) {
                 duplicateNameFound = true;
                 return;
@@ -347,18 +380,19 @@ var viewUtils = (function() {
     var updateTopic = function(form) {
         var $topicEditFormItem = $('form#topicEditForm'),
             topicName = $('input#topicEditNameField').val(),
-            topicID = parseInt($topicEditFormItem.parent().find('span.topicID').text(), 10);
+            topicID = parseInt($topicEditFormItem.parent().find('span.topicID').text(), 10),
             data = $(form).serialize(),
             duplicateNameFound = false,
             success = function() {}, error = function() {};
 
-        console.log("Updating a topic named " + topicName);
+        console.log("Updating topic " + topicName);
         if (!topicName) return false;
         if (topicID <= 0) return false;
 
         // Make sure the topic doesn't already exist
         $('#topicPanel .topicItem a').each(function() {
             var tmpTopicName = $(this).clone().children().remove().end().text().replace(/^\s+|\s+$/g,'');
+
             if (topicName.toUpperCase() === tmpTopicName.toUpperCase()) {
                 duplicateNameFound = true;
                 return;
@@ -393,12 +427,13 @@ var viewUtils = (function() {
     var resetTopicEdit = function(topicItem) {
         var $topicNameItem = $(topicItem).find('a.topicName'),
             $topicEditFormItem = $('form#topicEditForm'),
-            $topicEditNameFieldItem = $('input#topicEditNameField');
+            $topicEditNameFieldItem = $('input#topicEditNameField'),
 
-        var topicFormReset = function() {
-            $topicEditFormItem.hide();
-            $topicNameItem.show();
-        }
+            topicFormReset = function() {
+                $topicEditFormItem.hide();
+                $topicNameItem.show();
+            };
+
         return topicFormReset;
     }
 
@@ -408,6 +443,7 @@ var viewUtils = (function() {
             $topicEditNameFieldItem = $('input#topicEditNameField'),
             $topicDeleteItem = $(topicItem).find('span.topicDelete'),
             topicName = $topicNameItem.clone().children().remove().end().text().replace(/^\s+|\s+$/g,'');
+
         if (!topicName) return;
 
         // Call the old topic form resetter - it is idempotent, so calling multiple times is okay
@@ -473,7 +509,7 @@ var viewUtils = (function() {
     var enterNewSnippet = function() {
         // Create the reset closure function to clear and hide the form when finished
         $('#modalCover').show();
-        snippetFormReset = viewUtils.resetSnippetForm(undefined);
+        snippetFormReset = resetSnippetForm(undefined);
 
         // Relocate the snippetForm to the top of the displayed snippet list
         $snippetFormItem = $('#snippetForm');
@@ -490,8 +526,7 @@ var viewUtils = (function() {
          * and adds the new snippet to the DOM
          */
 
-        var that = $(snippetSaveButton),
-            title = $('#titleField').val(),
+        var title = $('#titleField').val(),
             data = $("#snippetForm").serialize(),
             topicName = $('#topicPanel .topicItem.active').find('a').clone().children().remove().end().text().replace(/^\s+|\s+$/g,''),
             success = function() {}, error = function() {};
@@ -519,7 +554,24 @@ var viewUtils = (function() {
 
 
     var saveEditedSnippet = function(snippetID) {
-        snippetFormReset();
+        var data = $("#snippetForm").serialize(),
+            title = $('#snippetForm #titleField').val(),
+            des   = $('#snippetForm #desField').val(),
+            code  = $('#snippetForm #codeField').val();
+
+        console.log("Saving edited snippet ID " + snippetID);
+        // Could check to see if anything changed. If not, don't talk to server.
+
+        success = function(results) {
+            updateSnippet(title, des, code);
+            snippetFormReset();
+        };
+        error = function(req, status, error) {
+            console.log("AJAX error: could not update snipet ID " + snippetID);
+        };
+
+        snippetService.saveEditedSnippet(snippetID, data, success, error);
+        return false;
     }
 
 
@@ -530,13 +582,13 @@ var viewUtils = (function() {
         success = function(results) {
             $snippet.remove();
             decrementTopicCount()
-        },
+        };
         error = function(req, status, error) {
             console.log("AJAX returned with error");
-        }
+        };
 
         snippetService.deleteSnippet(snippetID, success, error);
-    };
+    }
 
 
     var cancelSnippet = function() {
@@ -624,7 +676,7 @@ var viewUtils = (function() {
         $('.snippetDes-col').css('display', 'block');
         $('.snippetCode-col').css('display', 'block');
 
-        // Make the title, description and code visible
+        // Make the columnar layout icon active
         $('#snippetColIcon span').addClass('active');
         $('#snippetRowIcon span').removeClass('active');
         $('#snippetTitleOnlyIcon span').removeClass('active');
@@ -642,7 +694,7 @@ var viewUtils = (function() {
         $('.snippetDes-row').css('display', 'block');
         $('.snippetCode-row').css('display', 'block');
 
-        // Make the title, description and code visible
+        // Make the row layout icon active
         $('#snippetColIcon span').removeClass('active');
         $('#snippetRowIcon span').addClass('active');
         $('#snippetTitleOnlyIcon span').removeClass('active');
@@ -660,7 +712,7 @@ var viewUtils = (function() {
         $('.snippetDes-col').css('display', 'none');
         $('.snippetCode-col').css('display', 'none');
 
-        // Make the title, description and code visible
+        // Make the title only layout icon active
         $('#snippetColIcon span').removeClass('active');
         $('#snippetRowIcon span').removeClass('active');
         $('#snippetTitleOnlyIcon span').addClass('active');
@@ -706,7 +758,27 @@ var viewUtils = (function() {
         get isSnippetEditModeEnabled()           { return isSnippetEditModeEnabled; },
         set isSnippetEditModeEnabled(bool)       { isSnippetEditModeEnabled = bool; },
 
-        resetSnippetForm:resetSnippetForm,
+        // Okay, this took me a bit to grock. "topicEditReset" is a function pointer that
+        // points to function closures which are used to restore the state of a topic when
+        // it is being edited back to an unedited state. The function closure is nice
+        // in that it remembers the state (closure) of the topic before it was edited. Then,
+        // later on when the topic editing is saved or canceled, all we need to do is call
+        // the function closure and the topic is back to an unedited state, hopefully with
+        // the appropriate changes if it was edited, or to its original state if the editing
+        // was cancelled. Well, the 'topicEditReset' variable is private to this viewUtils
+        // module. The pointer can change state (point to different closures) throughout the
+        // operation of the app. What needs to be done is pass the closure (or a pointer to 
+        // it) to the "view" code whenever it needs to reset the topic editing.
+        // If the following line is set:
+        //     topicEditReset:topicEditReset,
+        // then the "topicEditReset" pointer will change, but any external use of the 
+        // viewUtils.topicEditReset will only get the original value that the pointer
+        // was pointing to. So, to make sure the current function closure is returned, the 
+        // current pointer must be reference. The following does the trick.
+        // Hopefully I'll know this the rest of my life and not have to write a Gozilla comment.
+        topicEditReset: function() { topicEditReset(); },
+        snippetFormReset: function() { snippetFormReset(); },
+
         createTopic:createTopic,
         editTopic:editTopic,
         updateTopic:updateTopic,
@@ -768,19 +840,22 @@ $(document).ready(function() {
         }
     });
 
-    // Topic 'edit' button is clicked - enable delete buttons on each topic name
+    // Topic 'edit' button is clicked 
+    // - allow topics to be deleted
+    // - allow topic names to be changed
     $('#topicEdit').click(function() {
         if (!viewUtils.isTopicAddModeEnabled) {
             viewUtils.isTopicEditModeEnabled = !viewUtils.isTopicEditModeEnabled;
             if (viewUtils.isTopicEditModeEnabled) {
                 $('#topicPanel li span.topicDelete').show();
                 $(this).find('span').addClass('selected');
+                //viewUtils.topicEditReset = 
             } else {
                 $('#topicPanel li span.fa.topicDelete').hide();
                 $(this).find('span').removeClass('selected');
 
                 // Remove the topic edit form if displayed
-                topicEditReset();
+                viewUtils.topicEditReset();
 
                 // Remove the popover if displayed
                 $('#topicEditNameField').popover('hide');
@@ -812,7 +887,7 @@ $(document).ready(function() {
     });
 
     var notifyInEditMode = function(times) {
-        $editIcon = $('#topicEdit span');
+        var $editIcon = $('#topicEdit span');
         if (times > 0) {
             if (times %2) {
                 $editIcon.addClass('fa-rotate-90');
@@ -915,6 +990,7 @@ $(document).ready(function() {
             snippetBlockWidth = $('#snippetBlock').width(),
             deltaFactor = .4, // decrease for faster animation
             delta = snippetBlockWidth / (100.0 * deltaFactor);  // make smaller 1/100 of the whole snippet area
+
         if (topicPanelWidth > (delta * deltaFactor)) {
             $('#topicPanel').width(topicPanelWidth - delta);
             $('#snippetPanel').width(snippetPanelWidth + delta);
@@ -940,6 +1016,7 @@ $(document).ready(function() {
             var snippetPanelWidth = $('#snippetPanel').width(),
                 snippetBlockWidth = $('#snippetBlock').width(),
                 delta = snippetBlockWidth / 100.0;
+
             $('#snippetPanel').width(snippetPanelWidth - delta/4);
             $("#topicPanel").css('display', 'block');
             showTopicPanel(topicPanelWidthRatio, function() {
@@ -951,13 +1028,14 @@ $(document).ready(function() {
 
 
     /* 
-     * Snippet Form Controls
+     * Snippet CRUD
      */
 
     // New snippet 'save' button clicked
     $('#snippetSave').click(function() {
-        if (isSnippetEditModeEnabled === true) {
-            viewUtils.saveEditedSnippet(this);
+        if (viewUtils.isSnippetEditModeEnabled === true) {
+            var snippetID = $('#snippetForm').data('snippetID');
+            viewUtils.saveEditedSnippet(snippetID);
         } else {
             viewUtils.saveNewSnippet(this);
             $('#snippetAdd').find('span').removeClass('selected');
@@ -993,6 +1071,7 @@ $(document).ready(function() {
 
     $("#snippetDoDelete").click(function() {
         var $snippet = $("#snippetDeleteDialog").data('snippetElement');
+
         viewUtils.deleteSnippet($snippet);
         $("#snippetDeleteDialog").modal('hide');
     });

@@ -500,61 +500,75 @@ nav div.navbar-header {
                             resize:vertical;
                         }
 
-                        .snippetDes-col {
-                            .make-sm-column(6);
-                            padding-right: 5px;
-                            font-size: small;
+                        .snippetDesText {
                         }
-                            .snippetDes-col ul {
-                                padding-left: 18px;
-                            }
-                        .snippetDes-row {
-                            .make-sm-column(12);
-                            font-size: small;
-                        }
-                            .snippetDes-row ul {
-                                padding-left: 18px;
-                            }
-                            .snippetDes-row .snippetDesStyle {
-                                margin-bottom:0;
-                            }
                             .snippetDesStyle {
                                 font-family:@des-font-family;
+                                font-size: small;
+                                margin-bottom:0;
                                 background-color:white;
                             }
-                            textarea.snippetDesStyle {
-                                font-family:@des-font-family;
-                                font-size: small;
+                                textarea.snippetDesStyle {
+                                    font-family:@des-font-family;
+                                    font-size: small;
+                                }
+                            .snippetDes-col {
+                                .make-sm-column(6);
+                                padding-right: 5px;
+                                //padding-left:0;
                             }
+                                .snippetDes-col ul {
+                                    padding-left: 18px;
+                                }
+                            .snippetDes-row {
+                                .make-sm-column(12);
+                                //padding-left:0;
+                            }
+                                .snippetDes-row ul {
+                                    padding-left: 18px;
+                                }
 
-                        .snippetCode-col {
-                            .make-sm-column(6);
-                            padding-left: 5px;
-                        }
-                        .snippetCode-row {
-                            .make-sm-column(12);
+                        .snippetCodeText {
+                            padding-top: 5px;
+                            padding-bottom: 5px;
+                            border-radius:4px;
                         }
                             .snippetCodeStyle {
                                 font-family:@code-font-family;
                                 font-size: x-small;
-                                border: none;
-                                margin-bottom:0;
                             }
-                                .snippetCodeStyle.owned {
+                                .snippetCodeStyle.owned pre {
+                                    font-size: x-small;
+                                    background-color: transparent;
+                                    padding:0;
+                                    margin:0;
+                                    border:none;
+                                }
+                                .snippetCodeText.snippetCodeStyle.owned {
                                     background-color:@user-snippet-code-color;
                                 }
-                                .snippetCodeStyle.notOwned {
+                                .snippetCodeText.snippetCodeStyle.notOwned {
                                     background-color:@public-snippet-code-color;
                                 }
-                            .snippetCommandStyle {
-                                font-size: x-small;
-                                border: none;
-                                border-top: 1px solid #bbb;
-                                padding-bottom:0;
-                                padding-left:0;
-                                margin-bottom:0;
-                                background-color:inherit;
+                            .snippetCode-col {
+                                .make-sm-column(6);
+                                padding-left: 5px;
                             }
+                            .snippetCode-row {
+                                .make-sm-column(12);
+                            }
+                                .snippetCodeText.snippetCode-row {
+                                    padding-left: 5px;
+                                }
+                                /*.snippetCommandStyle {
+                                    font-size: x-small;
+                                    border: none;
+                                    border-top: 1px solid #bbb;
+                                    padding-bottom:0;
+                                    padding-left:0;
+                                    margin-bottom:0;
+                                    background-color:inherit;
+                                }*/
 #modalCover {
     position:fixed;
     top:0;

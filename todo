@@ -97,17 +97,17 @@ Edit "Topics"
 Edit "Snippets"
   - Update snippetForm to have snippetFormBar - DONE
     - add cancel button - DONE
-    - add public/private icon (eye)
-    - add topic selector
-    - add language selector for jQuery ACE
+    l add public/private icon (eye)
+    l add topic selector
+    l add language selector for jQuery ACE
   - Make snippetForm relocatable - DONE
-  - Hookup up "Snippet Edit"
+  - Hookup up "Snippet Edit" - DONE
     - Print out to console when edit button is clicked - DONE
-    - Add snippetEdit function:
+    - Add snippetEdit function: - DONE
       - add snippet data into snippetForm - DONE
       - show form in correct place in DOM - DONE
-      - call snippetUpdate()
-    - Add snippetUpdate function to send AJAX PUT request to update snippet
+      - call snippetUpdate() - DONE
+    - Add snippetUpdate function to send AJAX PUT request to update snippet - DONE
   - Hide and reset snippetForm if "Cancel" is called - DONE
 
 Change snippet public or private state in Snippet Selector popup
@@ -230,10 +230,11 @@ POST   /topic/<atopic> - create a new topic with name 'atopic'. Return the new t
 PUT    /topic/<atopic> - update a topic with topic ID 'atopic'. Return the topic id that was changed.
 DELETE /topic/<atopic> - delete a topic with topic ID 'atopic'. Return the number of topics added to the General list.
 
-# Create, edit, and delet snippets
+# Create, edit, delet, and list snippets
 POST   /snippets/<topic> - create a new snippet under topic 'atopic'. Return the new snippet id.
-GET    /snippets/<topic> - get all snippets in topic 'atopic'. Return the list of snippets.
 DELETE /snippets/<topic> - delete a snippet with snippet ID of '<topic>'
+PUT    /snippets/<topic> - edit a snippet with snippet ID of '<topic>'
+GET    /snippets/<topic> - get all snippets in topic 'atopic'. Return the list of snippets.
 
 # Search Snippets
 GET    /snippets/search/personal - get all of a user's personal snippets matching a search string
