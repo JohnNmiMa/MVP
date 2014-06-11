@@ -297,12 +297,36 @@ var viewUtils = (function() {
     }
 
     var setupSnippetForm = function($snippet, titleText, desHtml, codeHtml, snippetID) {
-        var $snippetForm = $('#snippetForm');
+        var $snippetForm = $('#snippetForm'),
+            $snippetDesCol = $snippet.find('.snippetContent .snippetDes-col'),
+            $snippetDesRow = $snippet.find('.snippetContent .snippetDes-row');
 
+        // Populate fields in the form
         $("form #titleField").val(titleText);
         $("form #desField").val(desHtml);
         $("form #codeField").val(codeHtml);
         $snippetForm.data('snippetID', snippetID); // save the snippet id in the form for later use
+
+        // Set the layout according to the layout controls
+        if ($snippetDesCol.length > 0 && $snippetDesCol.css('display') != 'none') {
+            // Set the form to Columnar layout
+            $snippetForm.find('.snippetContent .snippetDes-row').toggleClass('snippetDes-row snippetDes-col');
+            $snippetForm.find('.snippetContent .snippetCode-row').toggleClass('snippetCode-row snippetCode-col');
+            $snippetForm.find('.snippetContent .snippetDes-col').css('display', 'block');
+            $snippetForm.find('.snippetContent .snippetCode-col').css('display', 'block');
+        } else if ($snippetDesRow.length > 0 && $snippetDesRow.css('display') != 'none') {
+            // Set the form to Row layout
+            $snippetForm.find('.snippetContent .snippetDes-col').toggleClass('snippetDes-col snippetDes-row');
+            $snippetForm.find('.snippetContent .snippetCode-col').toggleClass('snippetCode-col snippetCode-row');
+            $snippetForm.find('.snippetContent .snippetDes-row').css('display', 'block');
+            $snippetForm.find('.snippetContent .snippetCode-row').css('display', 'block');
+        } else {
+            // Set the form to TitleOnly layout
+            $snippetForm.find('.snippetContent .snippetDes-col').css('display', 'none');
+            $snippetForm.find('.snippetContent .snippetDes-row').css('display', 'none');
+            $snippetForm.find('.snippetContent .snippetCode-col').css('display', 'none');
+            $snippetForm.find('.snippetContent .snippetCode-row').css('display', 'none');
+        }
 
         return $snippetForm;
     }
