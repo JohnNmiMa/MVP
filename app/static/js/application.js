@@ -239,60 +239,62 @@ var viewUtils = (function() {
         return ss;
     }
 
+    var highlightSnippetLayout = function($snippetFade, layout) {
+        if (layout === 'snippetColLayout') {
+            // Highlight the Columnar layout button
+            $snippetFade.find('.layout.snippetRowLayout span').removeClass('active');
+            $snippetFade.find('.layout.snippetTitleOnlyLayout span').removeClass('active');
+            $snippetFade.find('.layout.snippetColLayout span').addClass('active');
+        } else if (layout === 'snippetRowLayout') {
+            // Highlight the Row layout button
+            $snippetFade.find('.layout.snippetColLayout span').removeClass('active');
+            $snippetFade.find('.layout.snippetTitleOnlyLayout span').removeClass('active');
+            $snippetFade.find('.layout.snippetRowLayout span').addClass('active');
+        } else if (layout === 'snippetTitleOnlyLayout') {
+            // Highlight the TitleOnly layout button
+            $snippetFade.find('.layout.snippetColLayout span').removeClass('active');
+            $snippetFade.find('.layout.snippetRowLayout span').removeClass('active');
+            $snippetFade.find('.layout.snippetTitleOnlyLayout span').addClass('active');
+        }
+    }
+
     var showSnippetCol = function(event) {
         var $snippet = event.data.snippet,
-            $snippetDesRow  = $snippet.find('.snippetContent .snippetDes-row'),
-            $snippetCodeRow = $snippet.find('.snippetContent .snippetCode-row'),
             $snippetFade    = $snippet.find('div.snippetFade');
 
         // Set the layout of the snippet to columnar
-        $snippetDesRow.toggleClass('snippetDes-row snippetDes-col');
-        $snippetCodeRow.toggleClass('snippetCode-row snippetCode-col');
+        $snippet.find('.snippetContent .snippetDes-row').toggleClass('snippetDes-row snippetDes-col');
+        $snippet.find('.snippetContent .snippetCode-row').toggleClass('snippetCode-row snippetCode-col');
         $snippet.find('.snippetContent .snippetDes-col').css('display', 'block');
         $snippet.find('.snippetContent .snippetCode-col').css('display', 'block');
 
-        // Make the columnar layout icon active
-        $snippetFade.find('.layout.snippetRowLayout span').removeClass('active');
-        $snippetFade.find('.layout.snippetTitleOnlyLayout span').removeClass('active');
-        $snippetFade.find('.layout.snippetColLayout span').addClass('active');
+        highlightSnippetLayout($snippetFade, 'snippetColLayout');
     }
 
     var showSnippetRow = function(event) {
         var $snippet = event.data.snippet,
-            $snippetDesCol  = $snippet.find('.snippetContent .snippetDes-col'),
-            $snippetCodeCol = $snippet.find('.snippetContent .snippetCode-col'),
             $snippetFade    = $snippet.find('div.snippetFade');
 
         // Set the layout of the snippet to rows
-        $snippetDesCol.toggleClass('snippetDes-col snippetDes-row');
-        $snippetCodeCol.toggleClass('snippetCode-col snippetCode-row');
+        $snippet.find('.snippetContent .snippetDes-col').toggleClass('snippetDes-col snippetDes-row');
+        $snippet.find('.snippetContent .snippetCode-col').toggleClass('snippetCode-col snippetCode-row');
         $snippet.find('.snippetContent .snippetDes-row').css('display', 'block');
         $snippet.find('.snippetContent .snippetCode-row').css('display', 'block');
 
-        // Make the row layout icon active
-        $snippetFade.find('.layout.snippetColLayout span').removeClass('active');
-        $snippetFade.find('.layout.snippetTitleOnlyLayout span').removeClass('active');
-        $snippetFade.find('.layout.snippetRowLayout span').addClass('active');
+        highlightSnippetLayout($snippetFade, 'snippetRowLayout');
     }
 
     var showSnippetTitleOnly = function(event) {
         var $snippet = event.data.snippet,
-            $snippetDesCol  = $snippet.find('.snippetContent .snippetDes-col'),
-            $snippetDesRow  = $snippet.find('.snippetContent .snippetDes-row'),
-            $snippetCodeCol = $snippet.find('.snippetContent .snippetCode-col'),
-            $snippetCodeRow = $snippet.find('.snippetContent .snippetCode-row'),
             $snippetFade    = $snippet.find('div.snippetFade');
 
         // Set the layout of the snippet to title only
-        $snippetDesCol.css('display', 'none');
-        $snippetDesRow.css('display', 'none');
-        $snippetCodeCol.css('display', 'none');
-        $snippetCodeRow.css('display', 'none');
+        $snippet.find('.snippetContent .snippetDes-col').css('display', 'none');
+        $snippet.find('.snippetContent .snippetDes-row').css('display', 'none');
+        $snippet.find('.snippetContent .snippetCode-col').css('display', 'none');
+        $snippet.find('.snippetContent .snippetCode-row').css('display', 'none');
 
-        // Make the title only layout icon active
-        $snippetFade.find('.layout.snippetColLayout span').removeClass('active');
-        $snippetFade.find('.layout.snippetRowLayout span').removeClass('active');
-        $snippetFade.find('.layout.snippetTitleOnlyLayout span').addClass('active');
+        highlightSnippetLayout($snippetFade, 'snippetTitleOnlyLayout');
     }
 
     // Setup the snippet selector for each newly displayed snippet
@@ -307,22 +309,13 @@ var viewUtils = (function() {
                 $snippetDesCol = $snippet.find('.snippetContent .snippetDes-col'),
                 $snippetDesRow = $snippet.find('.snippetContent .snippetDes-row');
 
-            // Make the correct layout control active
+            // Highlight the correct layout control
             if ($snippetDesCol.length > 0 && $snippetDesCol.css('display') != 'none') {
-                // Highlight the columnar layout button
-                $snippetFade.find('.layout.snippetRowLayout span').removeClass('active');
-                $snippetFade.find('.layout.snippetTitleOnlyLayout span').removeClass('active');
-                $snippetFade.find('.layout.snippetColLayout span').addClass('active');
+                highlightSnippetLayout($snippetFade, 'snippetColLayout');
             } else if ($snippetDesRow.length > 0 && $snippetDesRow.css('display') != 'none') {
-                // Highlight the row layout button
-                $snippetFade.find('.layout.snippetColLayout span').removeClass('active');
-                $snippetFade.find('.layout.snippetTitleOnlyLayout span').removeClass('active');
-                $snippetFade.find('.layout.snippetRowLayout span').addClass('active');
+                highlightSnippetLayout($snippetFade, 'snippetRowLayout');
             } else {
-                // Highlight the TitleOnly layout button
-                $snippetFade.find('.layout.snippetColLayout span').removeClass('active');
-                $snippetFade.find('.layout.snippetRowLayout span').removeClass('active');
-                $snippetFade.find('.layout.snippetTitleOnlyLayout span').addClass('active');
+                highlightSnippetLayout($snippetFade, 'snippetTitleOnlyLayout');
             }
 
             $snippetFade.show();
