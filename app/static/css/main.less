@@ -496,7 +496,7 @@ nav div.navbar-header {
                     }
                         #formContent.snippetTextAreas textarea {
                             margin:5px 0;
-                            /*Make the textarea resizers only work vertically*/
+                            line-height:1.4;
                             resize:vertical;
                         }
 
@@ -515,15 +515,19 @@ nav div.navbar-header {
                             .snippetDes-col {
                                 .make-sm-column(6);
                                 padding-right: 5px;
-                                //padding-left:0;
                             }
+                                .snippetDesText.snippetDes-col {
+                                    padding-left:0;
+                                }
                                 .snippetDes-col ul {
                                     padding-left: 18px;
                                 }
                             .snippetDes-row {
                                 .make-sm-column(12);
-                                //padding-left:0;
                             }
+                                .snippetDesText.snippetDes-row {
+                                    padding-left:0;
+                                }
                                 .snippetDes-row ul {
                                     padding-left: 18px;
                                 }
@@ -544,10 +548,10 @@ nav div.navbar-header {
                                     margin:0;
                                     border:none;
                                 }
-                                .snippetCodeText.snippetCodeStyle.owned {
+                                .snippetCodeStyle.owned {
                                     background-color:@user-snippet-code-color;
                                 }
-                                .snippetCodeText.snippetCodeStyle.notOwned {
+                                .snippetCodeStyle.notOwned {
                                     background-color:@public-snippet-code-color;
                                 }
                             .snippetCode-col {

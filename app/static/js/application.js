@@ -56,14 +56,53 @@ var viewUtils = (function() {
         return updateSnippet;
     }
 
+    var setFormTextAreaHeight = function($snippetFormItem) {
+        var taLineHeight = 0,
+            taHeight = 0,
+            numberOfLines = 0,
+            $desField  = $snippetFormItem.find('#desField'),
+            $codeField = $snippetFormItem.find('#codeField'),
+            defaultNumRows = 4;
+
+        // Get the line height info for the description textarea
+        taLineHeight = parseInt($desField.css('line-height'), 10);
+        taHeight = $desField.prop('scrollHeight');
+        numberOfLines = Math.floor(taHeight / taLineHeight);
+        numberOfLines = numberOfLines > defaultNumRows ? numberOfLines : defaultNumRows;
+
+        // Set the height of the textarea
+        $desField.attr('rows', numberOfLines);
+        $desField.css({'resize':'vertical'});
+
+        // Get the line height info for the code textarea
+        taLineHeight = parseInt($codeField.css('line-height'), 10);
+        taHeight = $codeField.prop('scrollHeight');
+        numberOfLines = Math.floor(taHeight / taLineHeight);
+        numberOfLines = numberOfLines > defaultNumRows ? numberOfLines : defaultNumRows;
+
+        // Set the height of the textarea
+        $codeField.attr('rows', numberOfLines);
+        $codeField.css({'resize':'vertical'});
+    }
+
     var resetSnippetForm = function($snippet) {
         var snippetFormReset = function() {
-            var $snippetFormItem = $('#snippetForm');
+            var $snippetFormItem = $('#snippetForm'),
+                $desField = $snippetFormItem.find('#desField'),
+                $codeField = $snippetFormItem.find('#codeField');
+
+            // Hide and reset the form, and set textarea row size to 1
+            $snippetFormItem.hide();
+            $snippetFormItem[0].reset();
+
+            $desField.css('height', 'auto'); // auto allow textarea 'rows' attribute to work again
+            $desField.attr('rows', 1);
+
+            $codeField.css('height', 'auto'); // auto allow textarea 'rows' attribute to work again
+            $codeField.attr('rows', 1);
 
             // Relocate the snippetForm somewhere outside of #userSnippets
             // so it won't get deleted when the #userSnippets area is refreshed.
-            $snippetFormItem.hide();
-            $snippetFormItem[0].reset();
             $('#userSnippets').after($snippetFormItem);
             isSnippetEditModeEnabled = false;
 
@@ -200,7 +239,6 @@ var viewUtils = (function() {
         return ss;
     }
 
-
     // Setup the snippet selector for each newly displayed snippet
     var bindSnippetSelector = function($snippet) {
 
@@ -239,6 +277,7 @@ var viewUtils = (function() {
             $snippetFormItem.data('snippetID', snippetID); // save the snippet id in the form for later use
             $snippet.before($snippetFormItem);
             $snippetFormItem.show();
+            setFormTextAreaHeight($snippetFormItem);
         });
 
         // Bind the snippet delete button
