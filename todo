@@ -110,18 +110,18 @@ Edit "Snippets"
     - Add snippetUpdate function to send AJAX PUT request to update snippet - DONE
   - Hide and reset snippetForm if "Cancel" is called - DONE
 
-Change snippet public or private state in Snippet Selector popup
-  - If snippet is owned by logged in user, toggle public or private
-
 Add ability to change individual snippet layout
-  - Add col and row icons to Snippet Selector layout when in Title Only mode
-  - Add title only icon to Snippet Selector layout when NOT in Title Only mode
-  - Add showSnippetHorizontal = function($snippet) {...}
-  - Add showSnippetVertical = function($snippet) {...}
-  - Add showSnippetTitleOnly = function($snippet) {...}
+  - Add col and row icons to Snippet Selector layout when in Title Only mode - DONE
+  - Add title only icon to Snippet Selector layout when NOT in Title Only mode - DONE
+  - Add showSnippetHorizontal = function($snippet) {...} - DONE
+  - Add showSnippetVertical = function($snippet) {...} - DONE
+  - Add showSnippetTitleOnly = function($snippet) {...} - DONE
 
 Implement jQuery ACE for code
   - 
+
+Change snippet public or private state in Snippet Selector popup
+  - If snippet is owned by logged in user, toggle public or private
 
 Implement text editor for description
   - 
@@ -154,7 +154,7 @@ When deleting topics, query if all snippets should get deleted, or pushed to the
 Sort snippets in a topic (Don't sort under General topic)
   - Sort by time, alphabetically, or custom
   - Custom sort will require each snippet to be draggable with drag bars
-    - Add the pencil icon to do custom order when in custom sort mode
+    - Add the pencil icon or 'edit' word to do custom order when in custom sort mode
 
 Add "All" topic to show all topics. This will be useful with the language filter
 
@@ -162,6 +162,8 @@ Implement Language Filter
 
 Add email or ability to forward to another user's inbox
   - add Inbox, so that other users can forward snippets
+    - add snippet URL (contains snippet ID) to see snippet
+  - snippet must be public to see
 
 iPhone layout:
 * Remove topic and snippet create

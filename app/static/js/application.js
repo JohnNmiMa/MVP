@@ -948,6 +948,17 @@ var viewUtils = (function() {
 $(document).ready(function() {
 
     var topicPanelWidthRatio = topicPanelRatio();
+    /*var codeEditor = ace.edit('embeddedCode');
+
+    codeEditor.setTheme('ace/theme/chrome');
+    codeEditor.getSession().setMode('ace/mode/javascript');
+    codeEditor.renderer.setShowGutter(false);
+    codeEditor.renderer.setHScrollBarAlwaysVisible(false);
+    codeEditor.setFontSize(10);*/
+
+    //$('#codeField').ace({theme:'chrome', lang:'javascript'});
+    //$('#embeddedCode').ace({theme:'chrome', lang:'javascript'});
+    //$('#embeddedCode').css('height', 'auto');
 
     function topicPanelRatio() {
         return $('#topicPanel').width() / $('#topicPanel').parent().width();
