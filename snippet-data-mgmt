@@ -1,0 +1,84 @@
+Scenario: Create a new snippet
+1) User selects the #snippetAdd icon
+  - viewUtils.enterNewSnippet() is called
+2) enterNewSnippet():
+   - create a snippetForResetter() // So the original snippet can be shown with new
+     data when done creating the new snippet - not applicable here (there is no original
+     snippet - we are creating one)
+   - enable the full-screen modal, so the user won't get confused during snippet edit
+   - relocate the #snippetForm right before the #userSnippets div
+   - setupCodeEditor($snippetForm, "") // give it an empty string - a fresh code section
+3)   setupCodeEditor():
+     - CodeMirror(#embeddedCode, options) is called
+       - creates the code editor, and initializes it's contents (empty contents for add)
+       - ### use CodeMirror.fromTextArea(codeField, options)
+         - this will create the code editor right after the form's textarea. There is
+           associated with the editor ability to put data into the editor and take the
+           document data from the editor and put it back into the forn's textarea.
+
+   - the snippetForm should have the title, description and code populated in it,
+     it's ready to be seen.
+   - show the snippetForm - #snippetForm.show()
+   - set focus to the title field in the form
+  - the #snippetAdd button is highlighted as selected
+
+4a) User clicks #snippetCancel button
+   - viewUtils.cancelSnippet() is called
+5a) cancelSnippet():
+   - snippetFormReset() is called
+6a)  snippetFormReset():
+     - $snippetForm.hide() - hide the form
+     - reset the form
+     - remove the CodeMirror editor from the DOM
+     - ? reset the textarea attributes to work again for the next snippet add
+     - relocate the snippetForm out of the #userSnippets so it won't get deleted 
+       if the userSnippets are deleted during a search or display of a new topic.
+     - set isSnippetEditModeEnabled to false
+     - If the snippetForm was used to edit a snippet, then the original snippet
+       would be displayed again.
+     - hide the snippet form
+
+4b) User clicks #snippetSave button
+  - viewUtils.saveNewSnippet() is called
+5b) saveNewSnippet():
+    ### Put the data from the code editor into the form
+    - ### Test 1: using the codeEditor.save() method:
+          This took the contents of the editor which is a raw text string
+          (with spacing and returns and all), and saved it away. It seems that
+           to make this display properly in a div, the data needs to be saved
+           away in <pre> tags. UPDATE: The pre tags worked. We now have simple
+           <div> text in <pre> tags to keep the spacing in the string.
+    - ### Test 2: don't use codeEditor.save(). What we would like to do is to 
+          take the editors DOM elements (a bunch of spans), and inset them into the
+          form's #codeField textarea. Not sure what happens when we get the textarea's
+          value. Will it be the DOM elements, or just a string of text?
+          !!! Did this - works beautifully. You can then style the code in your code div
+    - get the data from the form (title, description, code, topicName)
+      - data = $('#snippetForm').serialize() - this gets the data to send over the wire
+    - call snippetService.saveNewSnippet() - does an AJAX request to create a new snippet
+  - the #snippetAdd button is un-highlighted as deselected
+
+6b) The AJAX success or error methods are called. Let's do the success path
+  - displayNewSnippet(id, creator_id, access) is called
+7b) displayNewSnippet():
+    - the title, description, and code data are retrieved from the form fields
+    - buildSnippet() is called -> returns a node string
+    - snippetFormReset() is called
+8b)   snippetFormReset():
+      - $snippetForm.hide() - hide the form
+      - reset the form
+      - remove the CodeMirror editor from the DOM
+      - ? reset the textarea attributes to work again for the next snippet add
+      - relocate the snippetForm out of the #userSnippets so it won't get deleted 
+        if the userSnippets are deleted during a search or display of a new topic.
+      - set isSnippetEditModeEnabled to false
+      - If the snippetForm was used to edit a snippet, then the original snippet
+        would be displayed again.
+      - hide the snippet form
+
+    - add the new snippet to the beginning of #userSnippets
+    - bindSnippetSelector() is called to get the snippet selector controls working
+
+  - incrementTopicCount() is called
+
+
