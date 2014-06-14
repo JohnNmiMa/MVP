@@ -177,9 +177,7 @@ var viewUtils = (function() {
         ss +=     '    </div>';
         ss +=     '    <div class="snippetContent">';
         ss +=     '        <div class="snippetFade" style="display:none">';
-        if (codeClass == "owned") {
-            ss += '            <button type="button" class="btn btn-danger btn-xs layout snip-it">Snip it</button>';
-        }
+        ss +=     '            <button type="button" class="btn btn-danger btn-xs layout snip-it">Snip it</button>';
         ss +=     '            <div class="layout snippetColLayout">';
         ss +=     '                <span class="fa fa-minus-square-o fa-rotate-90 fa-2x">';
         ss +=     '            </div>';
@@ -1230,6 +1228,7 @@ $('#topicAdd').click(function() {
      * Snippet CRUD
      */
 
+    // Snippet 'save' button clicked
     $('#snippetSave').click(function() {
         if (viewUtils.isSnippetEditModeEnabled === true) {
             var snippetID = $('#snippetForm').data('snippetID');
