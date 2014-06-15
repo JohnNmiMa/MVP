@@ -24,7 +24,10 @@ var viewUtils = (function() {
         updateSnippet = function() {},
         codeEditor = {},
         codeEditorTheme = 'eclipse',
-        codeEditorMode = 'javascript';
+        codeEditorMode = 'javascript',
+        desEditor = {},
+        desEditorTheme = 'eclipse',
+        desEditorMode = 'default';
 
     /*
      * Private methods
@@ -95,12 +98,14 @@ var viewUtils = (function() {
         var snippetFormReset = function() {
             var $desField = $snippetForm.find('#desField'),
                 $codeField = $snippetForm.find('#codeField'),
+                $desEditorNode = desEditor.getWrapperElement(),
                 $codeEditorNode = codeEditor.getWrapperElement();
 
             // Hide and reset the form, and set textarea row size to 1
             $snippetForm.hide();
             $snippetForm[0].reset();
-            $codeEditorNode.remove(); // Remove the CodeMirror editor
+            $desEditorNode.remove(); // Remove the CodeMirror description editor
+            $codeEditorNode.remove(); // Remove the CodeMirror code editor
 
             $desField.css('height', 'auto'); // auto allow textarea 'rows' attribute to work again
             $desField.attr('rows', 1);
@@ -303,12 +308,18 @@ var viewUtils = (function() {
         highlightSnippetLayout($snippetFade, 'snippetTitleOnlyLayout');
     }
 
-    var getDomNodesAsString = function($snippetCodeText) {
-        var out = [];
-        $snippetCodeText.children('pre').each(function() {
-            out.push($(this).text());
+    var getDomNodesAsString = function($snippetDesText, $snippetCodeText) {
+        var desStr = [],
+            codeStr = [];
+
+        $snippetDesText.children('pre').each(function() {
+            desStr.push($(this).text());
         });
-        return out.join("\n");
+
+        $snippetCodeText.children('pre').each(function() {
+            codeStr.push($(this).text());
+        });
+        return {'desStr':desStr.join("\n"), 'codeStr':codeStr.join("\n")};
     }
 
     var setupSnippetForm = function($snippet, titleText, desHtml, codeText, snippetID) {
@@ -321,7 +332,7 @@ var viewUtils = (function() {
         $("form #desField").val(desHtml);
         $("form #codeField").val(codeText);
 
-        setupCodeEditor($('#codeField'), codeEditorTheme, codeEditorMode);
+        setupCodeMirrorEditors($('#desField'), $('#codeField'), desEditorTheme, desEditorMode, codeEditorTheme, codeEditorMode);
         $snippetForm.data('snippetID', snippetID); // save the snippet id in the form for later use
 
         // Set the layout according to the layout controls
@@ -385,12 +396,14 @@ var viewUtils = (function() {
             var snippetID = $snippet.find('span.snippetID').clone().children().remove().end().text();
                 titleText = $snippet.find('.snippetContent .snippetTitleText').clone().children().remove().end().text(),
                 desHtml   = $snippet.find('.snippetContent .snippetDesText').html(),
-                codeText  = getDomNodesAsString($snippet.find('.snippetContent .snippetCodeText'));
+                domNodeStrings = getDomNodesAsString(
+                    $snippet.find('.snippetContent .snippetDesText'),
+                    $snippet.find('.snippetContent .snippetCodeText')),
+                desText  = domNodeStrings['desStr'],
+                codeText  = domNodeStrings['codeStr'],
+                $snippetForm = setupSnippetForm($snippet, titleText, desText, codeText, snippetID);
 
             isSnippetEditModeEnabled = true;
-
-            // Prepare the snippet form
-            $snippetForm = setupSnippetForm($snippet, titleText, desHtml, codeText, snippetID);
 
             // Create the snippet updater and form resetter
             updateSnippet = snippetUpdater($snippet);
@@ -401,6 +414,7 @@ var viewUtils = (function() {
             $snippet.hide();                      // hide the currenlty edited snippet
             $snippet.before($snippetForm);        // place the form right before the snippet in the DOM
             $snippetForm.show();                  // show the form
+            desEditor.refresh();
             codeEditor.refresh();
             setFormTextAreaHeight($snippetForm);  // set the textareas in the form to a useful size
         });
@@ -679,12 +693,20 @@ var viewUtils = (function() {
         snippetService.deleteTopic(topicID, success, error);
     }
 
-    var setupCodeEditor = function($codeField, theme, mode) {
-        // Create a new CodeMirror editor, right under our #codeFiled textarea
+    var setupCodeMirrorEditors = function($desField, $codeField, desTheme, desMode, codeTheme, codeMode) {
+        // Create a new CodeMirror desciption editor, right under our #desField textarea
+        desEditor = CodeMirror.fromTextArea($desField.get(0), {
+            //mode:desMode,
+            tabindex: "2",
+            theme:desTheme,
+            flattenSpans:true
+        });
+
+        // Create a new CodeMirror code editor, right under our #codeField textarea
         codeEditor = CodeMirror.fromTextArea($codeField.get(0), {
-            mode:mode,
+            mode:codeMode,
             tabindex: "3",
-            theme:theme,
+            theme:codeTheme,
             flattenSpans:true
         });
     }
@@ -698,16 +720,21 @@ var viewUtils = (function() {
         // Relocate the snippetForm to the top of the displayed snippet list
         $('#modalCover').show();
         $('#userSnippets').before($snippetForm);
-        setupCodeEditor($('#codeField'), codeEditorTheme, codeEditorMode);
+        setupCodeMirrorEditors($('#desField'), $('#codeField'), desEditorTheme, desEditorMode, codeEditorTheme, codeEditorMode);
         $snippetForm.show();
 
         $('#titleField').focus();
     }
 
-    var updateTextareasWithEditorsContents = function($codeField) {
-        // Get the DOM nodes in an HTML string
-        var editorDomContents = $('#formContent .CodeMirror .CodeMirror-code').html();
+    var updateTextareasWithEditorsContents = function($desField, $codeField) {
+        // Get the description editors DOM nodes in an HTML string
+        var editorDomContents = $desField.next().find('.CodeMirror-code').html();
+        // Add the HTML string as new DOM nodes in the form's textarea
+        $desField.val(editorDomContents);
 
+        // Get the code editors DOM nodes in an HTML string
+        //editorDomContents = $('#codeField .CodeMirror .CodeMirror-code').html();
+        editorDomContents = $codeField.next().find('.CodeMirror-code').html();
         // Add the HTML string as new DOM nodes in the form's textarea
         $codeField.val(editorDomContents);
     }
@@ -732,7 +759,7 @@ var viewUtils = (function() {
         // Test 2: rather than take the text out of the editor, let's take the DOM elements.
         // And let's copy those DOM elements into our textarea. Is this going to work?
         // YES! This works great. It allows the snippet to be styled according to a ComeMirror theme.
-        updateTextareasWithEditorsContents($('#codeField'));
+        updateTextareasWithEditorsContents($('#desField'), $('#codeField'));
 
         data = $("#snippetForm").serialize();
 
@@ -760,13 +787,15 @@ var viewUtils = (function() {
 
     var saveEditedSnippet = function(snippetID) {
         var data = {},
-            title = $('#snippetForm #titleField').val(),
-            desText   = $('#snippetForm #desField').val(),
-            codeText  = '';
+            title = '',
+            desText = '',
+            codeText = '';
 
         // We must get the editor's contents into the form
-        updateTextareasWithEditorsContents($('#codeField'));
+        updateTextareasWithEditorsContents($('#desField'), $('#codeField'));
 
+        title = $('#snippetForm #titleField').val();
+        desText = $('#snippetForm #desField').val();
         codeText  = $('#snippetForm #codeField').val();
         data = $("#snippetForm").serialize(),
 
