@@ -117,14 +117,28 @@ Add ability to change individual snippet layout
   - Add showSnippetVertical = function($snippet) {...} - DONE
   - Add showSnippetTitleOnly = function($snippet) {...} - DONE
 
-Implement jQuery ACE for code
-  - 
+Implement Javascript embedded code editor for code div/textarea
+  - try jQuery ACE - is tough to embed, doesn't work - DONE
+  - try CodeMirror  - DONE
+    - read docs - DONE
+    - set font size - DONE
+    - set language - DONE
+    - get CodeMirror input area into textarea and save away - DONE
+      ? should a primary textarea be used, and managed by CodeMirror and its own div
+        - can use CodeMirror methods to move data back and forth - YES, this works great.
+          And this is especially how CodeMirror designed this to work.
+      ? or should we just manage the CodeMirror div without our own textarea. Didn't try.
+        Could be done, but really has no extra value.
+    - get textarea into CodeMirror input area
+      - what is getting saved? (HTML, raw text, ...?)
+    - get input area sizable - DONE
+
+Implement text editor for description
+  - just use the same implementation as done for the code textarea.
+  - make the language "text & html" only. Maybe add markup later.
 
 Change snippet public or private state in Snippet Selector popup
   - If snippet is owned by logged in user, toggle public or private
-
-Implement text editor for description
-  - 
 
 Implement Gear
   - Add "Setting" model in server
@@ -134,6 +148,10 @@ Implement Gear
   - Set default for snippet creation to public or private
   - Set user snippet color
   - Set public snippet color
+  - Set code line spacing
+  - Set snippet theme
+    - Create checkbox to show different language attributes
+    - variables, keywords, operators, punctuation, strings, comments
 
 Change DB to something that persists on Heroku (Postgres)
 

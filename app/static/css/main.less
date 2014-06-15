@@ -477,6 +477,25 @@ nav div.navbar-header {
                                     }
                                 #snippetForm .snippetTitle {
                                 }
+                        #snippetForm .CodeMirror {
+                            height:auto;
+                            min-height:30px;
+                            max-height:400px;
+                            margin:5px 0;
+                            border-radius:4px;
+                            font-family:@code-font-family;
+                            font-size: x-small;
+                            background-color:@user-snippet-code-color;
+                        }
+                            #snippetForm .CodeMirror-scroll {
+                                height:auto;
+                                overflow-x:auto;
+                            }
+                            #snippetForm .CodeMirror-scroll {
+                                [contentEditable=true]:empty:not(:focus):before{
+                                    content:attr(data-ph)
+                                }
+                            }
 
                     .snippetTitle {
                         .make-xs-column(12);
@@ -503,7 +522,6 @@ nav div.navbar-header {
                         #formContent.snippetTextAreas textarea {
                             margin:5px 0;
                             line-height:1.4;
-                            resize:vertical;
                         }
 
                         .snippetDesText {
@@ -514,6 +532,14 @@ nav div.navbar-header {
                                 margin-bottom:0;
                                 background-color:white;
                             }
+                                .snippetDesStyle pre {
+                                    //font-size: x-small;
+                                    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+                                    background-color: transparent;
+                                    padding:0;
+                                    margin:0;
+                                    border:none;
+                                }
                                 textarea.snippetDesStyle {
                                     font-family:@des-font-family;
                                     font-size: small;
@@ -547,33 +573,24 @@ nav div.navbar-header {
                                 font-family:@code-font-family;
                                 font-size: x-small;
                             }
-                                .snippetCodeStyle.owned pre {
-                                    font-size: x-small;
-                                    background-color: transparent;
-                                    padding:0;
-                                    margin:0;
-                                    border:none;
-                                }
                                 .snippetCodeStyle.owned {
                                     background-color:@user-snippet-code-color;
                                 }
                                 .snippetCodeStyle.notOwned {
                                     background-color:@public-snippet-code-color;
                                 }
+                                    .snippetCodeStyle.owned pre {
+                                        font-size: x-small;
+                                        background-color: transparent;
+                                        padding:0;
+                                        margin:0;
+                                        border:none;
+                                    }
                             .snippetCode-col {
                                 .make-sm-column(6);
                                 padding-left: 5px;
                                 position:relative;
                             }
-                                #embeddedCode {
-                                    position:absolute;
-                                    top:0;
-                                    right:0;
-                                    bottom:0;
-                                    left:0;
-                                    height:70px;
-                                    resize:vertical;
-                                }
                             .snippetCode-row {
                                 .make-sm-column(12);
                             }
