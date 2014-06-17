@@ -696,10 +696,11 @@ var viewUtils = (function() {
     var setupCodeMirrorEditors = function($desField, $codeField, desTheme, desMode, codeTheme, codeMode) {
         // Create a new CodeMirror desciption editor, right under our #desField textarea
         desEditor = CodeMirror.fromTextArea($desField.get(0), {
-            //mode:desMode,
+            mode:desMode,
             tabindex: "2",
             theme:desTheme,
-            flattenSpans:true
+            autofocus:false
+            //flattenSpans:true
         });
 
         // Create a new CodeMirror code editor, right under our #codeField textarea
@@ -707,7 +708,8 @@ var viewUtils = (function() {
             mode:codeMode,
             tabindex: "3",
             theme:codeTheme,
-            flattenSpans:true
+            autofocus:false
+            //flattenSpans:true
         });
     }
 

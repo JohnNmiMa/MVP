@@ -305,6 +305,7 @@ nav div.navbar-header {
         }
             #toggleIcon a {
                 padding-left: 1px;
+                z-index:5100;
             }
             #snippetAdd.hide {
                 display:none;
@@ -483,10 +484,25 @@ nav div.navbar-header {
                             max-height:400px;
                             margin:5px 0;
                             border-radius:4px;
-                            font-family:@code-font-family;
-                            font-size: x-small;
-                            background-color:@user-snippet-code-color;
+                            border: 1px solid #cccccc;
                         }
+                            #snippetForm .CodeMirror.CodeMirror-focused {
+                                border-color: #66afe9;
+                                outline: 0;
+                                -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, 0.6);
+                                box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, 0.6);
+                            }
+                            #snippetForm .snippetDes-col .CodeMirror,
+                            #snippetForm .snippetDes-row .CodeMirror, {
+                                font-family:@des-font-family;
+                                font-size: small;
+                            }
+                            #snippetForm .snippetCode-col .CodeMirror,
+                            #snippetForm .snippetCode-row .CodeMirror, {
+                                background-color:@user-snippet-code-color;
+                                font-family:@code-font-family;
+                                font-size: x-small;
+                            }
                             #snippetForm .CodeMirror-scroll {
                                 height:auto;
                                 overflow-x:auto;
@@ -521,7 +537,6 @@ nav div.navbar-header {
                     }
                         #formContent.snippetTextAreas textarea {
                             margin:5px 0;
-                            line-height:1.4;
                         }
 
                         .snippetDesText {
@@ -531,14 +546,16 @@ nav div.navbar-header {
                                 font-size: small;
                                 margin-bottom:0;
                                 background-color:white;
+                                line-height:1;
                             }
                                 .snippetDesStyle pre {
-                                    //font-size: x-small;
                                     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
                                     background-color: transparent;
                                     padding:0;
                                     margin:0;
                                     border:none;
+                                    line-height:1;
+                                    overflow:hidden;
                                 }
                                 textarea.snippetDesStyle {
                                     font-family:@des-font-family;
@@ -568,6 +585,7 @@ nav div.navbar-header {
                             padding-top: 5px;
                             padding-bottom: 5px;
                             border-radius:4px;
+                            line-height:1;
                         }
                             .snippetCodeStyle {
                                 font-family:@code-font-family;
@@ -585,6 +603,7 @@ nav div.navbar-header {
                                         padding:0;
                                         margin:0;
                                         border:none;
+                                        line-height:1;
                                     }
                             .snippetCode-col {
                                 .make-sm-column(6);

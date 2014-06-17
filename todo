@@ -129,13 +129,28 @@ Implement Javascript embedded code editor for code div/textarea
           And this is especially how CodeMirror designed this to work.
       ? or should we just manage the CodeMirror div without our own textarea. Didn't try.
         Could be done, but really has no extra value.
-    - get textarea into CodeMirror input area
+    - get textarea into CodeMirror input area - DONE
       - what is getting saved? (HTML, raw text, ...?)
     - get input area sizable - DONE
 
-Implement text editor for description
-  - just use the same implementation as done for the code textarea.
-  - make the language "text & html" only. Maybe add markup later.
+Implement text editor for description - DONE
+  - just use the same implementation as done for the code textarea. - DONE
+  - make the language "text & html" only. Maybe add markup later. - DONE
+
+Snippet Form Cleanup
+  - Add form selection borders (description and code textareas) - DONE
+  - get line height of form the same as when viewing des and code - DONE
+  - try the Markup mode for the description area
+    - NOTE: only styles markup, doesn't render Markup. Need a true Markup editor.
+            CodeMirror is only for styling, and will not support WSYWIG or Markup
+  - let the topic panel move during snippet edit - DONE
+  l can we save a large string of the editors contents that includes
+    the <span> tags? This would simplify the number of nodes in the DOM greatly
+
+Create "Welcome" topic in the SomeCode account, and put it in every new account
+  - initialize it in di.py script
+    - do it before the user accounts are created
+  - Add the Welcome topic to each new account
 
 Change snippet public or private state in Snippet Selector popup
   - If snippet is owned by logged in user, toggle public or private
