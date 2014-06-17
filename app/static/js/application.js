@@ -79,6 +79,12 @@ var viewUtils = (function() {
     }
 
     var snippetFormResetter = function($snippet, $snippetForm) {
+        if ($snippet == undefined) {
+            // Clear out the snippet form textareas (needed for Firefox)
+            $('#desField').val("");
+            $('#codeField').val("");
+        }
+
         var snippetFormReset = function() {
             var $desField = $snippetForm.find('#desField'),
                 $codeField = $snippetForm.find('#codeField'),
