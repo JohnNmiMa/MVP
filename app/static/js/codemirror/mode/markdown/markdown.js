@@ -14,6 +14,7 @@
 CodeMirror.defineMode("markdown", function(cmCfg, modeCfg) {
 
   var htmlFound = CodeMirror.modes.hasOwnProperty("xml");
+  var isHtmlFound = htmlFound ? {name: "xml", htmlMode: true} : "text/plain";
   var htmlMode = CodeMirror.getMode(cmCfg, htmlFound ? {name: "xml", htmlMode: true} : "text/plain");
   var aliases = {
     html: "htmlmixed",
