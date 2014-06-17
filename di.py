@@ -120,16 +120,27 @@ def create_db():
     else:
         api.version_control(SQLALCHEMY_DATABASE_URI, SQLALCHEMY_MIGRATE_REPO, api.version(SQLALCHEMY_MIGRATE_REPO))
 
+scgoog = {'google_id': '113145721600593244417', 'name':'SomeCode', 'email': 'somecodeapp@gmail.com', 'role':models.ROLE_ADMIN}
 jfb = {'fb_id': '100002423206916', 'name':'JohnMarksJr', 'email': 'johnmarksjr@gmail.com', 'role':models.ROLE_USER}
 jgoog = {'google_id': '106697488228998596996', 'name':'John', 'email': 'johnmarksjr@gmail.com', 'role':models.ROLE_USER}
 jtwit = {'twitter_id': '1860746486', 'name':'jettagozoom', 'email': None, 'role':models.ROLE_USER}
-scgoog = {'google_id': '113145721600593244417', 'name':'SomeCode', 'email': 'somecodeapp@gmail.com', 'role':models.ROLE_USER}
-users = [jfb, jgoog, jtwit]
+users = [scgoog, jfb, jgoog, jtwit]
 
 def add_users():
     u = None
     for user in users:
-        if 'fb_id' in user:
+        if user['name'] == 'SomeCode':
+            u = models.User(fb_id=user['fb_id'], name=user['name'], email=user['email'], role=user['role'])
+            db.session.add(u)
+
+            # Add the 'General' topic for the user
+            topic = models.Topic(topic = 'General', author = u)
+            db.session.add(topic)
+
+            # Add the 'Welcome' topic for the user
+            topic = models.Topic(topic = 'Welcome', author = u)
+            db.session.add(topic)
+        elif 'fb_id' in user:
             u = models.User(fb_id=user['fb_id'], name=user['name'], email=user['email'], role=user['role'])
             db.session.add(u)
 
@@ -149,7 +160,18 @@ def add_users():
         db.session.commit()
 
 
-def add_snips():
+def add_scsnips():
+    user = models.User.query.filter_by(name='SomeCode').first()
+    wt = user.topics.filter_by(topic='Welcome').first()
+
+    # Create and add the snippets
+    for snip in sc_snippets:
+        s = models.Snippet(title = snip['title'], description = snip['des'], code = snip['code'],
+                           timestamp = datetime.utcnow(), topic=gt, creator_id=user.id, access=snip['access'])
+        db.session.add(s)
+    db.session.commit()
+
+def add_jmsnips():
     # Get the 'General' topic
     user = models.User.query.first()
     gt = user.topics.filter_by(topic='General').first()

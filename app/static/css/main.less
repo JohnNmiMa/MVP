@@ -540,6 +540,7 @@ nav div.navbar-header {
                         }
 
                         .snippetDesText {
+                            padding: 5px 0;
                         }
                             .snippetDesStyle {
                                 font-family:@des-font-family;
@@ -582,8 +583,7 @@ nav div.navbar-header {
                                 }
 
                         .snippetCodeText {
-                            padding-top: 5px;
-                            padding-bottom: 5px;
+                            padding: 5px 0;
                             border-radius:4px;
                             line-height:1;
                         }
@@ -591,6 +591,9 @@ nav div.navbar-header {
                                 font-family:@code-font-family;
                                 font-size: x-small;
                             }
+                                .snippetCodeText.snippetCodeStyle:empty {
+                                    background-color:#fff;
+                                }
                                 .snippetCodeStyle.owned {
                                     background-color:@user-snippet-code-color;
                                 }

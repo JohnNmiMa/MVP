@@ -40,27 +40,11 @@ var viewUtils = (function() {
 
             // Update the snippet description
             $snippet.find('.snippetContent .snippetDesText').html(description);
-            if (description) {
-                // Add code layout class - columnar or row, and display it
-                $snippet.find('.snippetTextAreas .snippetDesText').addClass(snippetDesLayout);
-                $snippet.find('.snippetTextAreas .snippetDesText').show();
-            } else {
-                // Remove code layout class - columnar or row, and hide it
-                $snippet.find('.snippetTextAreas .snippetDesText').removeClass(snippetDesLayout);
-                $snippet.find('.snippetTextAreas .snippetDesText').hide();
-            }
+            $snippet.find('.snippetTextAreas .snippetDesText').show();
 
             // Update the snippet code
             $snippet.find('.snippetContent .snippetCodeText').html(code);
-            if (code) {
-                // Add code layout class - columnar or row, and display it
-                $snippet.find('.snippetTextAreas .snippetCodeText').addClass(snippetCodeLayout);
-                $snippet.find('.snippetTextAreas .snippetCodeText').show();
-            } else {
-                // Remove code layout class - columnar or row, and display it
-                $snippet.find('.snippetTextAreas .snippetCodeText').removeClass(snippetCodeLayout);
-                $snippet.find('.snippetTextAreas .snippetCodeText').hide();
-            }
+            $snippet.find('.snippetTextAreas .snippetCodeText').show();
         }
         return updateSnippet;
     }
@@ -106,6 +90,8 @@ var viewUtils = (function() {
             $snippetForm[0].reset();
             $desEditorNode.remove(); // Remove the CodeMirror description editor
             $codeEditorNode.remove(); // Remove the CodeMirror code editor
+            desEditor = function() {};
+            codeEditor = function() {};
 
             $desField.css('height', 'auto'); // auto allow textarea 'rows' attribute to work again
             $desField.attr('rows', 1);
@@ -232,7 +218,7 @@ var viewUtils = (function() {
             //ss += '<pre>' + code + '</pre></div>'; // use for CodeMirror "Test 1" method, described elsewhere
             ss += code + '</div>';
         } else {
-            ss += '                <div class="snippetCodeText snippetCodeStyle ' + codeClass + '" style="display:none"></div>';
+            ss += '                <div class="snippetCodeText snippetCodeStyle ' + snippetCodeLayout + ' ' + codeClass + '"></div>';
         }
         ss +=     '        </div>';
         ss +=     '    </div>';
@@ -315,6 +301,11 @@ var viewUtils = (function() {
         $snippetDesText.children('pre').each(function() {
             desStr.push($(this).text());
         });
+        if (desStr.length === 0) {
+            $snippetDesText.children().each(function() {
+                desStr.push($(this).text());
+            });
+        }
 
         $snippetCodeText.children('pre').each(function() {
             codeStr.push($(this).text());
@@ -699,8 +690,12 @@ var viewUtils = (function() {
             mode:desMode,
             tabindex: "2",
             theme:desTheme,
+            specialCharPlaceholder: function(ch) {
+                var token = document.createElement('span');
+                token.title = "\\u" + ch.charCodeAt(0).toString(16);
+                return token;
+            },
             autofocus:false
-            //flattenSpans:true
         });
 
         // Create a new CodeMirror code editor, right under our #codeField textarea
@@ -708,8 +703,12 @@ var viewUtils = (function() {
             mode:codeMode,
             tabindex: "3",
             theme:codeTheme,
+            specialCharPlaceholder: function(ch) {
+                var token = document.createElement('span');
+                token.title = "\\u" + ch.charCodeAt(0).toString(16);
+                return token;
+            },
             autofocus:false
-            //flattenSpans:true
         });
     }
 
@@ -728,17 +727,39 @@ var viewUtils = (function() {
         $('#titleField').focus();
     }
 
+    // Create function that returns a string with all non-printing characters removed
+    var getEditorTextContents = function($editorCodeDiv) {
+        //var editorTextContents = $editorCodeDiv.text().replace(/^\s+|\s+$/gm,'');
+        var editorTextContents = $editorCodeDiv.text();
+        if (editorTextContents.length === 1) {
+            var charCode = editorTextContents.charCodeAt(0);
+            if (charCode === 8203) {
+                editorTextContents = "";
+            }
+        }
+        return editorTextContents;
+    }
+
     var updateTextareasWithEditorsContents = function($desField, $codeField) {
         // Get the description editors DOM nodes in an HTML string
-        var editorDomContents = $desField.next().find('.CodeMirror-code').html();
-        // Add the HTML string as new DOM nodes in the form's textarea
-        $desField.val(editorDomContents);
+        var editorTextContents = getEditorTextContents($desField.next().find('.CodeMirror-code'));
+        if (editorTextContents.length > 0) {
+            editorDomContents = $desField.next().find('.CodeMirror-code').html();
+            // Add the HTML string as new DOM nodes in the form's textarea
+            $desField.val(editorDomContents);
+        } else {
+            $desField.val("");
+        }
 
         // Get the code editors DOM nodes in an HTML string
-        //editorDomContents = $('#codeField .CodeMirror .CodeMirror-code').html();
-        editorDomContents = $codeField.next().find('.CodeMirror-code').html();
-        // Add the HTML string as new DOM nodes in the form's textarea
-        $codeField.val(editorDomContents);
+        editorTextContents = getEditorTextContents($codeField.next().find('.CodeMirror-code'));
+        if (editorTextContents.length > 0) {
+            editorDomContents = $codeField.next().find('.CodeMirror-code').html();
+            // Add the HTML string as new DOM nodes in the form's textarea
+            $codeField.val(editorDomContents);
+        } else {
+            $codeField.val("");
+        }
     }
 
     var saveNewSnippet = function(snippetSaveButton) {
@@ -927,6 +948,14 @@ var viewUtils = (function() {
         snippetDesLayout = SNIPPET_DES_COL;
         snippetCodeLayout = SNIPPET_CODE_COL;
         snippetNoneLayout = false;
+
+        // Show the CodeMirror editors if we were in Text Only layout
+        if ('refresh' in desEditor) {
+            desEditor.refresh();
+        }
+        if ('refresh' in codeEditor) {
+            codeEditor.refresh();
+        }
     };
 
     var showSnippetsInRows = function() {
@@ -945,6 +974,14 @@ var viewUtils = (function() {
         snippetDesLayout = SNIPPET_DES_ROW;
         snippetCodeLayout = SNIPPET_CODE_ROW;
         snippetNoneLayout = false;
+
+        // Show the CodeMirror editors incase we were in Text Only mode
+        if ('refresh' in desEditor) {
+            desEditor.refresh();
+        }
+        if ('refresh' in codeEditor) {
+            codeEditor.refresh();
+        }
     };
 
     var showSnippetTitlesOnly = function() {

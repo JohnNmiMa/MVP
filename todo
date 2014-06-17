@@ -152,6 +152,10 @@ Create "Welcome" topic in the SomeCode account, and put it in every new account
     - do it before the user accounts are created
   - Add the Welcome topic to each new account
 
+Change DB to something that persists on Heroku (Postgres)
+
+Push to Heroku
+
 Change snippet public or private state in Snippet Selector popup
   - If snippet is owned by logged in user, toggle public or private
 
@@ -167,10 +171,6 @@ Implement Gear
   - Set snippet theme
     - Create checkbox to show different language attributes
     - variables, keywords, operators, punctuation, strings, comments
-
-Change DB to something that persists on Heroku (Postgres)
-
-Push to Heroku
 
 Associate snippet with a topic or multiple topics (MAYBE)
   - Update database to support a many-to-many relationship
