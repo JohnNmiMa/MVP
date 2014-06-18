@@ -8,9 +8,9 @@ import os.path
 import json
 import pdb
 
-snipf = {
+g_snipa = {
     'access': models.ACCESS_PUBLIC,
-    'title': 'Class Definition',
+    'title': 'Python Class Definition',
     "des": """
         <p>Classes are used to create user defined datatypes.</p>
         <ul>
@@ -29,10 +29,9 @@ class Dog:
 >>> ' This is a docstring for the Dog class. '</pre>
 """
 }
-
-snipe = {
+g_snipb = {
     'access': models.ACCESS_PUBLIC,
-    'title': 'Class Variables',
+    'title': 'Python Class Variables',
     "des": """
         <p>Class variables in python are shared among all of the class instances.</p>
         <ul>
@@ -57,11 +56,11 @@ yip yip
 growl yip</pre>
 """
 }
-
-snipd = {
+g_snipc = {
     'access': models.ACCESS_PUBLIC,
-    'title': 'Built-in Class Attributes',
+    'title': 'Python Built-in Attributes',
     "des": """
+    Class Attributes:
         <ul>
             <li>__dict__ Dictionary containing the class's namespace</li>
             <li>__doc__ The docstring - set to <em>None</em> if undefined</li>
@@ -69,14 +68,7 @@ snipd = {
             <li>__module__ Module name in which the class is defined - is "__main__" in interactive mode</li>
             <li>__bases__ A tuple containing the base classes</li>
         </ul>
-""",
-    "code": ''
-}
-
-snipc = {
-    'access': models.ACCESS_PRIVATE,
-    'title': 'Built-in Instance Attributes',
-    "des": """
+    Instance Attributes:
         <ul class="snippetTextAlone">
             <li>__dict__ Dictionary containing the instances's namespace</li>
             <li>__class__ Name of the instance's class</li>
@@ -84,59 +76,36 @@ snipc = {
 """,
     "code": ''
 }
+g_snippets = [g_snipc, g_snipb, g_snipa]
 
-snipb = {
-    'access': models.ACCESS_PRIVATE,
-    'title': 'Instance Variables/Methods, Ctor/Dtor',
-    "des": '',
-    "code": ''
-}
-
-snipa = {
-    'access': models.ACCESS_PRIVATE,
-    'title': 'Inheritance, Public/Private Attrs',
-    "des": '',
-    "code": ''
-}
-
-snipt = {
-    'access': models.ACCESS_PRIVATE,
-    'title': 'Class Definition',
-    "des": """
-""",
-    "code": """
-"""
-}
-jm_snippets = [snipa, snipb, snipc, snipd, snipe, snipf]
-
-sc_snipt = {
+w_snipt = {
     'access': models.ACCESS_PUBLIC,
     'title': "",
     "des": "",
     "code": ''
 }
 
-sc_snipa = {
+w_snipa = {
     'access': models.ACCESS_PUBLIC,
     'title': 'Welcome to SomeCode',
     "des": "<p>SomeCode is a code snippet service for coders. Store your code here, search for other developer's code, and save snippets created by others to one of your snippet topics.</p> \
     Yes, snippets can be stored in buckets (topics) for improved snippet organization. Create subject areas (jQuery, Python OO, C++ OO etc.) or other containers to store tricks or notes you wish to remember.",
     "code": ''
 }
-sc_snipb = {
+w_snipb = {
     'access': models.ACCESS_PUBLIC,
     'title': 'When logged out, you can search for all public snippets in the SomeCode Snippet Cloud',
     "des": "Users without a SomeCode account can search any public snippet. The number of public snippets that can be searched are visible in the snippet search bar. It is envisioned, that over time as the SomeCode database grows and matures, snippet information will become a valuable resource, available to all serious coders. Enter the word 'class' to give it a try.",
     "code": ''
 }
-sc_snipc = {
+w_snipc = {
     'access': models.ACCESS_PUBLIC,
     'title': "When logged in, you can search public and personal snippets",
     "des": "<p>Just click the 'Personal' search badge to search all personal snippets, or click the 'Public' search badge to search all public snippets.</p>\
     Code snippets created by the currently logged in user are colored differently than snippets created by other users. This allows the user to quickly observe their personal snippets from the entire list of snippets on the page. To make a snippet 'public' simply set the access icon (eye) to the public state when creating or editing snippets. Be careful though, public snippets can be searched and 'Snipped' by anyone.",
     "code": ''
 }
-sc_snipd = {
+w_snipd = {
     'access': models.ACCESS_PUBLIC,
     'title': "When logged in, you can do CRUD with snippets and snippet topics",
     "des": "<p>Snippets and snippet topics can be created, edited, and deleted. To create, just click the Snippet Add (plus) icon in the snippet panel, or click the Topic Add (plus) icon in the topic panel. Each snippet has a snippet selector where the snippet can be edited or deleted. Just hover over the snippet selector (eye) to pop up the selector bar, and then click the edit icon (pencil) or delete icon (times).</p>\
@@ -146,19 +115,19 @@ sc_snipd = {
     When entering a description or chunk of code, the textarea will grow or shrink as you type. Code entered in the code textarea is highlighted according to the syntax of the code's language. The description textarea is not fully implemented. Soon you will be able to enter Markdown or WYSIWYG text.",
     "code": ''
 }
-sc_snipe = {
+w_snipe = {
     'access': models.ACCESS_PUBLIC,
     'title': "Snippets in a topic can be displayed by the click of a button",
     "des": "Simply click on the topic name and all snippets in the topic will be displayed. Only the snippet display area of the page is updated and does not require a full page refresh. This provides a clean user experince without annoying page refreshes.",
     "code": ''
 }
-sc_snipf = {
+w_snipf = {
     'access': models.ACCESS_PUBLIC,
     'title': "You can hide the Topic Panel by clicking the Topic Panel Toggle Icon",
     "des": "Clicking the Topic Panel Toggle Icon will toggle the visibility of the Topic Panel. Getting the Topic Panel out of view will give more room to display large snippets.",
     "code": ''
 }
-sc_snipg = {
+w_snipg = {
     'access': models.ACCESS_PUBLIC,
     'title': "You can view the snippets in three ways",
     "des": "<ol><li>'Columnar' mode, where the snippet description and code are side-by-side. This can be a handy way to quickly look at many short snippets.</li>\
@@ -166,7 +135,7 @@ sc_snipg = {
     <li>'Title Only' mode, where only the title of the snippets are shown. This is handy for viewing many snippets at once and then selecting only the snippet of interest. The snippet layout can be changed by clicking on the global or local snippet layout icons.</li></ol>",
     "code": ''
 }
-sc_sniph = {
+w_sniph = {
     'access': models.ACCESS_PUBLIC,
     'title': "You can interact with individual snippets",
     "des": "<p>Just click on the Snippet Selector Icon, and from there you can</p><ol>\
@@ -176,13 +145,13 @@ sc_sniph = {
     <li>Delete the snippet</li></ol>",
     "code": ''
 }
-sc_snipi = {
+w_snipi = {
     'access': models.ACCESS_PUBLIC,
     'title': "Snippets can be public, so others can search and 'Snip' your snippets.",
     "des": "Just edit the snippet and toggle the eye icon to be public or private. All public snippets are displayed in a color different than snippets created by the logged in user. Public snippets can be 'Snipped' to any available topic, or personal snippets can be snipped to multiple topics in the account. Be careful though, public snippets can be search and 'Snipped' by anyone.",
     "code": ''
 }
-sc_snipj = {
+w_snipj = {
     'access': models.ACCESS_PRIVATE,
     'title': "Future Functionality",
     "des": "<p>The application you see now came to life as an MVP project in Thinkful's 'Programming in Python' (Python/Flask) class. It was the author's experience that other code snippet tools have a less than useful UX experience. When you want to create a snippet, you are flashed a full page webform where you enter your snippet data. All other information on the page is locked out and the context in which the new snippet is being placed is blocked. Another weaknesses is the display and layout of the snippets. Only a few snippets are displayed on the page, and the ability to see multiple snippets at once is missing. This application was an attempt to add a better UX experience for the user with the addition of functionality not present in other code snippet tools.</p>\
@@ -207,7 +176,7 @@ sc_snipj = {
     </ul>",
     "code": ''
 }
-sc_snippets = [sc_snipj, sc_snipi, sc_sniph, sc_snipg, sc_snipf, sc_snipe, sc_snipd, sc_snipc, sc_snipb, sc_snipa]
+w_snippets = [w_snipj, w_snipi, w_sniph, w_snipg, w_snipf, w_snipe, w_snipd, w_snipc, w_snipb, w_snipa]
 
 def cs():
     """ Create a snippet """
@@ -229,7 +198,6 @@ users = [scgoog, jfb, jgoog, jtwit]
 def add_users():
     u = None
     for user in users:
-        #pdb.set_trace()
         if user['name'] == 'SomeCode':
             u = models.User(fb_id=user['google_id'], name=user['name'], email=user['email'], role=user['role'])
             db.session.add(u)
@@ -269,27 +237,68 @@ def add_users():
         db.session.commit()
 
 
+def add_snips():
+    add_scsnips()
+    user = None
+    for user in users:
+        #pdb.set_trace()
+        u = models.User.query.filter_by(name=user['name']).first()
+        if user['name'] == 'SomeCode':
+            # SomeCode's snippets must be added first, so we do that above in this function
+            #add_scsnips()
+            pass
+        elif user['name'] == 'JohnMarksJr':
+            # Add the 'Welcome' snippets using SomeCode's Welcome snippets
+            add_usersnips(u)
+        elif user['name'] == 'John':
+            pass
+        elif user['name'] == 'jettagozoom':
+            # Add the 'Welcome' snippets using SomeCode's Welcome snippets
+            add_usersnips(u)
+
 def add_scsnips():
+    add_wsnips() # add SomeCode's 'Welcome' snippets
+    add_gsnips() # add SomeCode's 'General' snippets
+
+def add_wsnips():
     user = models.User.query.filter_by(name='SomeCode').first()
     wt = user.topics.filter_by(topic='Welcome').first()
 
-    # Create and add the snippets
-    for snip in sc_snippets:
+    # Create and add the 'Welcome' snippets
+    for snip in w_snippets:
         s = models.Snippet(title = snip['title'], description = snip['des'], code = snip['code'],
                            timestamp = datetime.utcnow(), topic=wt, creator_id=user.id, access=snip['access'])
         db.session.add(s)
     db.session.commit()
 
-def add_jmsnips():
+def add_gsnips():
     # Get the 'General' topic
-    user = models.User.query.filter_by(name='JohnMarksJr').first()
+    user = models.User.query.filter_by(name='SomeCode').first()
     gt = user.topics.filter_by(topic='General').first()
 
-    # Create and add the snippets
-    for snip in jm_snippets:
+    # Create and add the 'General' snippets
+    for snip in g_snippets:
         s = models.Snippet(title = snip['title'], description = snip['des'], code = snip['code'],
                            timestamp = datetime.utcnow(), topic=gt, creator_id=user.id, access=snip['access'])
         db.session.add(s)
+    db.session.commit()
+
+def add_usersnips(user):
+    # Get SomeCode's 'Welcome' topic
+    #pdb.set_trace()
+    sc_user = models.User.query.filter_by(name='SomeCode').first()
+    wt = sc_user.topics.filter_by(topic='Welcome').first()
+    w_snippets = wt.snippets
+
+    # Get the user's 'Welcome' topic
+    gt = user.topics.filter_by(topic='Welcome').first()
+
+    # Add SomeCodes 'Welcome' snippets to the user's 'Welcome' topic.
+    snippets = w_snippets.all()
+    snippets.reverse()
+    for snip in snippets:
+        s = models.Snippet(title = snip.title, description = snip.description, code = snip.code,
+                           timestamp = datetime.utcnow(), topic=gt, creator_id=user.id, access=models.ACCESS_PRIVATE)
     db.session.commit()
 
 def delete_snips():
@@ -300,7 +309,7 @@ def delete_snips():
         db.session.delete(snip)
     db.session.commit()
 
-    user = models.User.query.filter_by(name='JohnMarksJr').first()
+    user = models.User.query.filter_by(name='SomeCode').first()
     topic = user.topics.filter_by(topic='General').first()
     snips = topic.snippets.all()
     for snip in snips:
@@ -316,8 +325,7 @@ def delete_topic():
 def populate_db():
     create_db()
     add_users()
-    add_scsnips()
-    add_jmsnips()
+    add_snips()
 
 def qusers():
     """ Find all users """
