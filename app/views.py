@@ -240,6 +240,48 @@ def logout():
 ###
 ### Facebookk OAuth
 
+def createUserInDb(fb_id, goog_id, twit_id, name, email, role):
+    id = None
+    user = None
+    if fb_id is not None:
+        id = fb_id
+        user = User(fb_id = fb_id, name = name, email = email, role = role)
+    elif goog_id is not None:
+        id = goog_id
+        user = User(google_id = goog_id, name = name, email = email, role = role)
+    elif twit_id is not None:
+        id = twit_id
+        user = User(twitter_id = twit_id, name = name, role = role)
+
+    if id is None:
+        return;
+
+    db.session.add(user)
+
+    # All accounts have a 'General' topic
+    topic = Topic(topic = 'General', author = user)
+    db.session.add(topic)
+
+    # All accounts have a 'Welcome' account
+    topic = Topic(topic = 'Welcome', author = user)
+    db.session.add(topic)
+
+    # Add snippets from SomeCode's 'Welcome' topic
+    # to the user's 'Welcome' topic
+    admin_user = User.query.filter_by(name='SomeCode').first()
+    welcome_topic = admin_user.topics.filter_by(topic='Welcome').first()
+    welcome_snippets = welcome_topic.snippets
+    snippets = welcome_snippets.all()
+    snippets.reverse()
+    for snip in snippets:
+        s = Snippet(title = snip.title, description = snip.description, code = snip.code,
+                           timestamp = datetime.utcnow(), topic=topic, creator_id=user.id, access=ACCESS_PRIVATE)
+        db.session.add(s)
+
+    db.session.commit()
+    
+    return user
+
 @app.route('/signin/facebook_authorized')
 @facebook.authorized_handler
 def facebook_authorized(resp):
@@ -264,11 +306,9 @@ def facebook_authorized(resp):
         name = me.data['username']
         if (name == ""):
             name = 'Unknown'
-        user = User(fb_id = me.data['id'], name = name, email = me.data['email'], role = ROLE_USER)
-        db.session.add(user)
-        topic = Topic(topic = 'General', author = user)
-        db.session.add(topic)
-        db.session.commit()
+        user = createUserInDb(me.data['id'], None, None, name, me.data['email'], ROLE_USER)
+        if user is None:
+            return jsonify(error=500, text='Error creating user'), 500
     else:
         fb_id = user.fb_id
         if fb_id is None:
@@ -319,11 +359,9 @@ def twitter_authorized(resp):
         name = screen_name
         if (name == ""):
             name = 'Unknown'
-        user = User(twitter_id = twitter_id, name = name, role = ROLE_USER)
-        db.session.add(user)
-        topic = Topic(topic = 'General', author = user)
-        db.session.add(topic)
-        db.session.commit()
+        user = createUserInDb(None, None, twitter_id, name, '', ROLE_USER)
+        if user is None:
+            return jsonify(error=500, text='Error creating user'), 500
     else:
         # Update name if it changed
         twitter_name = user.name
@@ -380,11 +418,9 @@ def google_authorized(resp):
         name = me['given_name']
         if (name == ""):
             name = 'Unknown'
-        user = User(google_id = me['id'], name = name, email = me['email'], role = ROLE_USER)
-        topic = Topic(topic = 'General', author = user)
-        db.session.add(user)
-        db.session.add(topic)
-        db.session.commit()
+        user = createUserInDb(None, me['id'], None, name, me['email'], ROLE_USER)
+        if user is None:
+            return jsonify(error=500, text='Error creating user'), 500
     else:
         google_id = user.google_id
         if google_id is None:

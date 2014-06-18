@@ -86,27 +86,27 @@ w_snipt = {
 }
 
 w_snipa = {
-    'access': models.ACCESS_PUBLIC,
+    'access': models.ACCESS_PRIVATE,
     'title': 'Welcome to SomeCode',
     "des": "<p>SomeCode is a code snippet service for coders. Store your code here, search for other developer's code, and save snippets created by others to one of your snippet topics.</p> \
     Yes, snippets can be stored in buckets (topics) for improved snippet organization. Create subject areas (jQuery, Python OO, C++ OO etc.) or other containers to store tricks or notes you wish to remember.",
     "code": ''
 }
 w_snipb = {
-    'access': models.ACCESS_PUBLIC,
+    'access': models.ACCESS_PRIVATE,
     'title': 'When logged out, you can search for all public snippets in the SomeCode Snippet Cloud',
     "des": "Users without a SomeCode account can search any public snippet. The number of public snippets that can be searched are visible in the snippet search bar. It is envisioned, that over time as the SomeCode database grows and matures, snippet information will become a valuable resource, available to all serious coders. Enter the word 'class' to give it a try.",
     "code": ''
 }
 w_snipc = {
-    'access': models.ACCESS_PUBLIC,
+    'access': models.ACCESS_PRIVATE,
     'title': "When logged in, you can search public and personal snippets",
     "des": "<p>Just click the 'Personal' search badge to search all personal snippets, or click the 'Public' search badge to search all public snippets.</p>\
     Code snippets created by the currently logged in user are colored differently than snippets created by other users. This allows the user to quickly observe their personal snippets from the entire list of snippets on the page. To make a snippet 'public' simply set the access icon (eye) to the public state when creating or editing snippets. Be careful though, public snippets can be searched and 'Snipped' by anyone.",
     "code": ''
 }
 w_snipd = {
-    'access': models.ACCESS_PUBLIC,
+    'access': models.ACCESS_PRIVATE,
     'title': "When logged in, you can do CRUD with snippets and snippet topics",
     "des": "<p>Snippets and snippet topics can be created, edited, and deleted. To create, just click the Snippet Add (plus) icon in the snippet panel, or click the Topic Add (plus) icon in the topic panel. Each snippet has a snippet selector where the snippet can be edited or deleted. Just hover over the snippet selector (eye) to pop up the selector bar, and then click the edit icon (pencil) or delete icon (times).</p>\
     <p>All SomeCode accounts include a 'General' topic. Snippets not associated with a topic when created go into the General topic. And all snippets in a topic that is deleted will be moved to the General topic.</p>\
@@ -116,19 +116,19 @@ w_snipd = {
     "code": ''
 }
 w_snipe = {
-    'access': models.ACCESS_PUBLIC,
+    'access': models.ACCESS_PRIVATE,
     'title': "Snippets in a topic can be displayed by the click of a button",
     "des": "Simply click on the topic name and all snippets in the topic will be displayed. Only the snippet display area of the page is updated and does not require a full page refresh. This provides a clean user experince without annoying page refreshes.",
     "code": ''
 }
 w_snipf = {
-    'access': models.ACCESS_PUBLIC,
+    'access': models.ACCESS_PRIVATE,
     'title': "You can hide the Topic Panel by clicking the Topic Panel Toggle Icon",
     "des": "Clicking the Topic Panel Toggle Icon will toggle the visibility of the Topic Panel. Getting the Topic Panel out of view will give more room to display large snippets.",
     "code": ''
 }
 w_snipg = {
-    'access': models.ACCESS_PUBLIC,
+    'access': models.ACCESS_PRIVATE,
     'title': "You can view the snippets in three ways",
     "des": "<ol><li>'Columnar' mode, where the snippet description and code are side-by-side. This can be a handy way to quickly look at many short snippets.</li>\
     <li>'Row' mode, where the snippet description is listed in its own row above the snippet code.</li>\
@@ -136,7 +136,7 @@ w_snipg = {
     "code": ''
 }
 w_sniph = {
-    'access': models.ACCESS_PUBLIC,
+    'access': models.ACCESS_PRIVATE,
     'title': "You can interact with individual snippets",
     "des": "<p>Just click on the Snippet Selector Icon, and from there you can</p><ol>\
     <li>'Snip' the snippet (implemented soon) by saving it to one of the available topics. This will allow a snippet created by another user to be saved into any snippet topic. This is similar to pinning a pin in Pinterest. Just select the topic where the snippet is to reside.</li>\
@@ -146,7 +146,7 @@ w_sniph = {
     "code": ''
 }
 w_snipi = {
-    'access': models.ACCESS_PUBLIC,
+    'access': models.ACCESS_PRIVATE,
     'title': "Snippets can be public, so others can search and 'Snip' your snippets.",
     "des": "Just edit the snippet and toggle the eye icon to be public or private. All public snippets are displayed in a color different than snippets created by the logged in user. Public snippets can be 'Snipped' to any available topic, or personal snippets can be snipped to multiple topics in the account. Be careful though, public snippets can be search and 'Snipped' by anyone.",
     "code": ''
@@ -193,7 +193,8 @@ scgoog = {'google_id': '113145721600593244417', 'name':'SomeCode', 'email': 'som
 jfb = {'fb_id': '100002423206916', 'name':'JohnMarksJr', 'email': 'johnmarksjr@gmail.com', 'role':models.ROLE_USER}
 jgoog = {'google_id': '106697488228998596996', 'name':'John', 'email': 'johnmarksjr@gmail.com', 'role':models.ROLE_USER}
 jtwit = {'twitter_id': '1860746486', 'name':'jettagozoom', 'email': None, 'role':models.ROLE_USER}
-users = [scgoog, jfb, jgoog, jtwit]
+#users = [scgoog, jfb, jgoog, jtwit]
+users = [scgoog]
 
 def add_users():
     u = None
@@ -241,7 +242,6 @@ def add_snips():
     add_scsnips()
     user = None
     for user in users:
-        #pdb.set_trace()
         u = models.User.query.filter_by(name=user['name']).first()
         if user['name'] == 'SomeCode':
             # SomeCode's snippets must be added first, so we do that above in this function
@@ -299,6 +299,7 @@ def add_usersnips(user):
     for snip in snippets:
         s = models.Snippet(title = snip.title, description = snip.description, code = snip.code,
                            timestamp = datetime.utcnow(), topic=gt, creator_id=user.id, access=models.ACCESS_PRIVATE)
+        db.session.add(s)
     db.session.commit()
 
 def delete_snips():
