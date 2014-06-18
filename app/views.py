@@ -265,6 +265,7 @@ def createUserInDb(fb_id, goog_id, twit_id, name, email, role):
     # All accounts have a 'Welcome' account
     topic = Topic(topic = 'Welcome', author = user)
     db.session.add(topic)
+    db.session.commit()
 
     # Add snippets from SomeCode's 'Welcome' topic
     # to the user's 'Welcome' topic
