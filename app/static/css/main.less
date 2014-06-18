@@ -593,14 +593,24 @@ nav div.navbar-header {
                             }
                                 .snippetCodeText.snippetCodeStyle:empty {
                                     background-color:#fff;
+                                    padding:0;
                                 }
                                 .snippetCodeStyle.owned {
                                     background-color:@user-snippet-code-color;
                                 }
+                                    .snippetCodeStyle.owned pre {
+                                        font-size: x-small;
+                                        background-color: transparent;
+                                        padding:0;
+                                        margin:0;
+                                        border:none;
+                                        line-height:1;
+                                        overflow:hidden;
+                                    }
                                 .snippetCodeStyle.notOwned {
                                     background-color:@public-snippet-code-color;
                                 }
-                                    .snippetCodeStyle.owned pre {
+                                    .snippetCodeStyle.notOwned pre {
                                         font-size: x-small;
                                         background-color: transparent;
                                         padding:0;

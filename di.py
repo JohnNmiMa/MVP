@@ -116,100 +116,98 @@ sc_snipt = {
     "code": ''
 }
 
-sc_snipk = {
+sc_snipa = {
+    'access': models.ACCESS_PUBLIC,
+    'title': 'Welcome to SomeCode',
+    "des": "<p>SomeCode is a code snippet service for coders. Store your code here, search for other developer's code, and save snippets created by others to one of your snippet topics.</p> \
+    Yes, snippets can be stored in buckets (topics) for improved snippet organization. Create subject areas (jQuery, Python OO, C++ OO etc.) or other containers to store tricks or notes you wish to remember.",
+    "code": ''
+}
+sc_snipb = {
+    'access': models.ACCESS_PUBLIC,
+    'title': 'When logged out, you can search for all public snippets in the SomeCode Snippet Cloud',
+    "des": "Users without a SomeCode account can search any public snippet. The number of public snippets that can be searched are visible in the snippet search bar. It is envisioned, that over time as the SomeCode database grows and matures, snippet information will become a valuable resource, available to all serious coders. Enter the word 'class' to give it a try.",
+    "code": ''
+}
+sc_snipc = {
+    'access': models.ACCESS_PUBLIC,
+    'title': "When logged in, you can search public and personal snippets",
+    "des": "<p>Just click the 'Personal' search badge to search all personal snippets, or click the 'Public' search badge to search all public snippets.</p>\
+    Code snippets created by the currently logged in user are colored differently than snippets created by other users. This allows the user to quickly observe their personal snippets from the entire list of snippets on the page. To make a snippet 'public' simply set the access icon (eye) to the public state when creating or editing snippets. Be careful though, public snippets can be searched and 'Snipped' by anyone.",
+    "code": ''
+}
+sc_snipd = {
+    'access': models.ACCESS_PUBLIC,
+    'title': "When logged in, you can do CRUD with snippets and snippet topics",
+    "des": "<p>Snippets and snippet topics can be created, edited, and deleted. To create, just click the Snippet Add (plus) icon in the snippet panel, or click the Topic Add (plus) icon in the topic panel. Each snippet has a snippet selector where the snippet can be edited or deleted. Just hover over the snippet selector (eye) to pop up the selector bar, and then click the edit icon (pencil) or delete icon (times).</p>\
+    <p>All SomeCode accounts include a 'General' topic. Snippets not associated with a topic when created go into the General topic. And all snippets in a topic that is deleted will be moved to the General topic.</p>\
+    <p>To add a snippet to a snippet topic, first select the snippet topic by clicking on the topic name. Next, click the snippet add icon and enter the snippet contents. Click 'Save' and the new snippet will be added to the currently selected topic.</p>\
+    <p>Each snippet has three main parts - the title, description, and code. The title is required whereas the description and code are optional. To quickly create multiple snippets, just add the titles up front and add the description or code later on.</p>\
+    When entering a description or chunk of code, the textarea will grow or shrink as you type. Code entered in the code textarea is highlighted according to the syntax of the code's language. The description textarea is not fully implemented. Soon you will be able to enter Markdown or WYSIWYG text.",
+    "code": ''
+}
+sc_snipe = {
+    'access': models.ACCESS_PUBLIC,
+    'title': "Snippets in a topic can be displayed by the click of a button",
+    "des": "Simply click on the topic name and all snippets in the topic will be displayed. Only the snippet display area of the page is updated and does not require a full page refresh. This provides a clean user experince without annoying page refreshes.",
+    "code": ''
+}
+sc_snipf = {
+    'access': models.ACCESS_PUBLIC,
+    'title': "You can hide the Topic Panel by clicking the Topic Panel Toggle Icon",
+    "des": "Clicking the Topic Panel Toggle Icon will toggle the visibility of the Topic Panel. Getting the Topic Panel out of view will give more room to display large snippets.",
+    "code": ''
+}
+sc_snipg = {
+    'access': models.ACCESS_PUBLIC,
+    'title': "You can view the snippets in three ways",
+    "des": "<ol><li>'Columnar' mode, where the snippet description and code are side-by-side. This can be a handy way to quickly look at many short snippets.</li>\
+    <li>'Row' mode, where the snippet description is listed in its own row above the snippet code.</li>\
+    <li>'Title Only' mode, where only the title of the snippets are shown. This is handy for viewing many snippets at once and then selecting only the snippet of interest. The snippet layout can be changed by clicking on the global or local snippet layout icons.</li></ol>",
+    "code": ''
+}
+sc_sniph = {
+    'access': models.ACCESS_PUBLIC,
+    'title': "You can interact with individual snippets",
+    "des": "<p>Just click on the Snippet Selector Icon, and from there you can</p><ol>\
+    <li>'Snip' the snippet (implemented soon) by saving it to one of the available topics. This will allow a snippet created by another user to be saved into any snippet topic. This is similar to pinning a pin in Pinterest. Just select the topic where the snippet is to reside.</li>\
+    <li>Change the snippet layout</li>\
+    <li>Edit the snippet. The snippet title, description, and code can be changed.</li>\
+    <li>Delete the snippet</li></ol>",
+    "code": ''
+}
+sc_snipi = {
+    'access': models.ACCESS_PUBLIC,
+    'title': "Snippets can be public, so others can search and 'Snip' your snippets.",
+    "des": "Just edit the snippet and toggle the eye icon to be public or private. All public snippets are displayed in a color different than snippets created by the logged in user. Public snippets can be 'Snipped' to any available topic, or personal snippets can be snipped to multiple topics in the account. Be careful though, public snippets can be search and 'Snipped' by anyone.",
+    "code": ''
+}
+sc_snipj = {
     'access': models.ACCESS_PRIVATE,
     'title': "Future Functionality",
-    "des": "<p>The application you see now came to life by implementing a Thinkful MVP Python/Flask project. It was the author's experience that other code snippet tools have a less than useful UX experience. When you want to create a snippet, you are flashed a full page webform where you enter your snippet data. All other information on the page is locked out and the context in which the new snippet is being placed is blocked. Another weaknesses is the display and layout of the snippets. Only a few snippets are displayed on the page, and the ability to see multiple snippets at once is missing. This project was an attempt to add a better UX experience for the user plus other functionality to present in other code snippet tools.</p>\
-    <p>The author has no talent in UI design, so the use of Twitter Bootstrap helped greatly. To more fully flesh out the application, the following features are envisioned as being useful for a great 'snippet management' experience:</p> \
+    "des": "<p>The application you see now came to life as an MVP project in Thinkful's 'Programming in Python' (Python/Flask) class. It was the author's experience that other code snippet tools have a less than useful UX experience. When you want to create a snippet, you are flashed a full page webform where you enter your snippet data. All other information on the page is locked out and the context in which the new snippet is being placed is blocked. Another weaknesses is the display and layout of the snippets. Only a few snippets are displayed on the page, and the ability to see multiple snippets at once is missing. This application was an attempt to add a better UX experience for the user with the addition of functionality not present in other code snippet tools.</p>\
+    <p>To more fully flesh out the application, the following features are envisioned as being useful for a great 'snippet management' experience:</p> \
     <ul>\
     <li>Beef up the 'description' textarea. Implement a fast WYSIWYG/Markup strategy.</li>\
-    <li>Ability to 'Snip' or share snippets. Just as you can 'Pin' images in Pinterest, with SomeCode you will be able to 'Snip' code snippets. All public snippets can be 'snipped'. This will require the database to have a many-to-many relationship between a user's topics and the snippets in a topic. In other words, a topic can contain multiple snippets, and a snippet should be able to be in multiple topics (even topics from other users).</li>\
-    <li>Ability to sort snippets. Sorting on time ascending/descending, alphabetical, or custom. In custom sort mode, you will be able to drag snippets up or down into an order that makes sense for the snippet topic. This is one of the weaknesses of Pinterest - you can not move your pins around in the board. With SomeCode you will be able to order your snippets as you wish.</li>\
+    <li>Beef up the snippet bar. Add a snippet language selector and a topic selector.</li>\
+    <li>Implement the setting panel. Provide a default snippet layout, default snippet personal/public color, etc.</li>\
+    <li>Ability to 'Snip' or share snippets. Just as you can 'Pin' images in Pinterest, with SomeCode you should be able to 'Snip' code snippets. All public snippets can be 'snipped'. This will require the database to have a many-to-many relationship between a user's topics and the snippets in a topic. In other words, a topic can contain multiple snippets, and a snippet should be able to be in multiple topics, with topics being from the local logged in user or those from any other user on the system.</li>\
+    <li>Ability to sort snippets, sorting on time, alphabetically, or custom. In custom sort mode, you will be able to drag snippets up or down into an order that makes sense for the snippet topic. This is one of the weaknesses of Pinterest - you can not move your pins around in the board. With SomeCode you will be able to order your snippets as you wish.</li>\
     <li>Ability to filter snippets according to snippet language.</li>\
     <li>Ability to filter snippets according to popularity or number of times snipped. This implies that snippets will be able to be 'liked'.</li>\
     <li>Improve snippet layout so that long snippet descriptions will 'flow' around the snippet code.</li>\
     <li>Improve the Topic Panel to be able to size horizontally.</li>\
     <li>Improve responsivess for mobile devices. At small screen sizes, go into display mode only.</li>\
-    <li>Create mobile apps for Anderoid, iPhone/iPad.</li>\
     <li>Improve speed of code searches. Try NoSQL database persistence.</li>\
-    <li>Get UI professionally designed for best/cleanest look. This will likely require a full rewrite of the client side UI code. Although the 'grid' functionality from Twitter Bootstrap is useful, the limitations of Bootstrap was pushed to its limits.</li>\
     <li>Implement in AngularJS to be completely single-page.</li>\
+    <li>Get UI professionally designed for best/cleanest look. This will likely require a full rewrite of the client side UI code. Although the 'grid' functionality from Twitter Bootstrap is useful, it was pushed to its limits. This app needs a custom built UI.</li>\
+    <li>Create mobile apps for Anderoid, iPhone/iPad.</li>\
     <li>Add other modules: Todo, Notes, Projects, Pomodoro, Books, Scrum-like backlog, etc. This will allow the Snippet Topic Panel to be swapped out with a 'Notes' panel or a 'Todo' panel, or whatever module the user wishes to use. When a new module panel is displayed, the central display area will display data according to a format specific to that module.</li>\
     <li>Get user feedback for desired features and enhancements.</li>\
     </ul>",
     "code": ''
 }
-sc_snipj = {
-    'access': models.ACCESS_PUBLIC,
-    'title': "Snippets can be public, so others can search and 'Snip' your snippets.",
-    "des": "Just edit the snippet and toggle the eye icon to be public or private. Add public snippets displayed are displayed in a color different than snippets created by the logged in user. Only public snippets can be 'Snipped'",
-    "code": ''
-}
-sc_snipi = {
-    'access': models.ACCESS_PRIVATE,
-    'title': "You can edit snippets",
-    "des": "<p>Just click on the Snippet Selector Icon, and from there you can</p><ol>\
-    <li>'Snip' the snippet, by saving it to one of your topics (implemented soon). This will allow you to save a snippet created by another user into one of your snippet topics.</li>\
-    <li>Change the snippet layout</li>\
-    <li>Edit the snippet</li>\
-    <li>Delete the snippet. If you edit the snippet, you can then change the snippet title, description, and code.</li></ol>",
-    "code": ''
-}
-sc_sniph = {
-    'access': models.ACCESS_PRIVATE,
-    'title': "You can view the snippets in three ways",
-    "des": "<ol><li>In columnar mode, where the snippet description and code are side-by-side. This can be a handy way to quickly look at many short snippets.</li>\
-    <li>In row mode, where the snippet description is listed in its own row above the snippet code.</li>\
-    <li>'Title Only' mode, where only the title of the snippets are shown. This is handy to see many snippets at one, and then choose to show the snippet contents on a particular snippet. The snippet layout can be changed by clicking on the global or local snippet layout icons.</li></ol>",
-    "code": ''
-}
-sc_snipg = {
-    'access': models.ACCESS_PRIVATE,
-    'title': "You can create new snippets when logged in",
-    "des": "<p>Just click the Snippet Add (plus) Icon, and enter the snippet title, the snippet description, and the snippet code. The description or code sections are optional. When entering a description or chunk of code, the textarea will grow or shrink as you type. Code entered in the code textarea is highlighted according to the syntax of the code's language. The description textarea is not fully implemented. Soon you will be able to enter Markdown or WYSIWYG text.<p> \
-    Code snippets created by you have a different color than those created by another user. For instance, if you search for public snippets, you will see snippets created by someone else in a color different than snippets created by you.",
-    "code": ''
-}
-sc_snipf = {
-    'access': models.ACCESS_PRIVATE,
-    'title': "You can hide the Topic Panel by clicking the Topic Panel Toggle Icon",
-    "des": "Clicking the Topic Panel Toggle Icon will toggle the visibility of the Topic Panel. Getting the Topic Panel out of view will give more room to display large snippets.",
-    "code": ''
-}
-sc_snipe = {
-    'access': models.ACCESS_PRIVATE,
-    'title': "You can create topics to store related snippets",
-    "des": "<p>Just click the topic add icon, and enter a new topic name. Then, click on the new topic name, and you will see that there are no snippets in your new topic. You can then click the snippet add icon and start creating new snippets for that topic.",
-    "code": ''
-}
-sc_snipd = {
-    'access': models.ACCESS_PRIVATE,
-    'title': "When logged in, you can do CRUD with snippets and snippet topics",
-    "des": "You can create, delete, and edit snippets and snippet topics. To create, just click the Snippet Add (plus) icon in the snippet panel, or click the Topic Add (plus) icon in the topic panel. Each snippet has a snippet selector where you can edit and delete the snippet. Just hover over the snippet selector (eye) to pop up the selector bar, and then click the edit icon (pencil) or delete icon (times).",
-    "code": ''
-}
-sc_snipc = {
-    'access': models.ACCESS_PRIVATE,
-    'title': "When logged in, you can search public and personal snippets",
-    "des": "Just click the 'Personal' search badge to search your personal snippets, or click the 'Public' search badge to search all public snippets.",
-    "code": ''
-}
-
-sc_snipb = {
-    'access': models.ACCESS_PRIVATE,
-    'title': 'When logged out, you can search for all public snippets in SomeCode',
-    "des": "When you are viewing the SomeCode web page when not logged in, you can see how many public snippets are present in the SomeCode database, and you can search them as well. To try, search for the word 'class'",
-    "code": ''
-}
-
-sc_snipa = {
-    'access': models.ACCESS_PRIVATE,
-    'title': 'Welcome to SomeCode',
-    "des": "<p>SomeCode is a code snippet service for coders. Store your code here, search for other developer's code, and save snippets created by others to one of your snippet topics.</p> \
-    Yes, you can create buckets (topics) to store snippets. Create subject areas (jQuery, Python OO, etc.) or containers for coding tricks or notes you want to remember.",
-    "code": ''
-}
-sc_snippets = [sc_snipk, sc_snipj, sc_snipi, sc_sniph, sc_snipg, sc_snipf, sc_snipe, sc_snipd, sc_snipc, sc_snipb, sc_snipa]
+sc_snippets = [sc_snipj, sc_snipi, sc_sniph, sc_snipg, sc_snipf, sc_snipe, sc_snipd, sc_snipc, sc_snipb, sc_snipa]
 
 def cs():
     """ Create a snippet """
@@ -318,6 +316,7 @@ def delete_topic():
 def populate_db():
     create_db()
     add_users()
+    add_scsnips()
     add_jmsnips()
 
 def qusers():

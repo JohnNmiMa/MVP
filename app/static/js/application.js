@@ -178,7 +178,7 @@ var viewUtils = (function() {
         ss +=     '    <div class="snippetContent">';
         ss +=     '        <div class="snippetFade" style="display:none">';
         ss +=     '            <button type="button" class="btn btn-danger btn-xs layout snip-it">Snip it</button>';
-        ss +=     '            <div class="layout snippetColLayout">';
+        ss +=     '            <div class="layout snippetColLayout hidden-xs">';
         ss +=     '                <span class="fa fa-minus-square-o fa-rotate-90 fa-2x">';
         ss +=     '            </div>';
         ss +=     '            <div class="layout snippetRowLayout">';
