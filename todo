@@ -231,6 +231,7 @@ Future:
 
 --------
 Bugs:
+* Login overlay is underneath layout icons.
 * Title length can be created bigger than desired.
 * Title field does not wrap.
 * Topic count is not incremented when a new snippet is added - DONE
