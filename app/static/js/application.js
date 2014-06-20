@@ -7,6 +7,239 @@ Utils.numberWithCommas = function(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
+var SC = (function() {
+
+    var topicCrud = (function() {
+        var isTopicAddModeEnabled = false,
+        isTopicEditModeEnabled = false,
+        isTopicPopoverDisplayed = false,
+        topicEditReset   = function() {};
+
+        /*
+         * Topic Create */
+
+        var createTopic = function(form) {
+            var topicName = $('input#topicNameField').val(),
+                duplicateNameFound = false,
+                success = function() {}, error = function() {};
+
+            console.log("Saving a new topic named " + topicName);
+
+            // Make sure the topic doesn't already exist
+            $('#topicPanel .topicItem a').each(function() {
+                var tmpTopicName = $(this).clone().children().remove().end().text().replace(/^\s+|\s+$/g,'');
+
+                if (topicName.toUpperCase() === tmpTopicName.toUpperCase()) {
+                    duplicateNameFound = true;
+                    return;
+                }
+            });
+
+            if (duplicateNameFound) {
+                // Let user know the name already exists
+                $('#topicNameField').popover('show');
+                isTopicPopoverDisplayed = true;
+                return false;
+            }
+
+            // Name can't be empty
+            if (!topicName) return false;
+
+            success = function(results) {
+                displayNewTopic(topicName, results['id']);
+            };
+            error = function(req, status, error) {
+                console.log("AJAX returned with error");
+            };
+
+            snippetService.createTopic(topicName, success, error);
+            return false;
+        }
+
+        var displayNewTopic = function(topicName, id) {
+            var t = buildTopic(topicName, id);
+
+            // Create a new snippet with the form data
+            // Show it right after the 'General' topic
+            $('#topicPanel .list-group li.topicGeneralItem').after(t);
+
+            $('#topicForm')[0].reset();
+            $('#topicFormContainer').hide();
+            $('#topicAdd span').removeClass('selected');
+            isTopicAddModeEnabled = false;
+        }
+
+        var buildTopic = function(topicName, id) {
+            var t  = '<li class="list-group-item topicItem">';
+                t += '    <span class="fa fa-minus-circle topicDelete" style="display:none"></span>';
+                t += '    <a href="#" class="topicName">' + topicName + '</a>';
+                t += '    <span class="badge sit-right topicCounter">0</span>';
+                t += '    <span class="topicID" style="display:none">' + id + '</span>';
+                t += '</li>';
+
+            return t;
+        }
+
+        /*
+         * Topic Edit */
+
+        var updateTopic = function(form) {
+            var $topicEditFormItem = $('form#topicEditForm'),
+                topicName = $('input#topicEditNameField').val(),
+                topicID = parseInt($topicEditFormItem.parent().find('span.topicID').text(), 10),
+                data = $(form).serialize(),
+                duplicateNameFound = false,
+                success = function() {}, error = function() {};
+
+            console.log("Updating topic " + topicName);
+            if (!topicName) return false;
+            if (topicID <= 0) return false;
+
+            // Make sure the topic doesn't already exist
+            $('#topicPanel .topicItem a').each(function() {
+                var tmpTopicName = $(this).clone().children().remove().end().text().replace(/^\s+|\s+$/g,'');
+
+                if (topicName.toUpperCase() === tmpTopicName.toUpperCase()) {
+                    duplicateNameFound = true;
+                    return;
+                }
+            });
+
+            if (duplicateNameFound) {
+                // Let user know the name already exists
+                $('#topicEditNameField').popover('show');
+                isTopicPopoverDisplayed = true;
+                return false;
+            }
+
+            success = function(results) {
+                var $topicNameItem = $topicEditFormItem.parent().find('a.topicName');
+
+                // Update topic with new name
+                $topicNameItem.text(topicName);
+
+                // Hide the topic edit form and show <a class='topicName'></a> element
+                topicEditReset();
+            };
+            error = function(req, status, error) {
+                topicEditReset();
+                console.log("AJAX returned with error");
+            };
+
+            snippetService.updateTopic(topicID, data, success, error);
+            return false;
+        }
+
+        var resetTopicEdit = function(topicItem) {
+            var $topicNameItem = $(topicItem).find('a.topicName'),
+                $topicEditFormItem = $('form#topicEditForm'),
+                $topicEditNameFieldItem = $('input#topicEditNameField'),
+
+                topicFormReset = function() {
+                    $topicEditFormItem.hide();
+                    $topicNameItem.show();
+                };
+
+            return topicFormReset;
+        }
+
+        var editTopic = function($topicItem) {
+            var $topicNameItem = $topicItem.find('a.topicName'),
+                $topicEditFormItem = $('form#topicEditForm'),
+                $topicEditNameFieldItem = $('input#topicEditNameField'),
+                $topicDeleteItem = $topicItem.find('span.topicDelete'),
+                topicName = $topicNameItem.clone().children().remove().end().text().replace(/^\s+|\s+$/g,'');
+
+            if (!topicName) return;
+
+            // Call the old topic form resetter - it is idempotent, so calling multiple times is okay
+            topicEditReset();
+            // Create a resetter function to undo the following form actions for the particular topic item
+            topicEditReset = resetTopicEdit($topicItem);
+
+            // Hide element with the topic name
+            $topicNameItem.hide();
+
+            // Move/Put the form element to the same place where the topic name was shown
+            // Rather than poping up a whole new edit dialog, it is nice just to be able
+            // to edit the name of the topic in place. So, that is why we are hiding the 
+            // topic name, and adding an input form element to change the name.
+            $topicDeleteItem.after($topicEditFormItem);
+            $topicEditNameFieldItem.val(topicName);
+            $topicEditFormItem.show();
+
+            console.log("Editing topic " + topicName);
+        }
+
+        /*
+         * Topic Delete */
+
+        var deleteTopic = function($topicItem) {
+            /*
+             * Deletes a topic from the list of topics.
+             * - Sends an AJAX 'DELETE' request to delete the topic from the db.
+             * - Removes the topic name from the topic panel
+             */
+
+            var topicName = $topicItem.find('a').clone().children().remove().end().text().replace(/^\s+|\s+$/g,''),
+                topicID = $topicItem.find('span.topicID').text(),
+                success = function() {}, error = function() {};
+
+            success = function(results) {
+                removeDeletedTopic($topicItem, results.new_general_snippets);
+            };
+            error = function(req, status, error) {
+                console.log("AJAX returned with error");
+            };
+
+            snippetService.deleteTopic(topicID, success, error);
+        }
+
+        var removeDeletedTopic = function($topicItem, numGeneralSnippets) {
+            var topicName = $topicItem.find('a').clone().children().remove().end().text().replace(/^\s+|\s+$/g,''),
+                $generals_badge = $('#topicPanel .list-group li.topicGeneralItem span.topicCounter'),
+                badge_count = Number($generals_badge.text()),
+                topicDisplayedInSnippetPanel = $('#snippetTopicSearchDisplay').text();
+
+            // Remove the topic from the topic panel
+            $topicItem.remove();
+
+            // Select the 'General' element's topic counter, and increment by numGeneralSnippets
+            $generals_badge.text(badge_count + numGeneralSnippets);
+
+            // If the deleted topic was displayed in the snippet panel, clear the snippet panel.
+            if (topicDisplayedInSnippetPanel == topicName) {
+                $('#userSnippets').empty();
+                $('#snippetTopicSearchDisplay').empty();
+            }
+        }
+
+        // Return the object containing exported topicCrud methods
+        return {
+            // Getters and setters
+            get isTopicAddModeEnabled()              { return isTopicAddModeEnabled; },
+            set isTopicAddModeEnabled(bool)          { isTopicAddModeEnabled = bool; },
+            get isTopicEditModeEnabled()             { return isTopicEditModeEnabled; },
+            set isTopicEditModeEnabled(bool)         { isTopicEditModeEnabled = bool; },
+            get isTopicPopoverDisplayed()            { return isTopicPopoverDisplayed; },
+            set isTopicPopoverDisplayed(bool)        { isTopicPopoverDisplayed = bool; },
+
+            // Methods
+            createTopic:createTopic,
+            updateTopic:updateTopic,
+            editTopic:editTopic,
+            topicEditReset: function()               { topicEditReset(); },
+            deleteTopic:deleteTopic
+        }
+    }());
+
+    // Return the object containing exported SC methods
+    return {
+        // Methods
+        topicCrud:topicCrud
+    }
+})();
+
 var viewUtils = (function() {
     var SNIPPET_DES_COL =   'snippetDes-col',
         SNIPPET_DES_ROW =   'snippetDes-row',
@@ -15,13 +248,11 @@ var viewUtils = (function() {
         snippetDesLayout =  SNIPPET_DES_COL,
         snippetCodeLayout = SNIPPET_CODE_COL,
         snippetNoneLayout = false,
-        isTopicPopoverDisplayed = false,
-        isTopicEditModeEnabled = false,
-        isTopicAddModeEnabled = false,
+
         isSnippetEditModeEnabled = false,
-        topicEditReset   = function() {},
         snippetFormReset = function() {},
         updateSnippet = function() {},
+
         codeEditor = {},
         codeEditorTheme = 'eclipse',
         codeEditorMode = 'javascript',
@@ -178,30 +409,6 @@ var viewUtils = (function() {
         }
     }
 
-    var buildTopic = function(topicName, id) {
-        var t  = '<li class="list-group-item topicItem">';
-            t += '    <span class="fa fa-minus-circle topicDelete" style="display:none"></span>';
-            t += '    <a href="#" class="topicName">' + topicName + '</a>';
-            t += '    <span class="badge sit-right topicCounter">0</span>';
-            t += '    <span class="topicID" style="display:none">' + id + '</span>';
-            t += '</li>';
-
-        return t;
-    }
-
-    var displayNewTopic = function(topicName, id) {
-        var t = buildTopic(topicName, id);
-
-        // Create a new snippet with the form data
-        // Show it right after the 'General' topic
-        $('#topicPanel .list-group li.topicGeneralItem').after(t);
-
-        $('#topicForm')[0].reset();
-        $('#topicFormContainer').hide();
-        $('#topicAdd span').removeClass('selected');
-        isTopicAddModeEnabled = false;
-    }
-
 
     var buildSnippet = function(title, description, code, id, creatorId, access, isLoggedIn) {
         var userId = Number($('#userID').text()),
@@ -273,7 +480,6 @@ var viewUtils = (function() {
             } else {
                 ss += '            <div class="snippetCodeText snippetCodeStyle ' + snippetCodeLayout + ' ' + codeClass + '">';
             }
-            //ss += '<pre>' + code + '</pre></div>'; // use for CodeMirror "Test 1" method, described elsewhere
             ss += code + '</div>';
         } else {
             ss += '                <div class="snippetCodeText snippetCodeStyle ' + snippetCodeLayout + ' ' + codeClass + '"></div>';
@@ -613,173 +819,6 @@ var viewUtils = (function() {
     /*
      * Public methods
      */
-
-    var createTopic = function(form) {
-        var topicName = $('input#topicNameField').val(),
-            duplicateNameFound = false,
-            success = function() {}, error = function() {};
-
-        console.log("Saving a new topic named " + topicName);
-
-        // Make sure the topic doesn't already exist
-        $('#topicPanel .topicItem a').each(function() {
-            var tmpTopicName = $(this).clone().children().remove().end().text().replace(/^\s+|\s+$/g,'');
-
-            if (topicName.toUpperCase() === tmpTopicName.toUpperCase()) {
-                duplicateNameFound = true;
-                return;
-            }
-        });
-
-        if (duplicateNameFound) {
-            // Let user know the name already exists
-            $('#topicNameField').popover('show');
-            isTopicPopoverDisplayed = true;
-            return false;
-        }
-
-        // Name can't be empty
-        if (!topicName) return false;
-
-        success = function(results) {
-            displayNewTopic(topicName, results['id']);
-        };
-        error = function(req, status, error) {
-            console.log("AJAX returned with error");
-        };
-
-        snippetService.createTopic(topicName, success, error);
-        return false;
-    }
-
-    var updateTopic = function(form) {
-        var $topicEditFormItem = $('form#topicEditForm'),
-            topicName = $('input#topicEditNameField').val(),
-            topicID = parseInt($topicEditFormItem.parent().find('span.topicID').text(), 10),
-            data = $(form).serialize(),
-            duplicateNameFound = false,
-            success = function() {}, error = function() {};
-
-        console.log("Updating topic " + topicName);
-        if (!topicName) return false;
-        if (topicID <= 0) return false;
-
-        // Make sure the topic doesn't already exist
-        $('#topicPanel .topicItem a').each(function() {
-            var tmpTopicName = $(this).clone().children().remove().end().text().replace(/^\s+|\s+$/g,'');
-
-            if (topicName.toUpperCase() === tmpTopicName.toUpperCase()) {
-                duplicateNameFound = true;
-                return;
-            }
-        });
-
-        if (duplicateNameFound) {
-            // Let user know the name already exists
-            $('#topicEditNameField').popover('show');
-            isTopicPopoverDisplayed = true;
-            return false;
-        }
-
-        success = function(results) {
-            var $topicNameItem = $topicEditFormItem.parent().find('a.topicName');
-
-            // Update topic with new name
-            $topicNameItem.text(topicName);
-
-            // Hide the topic edit form and show <a class='topicName'></a> element
-            topicEditReset();
-        };
-        error = function(req, status, error) {
-            topicEditReset();
-            console.log("AJAX returned with error");
-        };
-
-        snippetService.updateTopic(topicID, data, success, error);
-        return false;
-    }
-
-    var resetTopicEdit = function(topicItem) {
-        var $topicNameItem = $(topicItem).find('a.topicName'),
-            $topicEditFormItem = $('form#topicEditForm'),
-            $topicEditNameFieldItem = $('input#topicEditNameField'),
-
-            topicFormReset = function() {
-                $topicEditFormItem.hide();
-                $topicNameItem.show();
-            };
-
-        return topicFormReset;
-    }
-
-    var editTopic = function(topicItem) {
-        var $topicNameItem = $(topicItem).find('a.topicName'),
-            $topicEditFormItem = $('form#topicEditForm'),
-            $topicEditNameFieldItem = $('input#topicEditNameField'),
-            $topicDeleteItem = $(topicItem).find('span.topicDelete'),
-            topicName = $topicNameItem.clone().children().remove().end().text().replace(/^\s+|\s+$/g,'');
-
-        if (!topicName) return;
-
-        // Call the old topic form resetter - it is idempotent, so calling multiple times is okay
-        topicEditReset();
-        // Create a resetter function to undo the following form actions for the particular topic item
-        topicEditReset = resetTopicEdit(topicItem);
-
-        // Hide element with the topic name
-        $topicNameItem.hide();
-
-        // Move/Put the form element to the same place where the topic name was shown
-        // Rather than poping up a whole new edit dialog, it is nice just to be able
-        // to edit the name of the topic in place. So, that is why we are hiding the 
-        // topic name, and adding an input form element to change the name.
-        $topicDeleteItem.after($topicEditFormItem);
-        $topicEditNameFieldItem.val(topicName);
-        $topicEditFormItem.show();
-
-        console.log("Editing topic " + topicName);
-    }
-
-    var removeDeletedTopic = function(topicItem, numGeneralSnippets) {
-        var topicName = $(topicItem).find('a').clone().children().remove().end().text().replace(/^\s+|\s+$/g,'');
-
-        // Remove the topic from the topic panel
-        topicItem.remove();
-
-        // Select the 'General' element's topic counter, and increment by numGeneralSnippets
-        $generals_badge = $('#topicPanel .list-group li.topicGeneralItem span.topicCounter');
-        badge_count = Number($generals_badge.text());
-        $generals_badge.text(badge_count + numGeneralSnippets);
-
-        // If the deleted topic was displayed in the snippet panel,
-        // clear the snippet panel.
-        topicDisplayedInSnippetPanel = $('#snippetTopicSearchDisplay').text();
-        if (topicDisplayedInSnippetPanel == topicName) {
-            $('#userSnippets').empty();
-            $('#snippetTopicSearchDisplay').empty();
-        }
-    }
-
-    var deleteTopic = function(topicItem) {
-        /*
-         * Deletes a topic from the list of topics.
-         * - Sends an AJAX 'DELETE' request to delete the topic from the db.
-         * - Removes the topic name from the topic panel
-         */
-
-        var topicName = $(topicItem).find('a').clone().children().remove().end().text().replace(/^\s+|\s+$/g,''),
-            topicID = $(topicItem).find('span.topicID').text(),
-            success = function() {}, error = function() {};
-
-        success = function(results) {
-            removeDeletedTopic(topicItem, results.new_general_snippets);
-        };
-        error = function(req, status, error) {
-            console.log("AJAX returned with error");
-        };
-
-        snippetService.deleteTopic(topicID, success, error);
-    }
 
     var setupCodeMirrorEditors = function($desField, $codeField, desTheme, desMode, codeTheme, codeMode) {
         // Create a new CodeMirror desciption editor, right under our #desField textarea
@@ -1143,40 +1182,10 @@ var viewUtils = (function() {
 
     return {
         // Exported getters and setters
-        get isTopicPopoverDisplayed()            { return isTopicPopoverDisplayed; },
-        set isTopicPopoverDisplayed(bool)        { isTopicPopoverDisplayed = bool; },
-        get isTopicEditModeEnabled()             { return isTopicEditModeEnabled; },
-        set isTopicEditModeEnabled(bool)         { isTopicEditModeEnabled = bool; },
-        get isTopicAddModeEnabled()              { return isTopicAddModeEnabled; },
-        set isTopicAddModeEnabled(bool)          { isTopicAddModeEnabled = bool; },
         get isSnippetEditModeEnabled()           { return isSnippetEditModeEnabled; },
         set isSnippetEditModeEnabled(bool)       { isSnippetEditModeEnabled = bool; },
 
-        // Okay, this took me a bit to grock. "topicEditReset" is a function pointer that
-        // points to function closures which are used to restore the state of a topic when
-        // it is being edited back to an unedited state. The function closure is nice
-        // in that it remembers the state (closure) of the topic before it was edited. Then,
-        // later on when the topic editing is saved or canceled, all we need to do is call
-        // the function closure and the topic is back to an unedited state, hopefully with
-        // the appropriate changes if it was edited, or to its original state if the editing
-        // was cancelled. Well, the 'topicEditReset' variable is private to this viewUtils
-        // module. The pointer can change state (point to different closures) throughout the
-        // operation of the app. What needs to be done is pass the closure (or a pointer to 
-        // it) to the "view" code whenever it needs to reset the topic editing.
-        // If the following line is set:
-        //     topicEditReset:topicEditReset,
-        // then the "topicEditReset" pointer will change, but any external use of the 
-        // viewUtils.topicEditReset will only get the original value that the pointer
-        // was pointing to. So, to make sure the current function closure is returned, the 
-        // current pointer must be reference. The following does the trick.
-        // Hopefully I'll know this the rest of my life and not have to write a Gozilla comment.
-        topicEditReset: function() { topicEditReset(); },
         snippetFormReset: function() { snippetFormReset(); },
-
-        createTopic:createTopic,
-        editTopic:editTopic,
-        updateTopic:updateTopic,
-        deleteTopic:deleteTopic,
         enterNewSnippet:enterNewSnippet,
         saveNewSnippet:saveNewSnippet,
         saveEditedSnippet:saveEditedSnippet,
@@ -1214,9 +1223,9 @@ $(document).ready(function() {
 
 // Topic 'add' button is clicked
 $('#topicAdd').click(function() {
-    if (!viewUtils.isTopicEditModeEnabled) {
-        viewUtils.isTopicAddModeEnabled = !viewUtils.isTopicAddModeEnabled;
-        if (viewUtils.isTopicAddModeEnabled) {
+    if (!SC.topicCrud.isTopicEditModeEnabled) {
+        SC.topicCrud.isTopicAddModeEnabled = !SC.topicCrud.isTopicAddModeEnabled;
+        if (SC.topicCrud.isTopicAddModeEnabled) {
             $('#topicFormContainer').show();
             $(this).find('span').addClass('selected');
 
@@ -1229,7 +1238,7 @@ $('#topicAdd').click(function() {
 
             // Remove the popover if displayed
             $('#topicNameField').popover('hide');
-            viewUtils.isTopicPopoverDisplayed = false;
+            SC.topicCrud.isTopicPopoverDisplayed = false;
         }
     }
 });
@@ -1238,22 +1247,21 @@ $('#topicAdd').click(function() {
     // - allow topics to be deleted
     // - allow topic names to be changed
     $('#topicEdit').click(function() {
-        if (!viewUtils.isTopicAddModeEnabled) {
-            viewUtils.isTopicEditModeEnabled = !viewUtils.isTopicEditModeEnabled;
-            if (viewUtils.isTopicEditModeEnabled) {
+        if (!SC.topicCrud.isTopicAddModeEnabled) {
+            SC.topicCrud.isTopicEditModeEnabled = !SC.topicCrud.isTopicEditModeEnabled;
+            if (SC.topicCrud.isTopicEditModeEnabled) {
                 $('#topicPanel li span.topicDelete').show();
                 $(this).find('span').addClass('selected');
-                //viewUtils.topicEditReset = 
             } else {
                 $('#topicPanel li span.fa.topicDelete').hide();
                 $(this).find('span').removeClass('selected');
 
                 // Remove the topic edit form if displayed
-                viewUtils.topicEditReset();
+                SC.topicCrud.topicEditReset();
 
                 // Remove the popover if displayed
                 $('#topicEditNameField').popover('hide');
-                viewUtils.isTopicPopoverDisplayed = false;
+                SC.topicCrud.isTopicPopoverDisplayed = false;
             }
         }
     });
@@ -1263,7 +1271,7 @@ $('#topicAdd').click(function() {
     $("#topicDoDelete").click(function() {
         // Delete the topic here
         var $topic = $("#topicDeleteDialog").data('topicElement');
-        viewUtils.deleteTopic($topic);
+        SC.topicCrud.deleteTopic($topic);
         $("#topicDeleteDialog").modal('hide');
     });
 
@@ -1299,13 +1307,13 @@ $('#topicAdd').click(function() {
     $('#topicPanel').on('click', 'li.topicItem a.topicName', function(event) {
         var $topicItem = $(this).parent();
 
-        if (viewUtils.isTopicEditModeEnabled) {
+        if (SC.topicCrud.isTopicEditModeEnabled) {
             if ($topicItem.hasClass('topicGeneralItem')) {
                 // User might get confused when clicking on the 'General' topic when in edit mode.
                 // So alert them somehow as to their condition
                 notifyInEditMode(7);
             } else {
-                viewUtils.editTopic($topicItem);
+                SC.topicCrud.editTopic($topicItem);
             }
         } else {
             viewUtils.displayTopicSnippets($topicItem);
@@ -1318,15 +1326,15 @@ $('#topicAdd').click(function() {
                                       content:"This name already exists. Please type another name."});
         // Dismiss the popover upon click
         $element.click(function() {
-            if (viewUtils.isTopicPopoverDisplayed) {
+            if (SC.topicCrud.isTopicPopoverDisplayed) {
                 $(this).popover('hide');
-                viewUtils.isTopicPopoverDisplayed = false;
+                SC.topicCrud.isTopicPopoverDisplayed = false;
             }
         });
         $element.on('input', function() {
-            if (viewUtils.isTopicPopoverDisplayed) {
+            if (SC.topicCrud.isTopicPopoverDisplayed) {
                 $(this).popover('hide');
-                viewUtils.isTopicPopoverDisplayed = false;
+                SC.topicCrud.isTopicPopoverDisplayed = false;
             }
         });
     }
