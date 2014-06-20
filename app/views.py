@@ -116,6 +116,9 @@ def snippets(topic):
         # Get the snippet data from the form
         if (request.form):
             form = request.form.to_dict()
+        access = ACCESS_PRIVATE;
+        if form.get('access') == 'on':
+            access = ACCESS_PUBLIC;
         title = form['title']
         description = form['description']
         code = form['code']
@@ -123,7 +126,7 @@ def snippets(topic):
         # Persist the snippet to the users topic
         snippet = Snippet(title = title, description = description, code = code,
                           timestamp = datetime.utcnow(), topic = topic,
-                          creator_id = g.user.id, access = ACCESS_PRIVATE)
+                          creator_id = g.user.id, access = access)
         db.session.add(snippet)
         db.session.commit()
         return jsonify(id = snippet.id, creator_id = snippet.creator_id, access = snippet.access)
@@ -143,6 +146,9 @@ def snippets(topic):
 
         if (request.form):
             form = request.form.to_dict()
+        access = ACCESS_PRIVATE;
+        if form.get('access') == 'on':
+            access = ACCESS_PUBLIC;
         title = form['title']
         description = form['description']
         code = form['code']
@@ -150,7 +156,7 @@ def snippets(topic):
         snippet.title = title;
         snippet.description = description;
         snippet.code = code;
-        #pdb.set_trace()
+        snippet.access = access;
         db.session.commit()
         return jsonify(id = snippet.id)
 

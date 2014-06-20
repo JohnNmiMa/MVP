@@ -376,6 +376,9 @@ nav div.navbar-header {
                     padding:0 5px;
                     z-index:600;
                 }
+                    .snippetSelector .glyphicon {
+                        color:@icon-color;
+                    }
 
                 .snippetContent {
                     position:relative;
@@ -453,7 +456,7 @@ nav div.navbar-header {
                                 #snippetForm .snippetSelector {
                                     padding:5px;
                                 }
-                                #snippetSave, #snippetCancel {
+                                #snippetSave, #snippetCancel, #snippetAccess {
                                     float:right;
                                     width:46px;
                                     height:24px;
@@ -463,6 +466,18 @@ nav div.navbar-header {
                                     color:#fff;
                                     font-size:11px;
                                 }
+                                #snippetAccess {
+                                    margin-right:10px;
+                                    font-size: 14px;
+                                    color:@icon-color;
+                                    background-color:#fff;
+                                }
+                                    #snippetAccess:hover {
+                                        color:darken(@icon-color, 9%);
+                                    }
+                                    #snippetAccess:focus {
+                                        outline:0;
+                                    }
                                 #snippetCancel {
                                     margin-right:10px;
                                     background-color:@brand-danger;

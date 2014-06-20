@@ -34,7 +34,7 @@ var viewUtils = (function() {
      */
 
     var snippetUpdater = function($snippet) {
-        var updateSnippet = function(title, description, code) {
+        var updateSnippet = function(title, description, code, access) {
             // Update the snippet title
             $snippet.find('.snippetTitleText').text(title);
 
@@ -45,6 +45,17 @@ var viewUtils = (function() {
             // Update the snippet code
             $snippet.find('.snippetContent .snippetCodeText').html(code);
             $snippet.find('.snippetTextAreas .snippetCodeText').show();
+
+            // Update the snippet access
+            var $snippetAccessIcon = $snippet.find('.snippetSelector').find('.glyphicon');
+            $snippetAccessIcon.removeClass('glyphicon-eye-open glyphicon-eye-close');
+            if (access) {
+                $snippetAccessIcon.addClass('glyphicon-eye-open');
+                $snippet.find('.snippetAccess').text('public');
+            } else {
+                $snippetAccessIcon.addClass('glyphicon-eye-close');
+                $snippet.find('.snippetAccess').text('private');
+            }
         }
         return updateSnippet;
     }
@@ -79,7 +90,29 @@ var viewUtils = (function() {
     }
 
     var snippetFormResetter = function($snippet, $snippetForm) {
-        if ($snippet == undefined) {
+        var snippetID = "",
+            titleText = "",
+            domNodeStrings = "",
+            desText  = "",
+            codeText = "",
+            access = false;
+
+        if ($snippet != undefined) {
+            if ($snippet.find('.snippetAccess').text() == 'public') {
+                access = true;
+            }
+            snippetID = $snippet.find('span.snippetID').clone().children().remove().end().text();
+            titleText = $snippet.find('.snippetContent .snippetTitleText').clone().children().remove().end().text();
+            //desHtml   = $snippet.find('.snippetContent .snippetDesText').html(),
+            domNodeStrings = getDomNodesAsString(
+                $snippet.find('.snippetContent .snippetDesText'),
+                $snippet.find('.snippetContent .snippetCodeText'));
+            desText  = domNodeStrings['desStr'];
+            codeText = domNodeStrings['codeStr'];
+
+            // Populate the snippet form with the edited snippets data
+            setupSnippetForm($snippet, titleText, desText, codeText, access, snippetID);
+        } else {
             // Clear out the snippet form textareas (needed for Firefox)
             $('#desField').val("");
             $('#codeField').val("");
@@ -173,7 +206,11 @@ var viewUtils = (function() {
 
         ss +=     '<div class="snippet">';
         ss +=     '    <div class="snippetSelector">';
-        ss +=     '        <a href="#"><span class="fa fa-circle-o fa-2x"></span></a>';
+        if (access) {
+            ss += '        <a href="#"><span class="glyphicon glyphicon-eye-open fa-2x"></span></a>';
+        } else {
+            ss += '        <a href="#"><span class="glyphicon glyphicon-eye-close fa-2x"></span></a>';
+        }
         ss +=     '    </div>';
         ss +=     '    <div class="snippetContent">';
         ss +=     '        <div class="snippetFade" style="display:none">';
@@ -319,14 +356,30 @@ var viewUtils = (function() {
         return {'desStr':desStr.join("\n"), 'codeStr':codeStr.join("\n")};
     }
 
-    var setupSnippetForm = function($snippet, titleText, desHtml, codeText, snippetID) {
+    var setupSnippetForm = function($snippet, titleText, desText, codeText, access, snippetID) {
         var $snippetForm = $('#snippetForm'),
             $snippetDesCol = $snippet.find('.snippetContent .snippetDes-col'),
-            $snippetDesRow = $snippet.find('.snippetContent .snippetDes-row');
+            $snippetDesRow = $snippet.find('.snippetContent .snippetDes-row'),
+            $snippetAccessIcon = $snippetForm.find('.snippetSelector').find('.glyphicon'),
+            $snippetAccessFieldIcon = $('#snippetAccess').children('.glyphicon');
+
+        // Show the proper access state - public or private
+        // - for both the snippet selector icon and the snippet bar form button
+        $snippetAccessIcon.removeClass('glyphicon-eye-open glyphicon-eye-close');
+        $snippetAccessFieldIcon.removeClass('glyphicon-eye-open glyphicon-eye-close');
+        if (access) {
+            $snippetAccessIcon.addClass('glyphicon-eye-open');
+            $snippetAccessFieldIcon.addClass('glyphicon-eye-open');
+            $('#snippetAccessField').prop('checked', true);
+        } else {
+            $snippetAccessIcon.addClass('glyphicon-eye-close');
+            $snippetAccessFieldIcon.addClass('glyphicon-eye-close');
+            $('#snippetAccessField').prop('checked', false);
+        }
 
         // Populate fields in the form
         $("form #titleField").val(titleText);
-        $("form #desField").val(desHtml);
+        $("form #desField").val(desText);
         $("form #codeField").val(codeText);
 
         setupCodeMirrorEditors($('#desField'), $('#codeField'), desEditorTheme, desEditorMode, codeEditorTheme, codeEditorMode);
@@ -390,16 +443,7 @@ var viewUtils = (function() {
 
         // Bind the snippet edit button
         $snippet.find('.layout.snippetEdit').on('click', function() {
-            var snippetID = $snippet.find('span.snippetID').clone().children().remove().end().text();
-                titleText = $snippet.find('.snippetContent .snippetTitleText').clone().children().remove().end().text(),
-                desHtml   = $snippet.find('.snippetContent .snippetDesText').html(),
-                domNodeStrings = getDomNodesAsString(
-                    $snippet.find('.snippetContent .snippetDesText'),
-                    $snippet.find('.snippetContent .snippetCodeText')),
-                desText  = domNodeStrings['desStr'],
-                codeText  = domNodeStrings['codeStr'],
-                $snippetForm = setupSnippetForm($snippet, titleText, desText, codeText, snippetID);
-
+            var $snippetForm = $('#snippetForm');
             isSnippetEditModeEnabled = true;
 
             // Create the snippet updater and form resetter
@@ -748,9 +792,13 @@ var viewUtils = (function() {
 
     var updateTextareasWithEditorsContents = function($desField, $codeField) {
         // Get the description editors DOM nodes in an HTML string
-        var editorTextContents = getEditorTextContents($desField.next().find('.CodeMirror-code'));
+        var $editorDesField  = $desField.next().find('.CodeMirror-code'),
+            $editorCodeField = $codeField.next().find('.CodeMirror-code'),
+            editorTextContents = getEditorTextContents($editorDesField),
+            editorDomContents = "";
+
         if (editorTextContents.length > 0) {
-            editorDomContents = $desField.next().find('.CodeMirror-code').html();
+            editorDomContents = $editorDesField.html();
             // Add the HTML string as new DOM nodes in the form's textarea
             $desField.val(editorDomContents);
         } else {
@@ -758,9 +806,9 @@ var viewUtils = (function() {
         }
 
         // Get the code editors DOM nodes in an HTML string
-        editorTextContents = getEditorTextContents($codeField.next().find('.CodeMirror-code'));
+        editorTextContents = getEditorTextContents($editorCodeField);
         if (editorTextContents.length > 0) {
-            editorDomContents = $codeField.next().find('.CodeMirror-code').html();
+            editorDomContents = $editorCodeField.html();
             // Add the HTML string as new DOM nodes in the form's textarea
             $codeField.val(editorDomContents);
         } else {
@@ -818,21 +866,22 @@ var viewUtils = (function() {
         var data = {},
             title = '',
             desText = '',
-            codeText = '';
+            codeText = '',
+            access = false;
 
         // We must get the editor's contents into the form
         updateTextareasWithEditorsContents($('#desField'), $('#codeField'));
 
+        access = $('#snippetForm #snippetAccessField').prop('checked');
         title = $('#snippetForm #titleField').val();
         desText = $('#snippetForm #desField').val();
         codeText  = $('#snippetForm #codeField').val();
-        data = $("#snippetForm").serialize(),
+        data = $("#snippetForm").serialize();
 
-        console.log("Saving edited snippet ID " + snippetID);
         // Could check to see if anything changed. If not, don't talk to server.
 
         success = function(results) {
-            updateSnippet(title, desText, codeText);
+            updateSnippet(title, desText, codeText, access);
             snippetFormReset();
         };
         error = function(req, status, error) {
@@ -1331,6 +1380,15 @@ $('#topicAdd').click(function() {
     $('#snippetCancel').click(function() {
         viewUtils.cancelSnippet();
         $('#snippetAdd').find('span').removeClass('selected');
+    });
+
+    // Snippet access - public or private
+    $('#snippetAccess').on('click', function() {
+        var $access = $(this).children('span.glyphicon-eye-open, span.glyphicon-eye-close');
+        $access.toggleClass('glyphicon-eye-open glyphicon-eye-close');
+
+        // Set the hidden checkbox field according to visibility of access icon
+        $('#snippetAccessField').prop('checked', $access.hasClass('glyphicon-eye-open'));
     });
 
     // Eatup the form keyboard 'enter' event, so the user must click the submit button

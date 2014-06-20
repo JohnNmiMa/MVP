@@ -1,0 +1,84 @@
+sequence of description area's text data
+
+1) A <div class='snippetDesStyle'>That contains HTML</div>
+2) Call snippetFormResetter:
+   snippetFormResetter($snippet, $snippetForm)
+   - call getDomNodeAsString() to get the description and code text data
+     getDomNodeAsString($desDiv, $codeDiv)
+     - for the description, ???
+     - for the code, simply copy each $codeDiv.children('pre') element into an array
+       - For each node, get the .text(). This will contain no HTML, just text.
+       - then join all of the elements together into a string containing the HTML of the $codeDiv,
+         tacking on a '\n' line return at the end of each string.
+       The line returns keep the text string in the right form.
+
+   - call setupSnippetForm($snippet, titleText, desText, codeText, ...)
+     setupSnippetForm($snippet, titleText, desText, codeText, ...)
+     - populate the des and code textareas in the form
+       - $("form #titleField").val(titleText);
+       - $("form #desField").val(desText);
+       - $("form #codeField").val(codeText);
+       Now the form's textareas contain just single text strings. These text string
+       will be interpreted by the CodeMirror editor, and produce a bit of HTML for each
+       line of text. When the editing is finished in the editor, the editor's DOM contents
+       will be copied back into the form's textarea.
+
+       - call setupCodeMirrorEditors(...)
+         setupCodeMirrorEditors(...)
+         - this will create the CodeMirror editors for each of the snippet form's textareas.
+           The data in the snippet form will be copied to the editors .CodeMirror-code div.
+           The editors need to be refreshed to have the contents show.
+         
+3) Call saveEditedSnippet --> to save the CodeMirror editors contents
+  - call updateTextareasWithEditorsContents
+    - if there are contents in the editor,
+      - get the code editor's .html() of .CodeMirror-code divs (editorsDomContents)
+      - save the html (editorsDomContents) into the snippet form's code 
+        field ($codeField.val(editorsDomContent)
+
+    Now, the snippet form has the html contents of the editors .CodeMirror-code div.
+  - get access to each of the snippet form's fields
+    - title = $('#snippetForm #titleField').val();
+    - desText = $('#snippetForm #desField').val();
+    - codeText  = $('#snippetForm #codeField').val();
+  - call updateSnippet --> to save the snippet form's data back into the snippet's divs
+    - $(.snippetDesText').html(desText)
+    - $(.snippetCodeText').html(codeText)
+    This will put the html from the snippet form into the snippet's div fields. The .html()
+    function will create DOM nodes for all HTML tags stored in the form.
+
+Code Flow:
+1) Click the snippet edit button
+2) For each <pre> node in the snippet's .snippetCodeText div, get the element.text() and save
+   the text into an array. When all nodes have been save as text in the array, joint the array
+   into a large string, with a line-break at the end of every string.
+3) Take this large string with line-breaks embedded inside, and initialize the snippet form's
+   textareas with this string - $('#codeField').val(codeTextStr)
+4) When the snippet form is initialized properly, create the CodeMirror edtitors. This will
+   copy all of the snippet form's textarea content and get stored into CodeMirrors editors -
+   .CodeMirror-code div.
+5) Edit the contents in the CodeMirror editor. When finished, save the contents and show the
+   newly edited snippet
+6) Copy the editor's html contents $('.CodeMirror-code').html() into the snippet form $('#codeField').val(editorsDomContent)
+7) Copy the snippet form's contents $(.$codeField').val() into the snippet's div as html -
+   $(.snippetCodeText').html(codeText)
+
+Code Flow again
+1) Gather each node in $(.snippetCodeText).text() into a large string embedded with line-feeded.
+   - this large string contain only text, no html
+2) Initialize the snippet form with the large string - $('#codeField').val(largeString)
+3) Create the CodeMirror editor and edit contents, and then click 'save' button
+4) Get the editor's html contents - $('.CodeMirror-code').html()
+5) Save the html into the snippet form - $('#codeField').val(editorsDomContent)
+6) Copy the snippet form's contents into the snippet - $(.snippetCodeText').html(codeText)
+
+Description Flow:
+1) Get html for each node in the description div - $('.snippetDesText').html()
+2) Add the node's html into an html array. Joint the array inserting line-breaks after each line
+3) Insert the large string into the snippet form - $('#desField').val(largeString)
+4) Create the CodeMirror editor for the description textarea and edit contents, then click 'save' button
+5) To save the editor's contents back to the snippet form:
+   - for each <pre> element, get the .html() string. Add the string to an array
+   - joint the array into a large string (don't need to embed line-breaks).
+6) Save the large string into the snippet form - $('#desField').val(largStr)
+7) Copy the snippet form's contents into the snippet - $(.snippetDesText').html(desText)

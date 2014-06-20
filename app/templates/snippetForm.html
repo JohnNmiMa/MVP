@@ -4,12 +4,16 @@
     <fieldset>
         <div class="snippet">
             <div class="snippetSelector">
-                <a href="#"><span class="fa fa-circle-o fa-2x"></span></a>
+                <a href="#"><span class="glyphicon glyphicon-eye-close"></span></a>
             </div>
             <div class="snippetContent">
                 <div id="snippetFormBar">
                     <button id="snippetSave" type="button" name="snippetSave" tabindex="4">Save</button>
                     <button id="snippetCancel" type="button" name="snippetCancel" tabindex="-1">Cancel</button>
+                    <button id="snippetAccess" type="button" name="snippetAccess" tabindex="-1">
+                        <span class="glyphicon glyphicon-eye-close"></span>
+                    </button>
+                    <input id='snippetAccessField' type="checkbox" name="access" tabindex=-1 style="visibility:hidden">
                 </div>
                 <div class="snippetTitle">
                     <div id='titleDiv'>

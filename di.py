@@ -112,7 +112,7 @@ w_snipd = {
     <p>All SomeCode accounts include a 'General' topic. Snippets not associated with a topic when created go into the General topic. And all snippets in a topic that is deleted will be moved to the General topic.</p>\
     <p>To add a snippet to a snippet topic, first select the snippet topic by clicking on the topic name. Next, click the snippet add icon and enter the snippet contents. Click 'Save' and the new snippet will be added to the currently selected topic.</p>\
     <p>Each snippet has three main parts - the title, description, and code. The title is required whereas the description and code are optional. To quickly create multiple snippets, just add the titles up front and add the description or code later on.</p>\
-    When entering a description or chunk of code, the textarea will grow or shrink as you type. Code entered in the code textarea is highlighted according to the syntax of the code's language. The description textarea is not fully implemented. Soon you will be able to enter Markdown or WYSIWYG text.",
+    When entering a description or chunk of code, the textarea will grow or shrink as text is added or deleted. Code entered in the code textarea is highlighted according to the syntax of the code's language. The description textarea is not fully implemented. Soon Markdown or WYSIWYG text will be enabled.",
     "code": ''
 }
 w_snipe = {
@@ -138,9 +138,9 @@ w_snipg = {
 w_sniph = {
     'access': models.ACCESS_PRIVATE,
     'title': "You can interact with individual snippets",
-    "des": "<p>Just click on the Snippet Selector Icon, and from there you can</p><ol>\
+    "des": "<p>Just hover over the Snippet Selector Icon to perform the following tasks:</p><ol>\
     <li>'Snip' the snippet (implemented soon) by saving it to one of the available topics. This will allow a snippet created by another user to be saved into any snippet topic. This is similar to pinning a pin in Pinterest. Just select the topic where the snippet is to reside.</li>\
-    <li>Change the snippet layout</li>\
+    <li>Change the snippet layout (columnar, row, title-only)</li>\
     <li>Edit the snippet. The snippet title, description, and code can be changed.</li>\
     <li>Delete the snippet</li></ol>",
     "code": ''
@@ -154,14 +154,14 @@ w_snipi = {
 w_snipj = {
     'access': models.ACCESS_PRIVATE,
     'title': "Future Functionality",
-    "des": "<p>The application you see now came to life as an MVP project in Thinkful's 'Programming in Python' (Python/Flask) class. It was the author's experience that other code snippet tools have a less than useful UX experience. When you want to create a snippet, you are flashed a full page webform where you enter your snippet data. All other information on the page is locked out and the context in which the new snippet is being placed is blocked. Another weaknesses is the display and layout of the snippets. Only a few snippets are displayed on the page, and the ability to see multiple snippets at once is missing. This application was an attempt to add a better UX experience for the user with the addition of functionality not present in other code snippet tools.</p>\
+    "des": "<p>The application before you came to life as an MVP project in Thinkful's 'Programming in Python' (Python/Flask) class. It was the author's experience that other code snippet tools have a less than useful UX experience. When creating a snippet, a full page webform is flashed where the data is to be enter. All other information on the page is locked out and the context in which the new snippet is being placed is blocked. Another weaknesses is the display and layout of the snippets. Only a few snippets are displayed on the page, and the ability to see multiple snippets at once is missing. This application was an attempt to add a better UX experience for the user with the addition of functionality not present in other code snippet tools.</p>\
     <p>To more fully flesh out the application, the following features are envisioned as being useful for a great 'snippet management' experience:</p> \
     <ul>\
     <li>Beef up the 'description' textarea. Implement a fast WYSIWYG/Markup strategy.</li>\
     <li>Beef up the snippet bar. Add a snippet language selector and a topic selector.</li>\
     <li>Implement the setting panel. Provide a default snippet layout, default snippet personal/public color, etc.</li>\
-    <li>Ability to 'Snip' or share snippets. Just as you can 'Pin' images in Pinterest, with SomeCode you should be able to 'Snip' code snippets. All public snippets can be 'snipped'. This will require the database to have a many-to-many relationship between a user's topics and the snippets in a topic. In other words, a topic can contain multiple snippets, and a snippet should be able to be in multiple topics, with topics being from the local logged in user or those from any other user on the system.</li>\
-    <li>Ability to sort snippets, sorting on time, alphabetically, or custom. In custom sort mode, you will be able to drag snippets up or down into an order that makes sense for the snippet topic. This is one of the weaknesses of Pinterest - you can not move your pins around in the board. With SomeCode you will be able to order your snippets as you wish.</li>\
+    <li>Ability to 'Snip' or share snippets. Just as images in Pinterest can be 'Pinned', with SomeCode 'Snippets' should be able to be 'Snipped'. All public snippets can be 'snipped'. This will require the database to have a many-to-many relationship between a user's topics and the snippets in a topic. In other words, a topic can contain multiple snippets, and a snippet should be able to be in multiple topics, with topics being from the local logged in user or those from any other user on the system.</li>\
+    <li>Ability to sort snippets, sorting on time, alphabetically, or custom. In custom sort mode, snippets can be dragged up or down into an order that makes sense for the snippet topic. This is one of the weaknesses of Pinterest - pins can not be moved around in the board. With SomeCode snippets can be placed in any desired order.</li>\
     <li>Ability to filter snippets according to snippet language.</li>\
     <li>Ability to filter snippets according to popularity or number of times snipped. This implies that snippets will be able to be 'liked'.</li>\
     <li>Improve snippet layout so that long snippet descriptions will 'flow' around the snippet code.</li>\
