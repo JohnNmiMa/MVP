@@ -116,7 +116,17 @@ var viewUtils = (function() {
             // Clear out the snippet form textareas (needed for Firefox)
             $('#desField').val("");
             $('#codeField').val("");
+
+            var $snippetAccessIcon = $snippetForm.find('.snippetSelector').find('.glyphicon');
+            var $snippetAccessFieldIcon = $('#snippetAccess').children('.glyphicon');
+            $snippetAccessIcon.removeClass('glyphicon-eye-open glyphicon-eye-close');
+            $snippetAccessFieldIcon.removeClass('glyphicon-eye-open glyphicon-eye-close');
+            $snippetAccessIcon.addClass('glyphicon-eye-close');
+            $snippetAccessFieldIcon.addClass('glyphicon-eye-close');
+            $('#snippetAccessField').prop('checked', false);
         }
+
+        setupCodeMirrorEditors($('#desField'), $('#codeField'), desEditorTheme, desEditorMode, codeEditorTheme, codeEditorMode);
 
         var snippetFormReset = function() {
             var $desField = $snippetForm.find('#desField'),
@@ -382,7 +392,6 @@ var viewUtils = (function() {
         $("form #desField").val(desText);
         $("form #codeField").val(codeText);
 
-        setupCodeMirrorEditors($('#desField'), $('#codeField'), desEditorTheme, desEditorMode, codeEditorTheme, codeEditorMode);
         $snippetForm.data('snippetID', snippetID); // save the snippet id in the form for later use
 
         // Set the layout according to the layout controls
@@ -771,7 +780,6 @@ var viewUtils = (function() {
         // Relocate the snippetForm to the top of the displayed snippet list
         $('#modalCover').show();
         $('#userSnippets').before($snippetForm);
-        setupCodeMirrorEditors($('#desField'), $('#codeField'), desEditorTheme, desEditorMode, codeEditorTheme, codeEditorMode);
         $snippetForm.show();
 
         $('#titleField').focus();
