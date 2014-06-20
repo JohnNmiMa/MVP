@@ -158,7 +158,7 @@ def snippets(topic):
         snippet.code = code;
         snippet.access = access;
         db.session.commit()
-        return jsonify(id = snippet.id)
+        return jsonify(id = snippet.id, creator_id = snippet.creator_id, access = snippet.access)
 
     elif request.method == 'GET':
         """ Find all snippets associated with a topic """

@@ -34,7 +34,8 @@ var viewUtils = (function() {
      */
 
     var snippetUpdater = function($snippet) {
-        var updateSnippet = function(title, description, code, access) {
+        // Closure function used to update the snippet after editing
+        var updateSnippet = function(id, creatorID, title, description, code, access) {
             // Update the snippet title
             $snippet.find('.snippetTitleText').text(title);
 
@@ -95,7 +96,9 @@ var viewUtils = (function() {
             domNodeStrings = "",
             desText  = "",
             codeText = "",
-            access = false;
+            access = false,
+            $snippetAccessIcon = $(),
+            $snippetAccessFieldIcon = $();
 
         if ($snippet != undefined) {
             if ($snippet.find('.snippetAccess').text() == 'public') {
@@ -117,8 +120,9 @@ var viewUtils = (function() {
             $('#desField').val("");
             $('#codeField').val("");
 
-            var $snippetAccessIcon = $snippetForm.find('.snippetSelector').find('.glyphicon');
-            var $snippetAccessFieldIcon = $('#snippetAccess').children('.glyphicon');
+            $snippetAccessIcon = $snippetForm.find('.snippetSelector').find('.glyphicon');
+            $snippetAccessFieldIcon = $('#snippetAccess').children('.glyphicon');
+
             $snippetAccessIcon.removeClass('glyphicon-eye-open glyphicon-eye-close');
             $snippetAccessFieldIcon.removeClass('glyphicon-eye-open glyphicon-eye-close');
             $snippetAccessIcon.addClass('glyphicon-eye-close');
@@ -128,6 +132,7 @@ var viewUtils = (function() {
 
         setupCodeMirrorEditors($('#desField'), $('#codeField'), desEditorTheme, desEditorMode, codeEditorTheme, codeEditorMode);
 
+        // Closure function used to reset the form when finished editing the snippet
         var snippetFormReset = function() {
             var $desField = $snippetForm.find('#desField'),
                 $codeField = $snippetForm.find('#codeField'),
@@ -392,7 +397,7 @@ var viewUtils = (function() {
         $("form #desField").val(desText);
         $("form #codeField").val(codeText);
 
-        $snippetForm.data('snippetID', snippetID); // save the snippet id in the form for later use
+        $snippetForm.data('snippetElement', $snippet); // save the snippet in the form for later use
 
         // Set the layout according to the layout controls
         if ($snippetDesCol.length > 0 && $snippetDesCol.css('display') != 'none') {
@@ -498,40 +503,73 @@ var viewUtils = (function() {
         bindSnippetSelector($snippet);
     }
 
-    var incrementTopicCount = function() {
-        var $badge = $('#topicPanel .list-group li.topicItem.active span.topicCounter'),
-            badge_count = 0,
+    var incrementSnippetCounters = function(access) {
+        var $topic_badge = $('#topicPanel .list-group li.topicItem.active span.topicCounter'),
             $personal_badge = $('#personalSnippetCounter'),
+            $public_badge = $('#publicSnippetCounter'),
+            topic_badge_count = 0,
+            public_badge_count = 0,
             personal_badge_count = 0;
 
-        if ($badge.length == 0) {
+        // Increment the topic's counter
+        if ($topic_badge.length == 0) {
             // No topic is active, so increment the General topic
-            $badge = $('#topicPanel .list-group li.topicGeneralItem span.topicCounter');
+            $topic_badge = $('#topicPanel .list-group li.topicGeneralItem span.topicCounter');
         }
-        badge_count = Number($badge.text());
-        $badge.text(badge_count + 1);
+        topic_badge_count = Number($topic_badge.text());
+        $topic_badge.text(topic_badge_count + 1);
 
+        // Increment the personal search counter
         personal_badge_count = Number($personal_badge.text());
         $personal_badge.text(personal_badge_count + 1);
+
+        // If snippet has public access, increment the public search counter
+        if (access) {
+            public_badge_count = Number($public_badge.text());
+            $public_badge.text(public_badge_count + 1);
+        }
     }
 
-    var decrementTopicCount = function() {
-        var $badge = $('#topicPanel .list-group li.topicItem.active span.topicCounter'),
-            badge_count = 0,
+    var updateSnippetCounters = function(oldAccess, newAccess) {
+        // We only need to update the public search counter
+        var $public_badge = $('#publicSnippetCounter'),
+            public_badge_count = 0;
+
+        public_badge_count = Number($public_badge.text());
+        if (oldAccess == false && newAccess == true) {
+            $public_badge.text(public_badge_count + 1);
+        } else if (oldAccess == true && newAccess == false) {
+            $public_badge.text(public_badge_count - 1);
+        }
+    }
+
+    var decrementSnippetCounters = function(access) {
+        var $topic_badge = $('#topicPanel .list-group li.topicItem.active span.topicCounter'),
             $personal_badge = $('#personalSnippetCounter'),
+            $public_badge = $('#publicSnippetCounter'),
+            topic_badge_count = 0,
+            public_badge_count = 0,
             personal_badge_count = 0;
 
-        if ($badge.length == 0) {
+        // Decrement the topic's counter
+        if ($topic_badge.length == 0) {
             // No topic is active, so don't decrement any topic counter
             // NOTE: This needs to be fixed. Must find all topics that contained the snippet,
             //       and decrement each topic counter. (I think this is right)
-            //$badge = $('#topicPanel .list-group li.topicGeneralItem span.topicCounter');
+            //$topic_badge = $('#topicPanel .list-group li.topicGeneralItem span.topicCounter');
         }
-        badge_count = Number($badge.text());
-        $badge.text(badge_count - 1);
+        topic_badge_count = Number($topic_badge.text());
+        $topic_badge.text(topic_badge_count - 1);
 
+        // Decrement the personal search counter
         personal_badge_count = Number($personal_badge.text());
         $personal_badge.text(personal_badge_count - 1);
+
+        // If snippet had public access, decrement the public search counter
+        if (access) {
+            public_badge_count = Number($public_badge.text());
+            $public_badge.text(public_badge_count - 1);
+        }
     }
 
     var displaySnippets = function(snippets) {
@@ -858,8 +896,9 @@ var viewUtils = (function() {
         }
 
         success = function(results) {
-            displayNewSnippet(results['id'], results['creator_id'], results['access']);
-            incrementTopicCount();
+            var access = results['access'];
+            displayNewSnippet(results['id'], results['creator_id'], access);
+            incrementSnippetCounters(access);
         };
         error = function(req, status, error) {
             console.log("AJAX returned with error");
@@ -870,17 +909,22 @@ var viewUtils = (function() {
     };
 
 
-    var saveEditedSnippet = function(snippetID) {
+    var saveEditedSnippet = function($snippet) {
         var data = {},
             title = '',
             desText = '',
             codeText = '',
-            access = false;
+            oldAccess = false,
+            accessFromForm = false,
+            snippetID = $snippet.find('span.snippetID').text();
 
         // We must get the editor's contents into the form
         updateTextareasWithEditorsContents($('#desField'), $('#codeField'));
 
-        access = $('#snippetForm #snippetAccessField').prop('checked');
+        if ($snippet.find('.snippetAccess').text() == 'public') {
+            oldAccess = true;
+        }
+        accessFromForm = $('#snippetForm #snippetAccessField').prop('checked');
         title = $('#snippetForm #titleField').val();
         desText = $('#snippetForm #desField').val();
         codeText  = $('#snippetForm #codeField').val();
@@ -889,7 +933,10 @@ var viewUtils = (function() {
         // Could check to see if anything changed. If not, don't talk to server.
 
         success = function(results) {
-            updateSnippet(title, desText, codeText, access);
+            var newAccess = results['access'];
+
+            updateSnippet(results['id'], results['creator_id'], title, desText, codeText, newAccess);
+            updateSnippetCounters(oldAccess, newAccess)
             snippetFormReset();
         };
         error = function(req, status, error) {
@@ -903,11 +950,16 @@ var viewUtils = (function() {
 
     var deleteSnippet = function($snippet) {
         var snippetID = $snippet.find('span.snippetID').text(),
-            success = function() {}, error = function() {};
+            success = function() {}, error = function() {},
+            access = false;
+
+        if ($snippet.find('.snippetAccess').text() == 'public') {
+            access = true;
+        }
 
         success = function(results) {
             $snippet.remove();
-            decrementTopicCount()
+            decrementSnippetCounters(access)
         };
         error = function(req, status, error) {
             console.log("AJAX returned with error");
@@ -1373,18 +1425,19 @@ $('#topicAdd').click(function() {
      * Snippet CRUD
      */
 
-    // Snippet 'save' button clicked
+    // Snippet form 'save' button clicked
     $('#snippetSave').click(function() {
         if (viewUtils.isSnippetEditModeEnabled === true) {
-            var snippetID = $('#snippetForm').data('snippetID');
-            viewUtils.saveEditedSnippet(snippetID);
+            var $snippet = $("#snippetForm").data('snippetElement');
+
+            viewUtils.saveEditedSnippet($snippet);
         } else {
             viewUtils.saveNewSnippet(this);
             $('#snippetAdd').find('span').removeClass('selected');
         }
     });
 
-    // New snippet 'cancel' button clicked
+    // Snippet form 'cancel' button clicked
     $('#snippetCancel').click(function() {
         viewUtils.cancelSnippet();
         $('#snippetAdd').find('span').removeClass('selected');
@@ -1420,6 +1473,7 @@ $('#topicAdd').click(function() {
     // Enable Bootstrap Modal Dialog for the Snippet Selector Delete Button
     $("#snippetDeleteDialog").modal({backdrop:'static', keyboard:false, show:false});
 
+    // Snippet delete dialog 'delete' button clicked
     $("#snippetDoDelete").click(function() {
         var $snippet = $("#snippetDeleteDialog").data('snippetElement');
 

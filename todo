@@ -147,17 +147,24 @@ Snippet Form Cleanup
   l can we save a large string of the editors contents that includes
     the <span> tags? This would simplify the number of nodes in the DOM greatly
 
-Create "Welcome" topic in the SomeCode account, and put it in every new account
-  - initialize it in di.py script
-    - do it before the user accounts are created
-  - Add the Welcome topic to each new account
+Create "Welcome" topic in the SomeCode account, and put it in every new account - DONE
+  - initialize it in di.py script - DONE
+    - do it before the user accounts are created - DONE
+  - Add the Welcome topic to each new account - DONE
+
+Change snippet public or private state in snippet edit - DONE
+  - If snippet is owned by logged in user, toggle public or private - DONE
+  - On snippet create, if public, increment the public counter - DONE
+  - On snippet edit, if public access changed, update the public counter - DONE
+  - On snippet delete, if public, decrement the public counter - DONE
+
+Tidy up code
+  - create topicCrud object
+  - create snippetCrud object
 
 Change DB to something that persists on Heroku (Postgres)
 
 Push to Heroku
-
-Change snippet public or private state in Snippet Selector popup
-  - If snippet is owned by logged in user, toggle public or private
 
 Implement Gear
   - Add "Setting" model in server
@@ -286,7 +293,7 @@ Public Snippet - Any user can search and view the snippet
   - Is modeled as "access==ACCESS_PUBLIC" in the User model.
 
 Private Snippet - Only the owner can search and view the snippet
-  - Public snippets have the closed-eye icon.
+  - Private snippets have the closed-eye icon.
   - Is modeled as "access==ACCESS_PRIVATE" in the User model.
 
 Owned Snippet - The snippet creator id == the currently logged in user id
@@ -294,7 +301,7 @@ Owned Snippet - The snippet creator id == the currently logged in user id
     useful to differentiate a user's own created snippets vs those snippets
     that are linked/snipped in from another user.
   - Is modeled as creator_id in the Snippet model. Just compare the
-    current user id with the creator id, and if the same, they it is
+    current user id with the creator id, and if the same, then it is
     owned by current user.
   - When there is no logged in user, there is no way to determine snippet ownership.
     Therefore all snippets will be colored as non-owned color.
@@ -302,7 +309,7 @@ Owned Snippet - The snippet creator id == the currently logged in user id
 Personal Snippet - The user has the snippet in some topic
   - The snippet could be "owned" by another user
   - Can be both public or private
-  - personal snippets (user's snippets) can be searched searched independently
+  - Personal snippets (user's snippets) can be searched searched independently
     from public snippets
   - Only personal snippets can be edited and deleted
   - Only when logged in can snippets can be edited and deleted
