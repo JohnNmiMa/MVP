@@ -27,6 +27,10 @@
                     <li class='list-group-item topicItem topicGeneralItem'>
                         <span class="fa fa-circle topicDelete topicDeleteInvisible" style="display:none"></span>
                         <a href="#" class="topicName">General</a>
+                {% elif topic.topic == 'Welcome' %}
+                    <li class='list-group-item topicItem topicWelcomeItem'>
+                        <span class="fa fa-circle topicDelete topicWelcomeInvisible" style="display:none"></span>
+                        <a href="#" class="topicName">Welcome</a>
                 {% else %}
                     <li class='list-group-item topicItem'>
                         <span class="fa fa-minus-circle topicDelete" style="display:none"></span>

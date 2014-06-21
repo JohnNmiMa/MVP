@@ -1278,8 +1278,9 @@ $('#topicAdd').click(function() {
     // Topic delete button in topic panel is clicked - will delete topic here
     $('#topicPanel').on('click', 'span.topicDelete', function() {
         var $topic = $(this).parent();
-        if ($topic.hasClass('topicGeneralItem')) {
-            // Don't delete the general topic
+        if ($topic.hasClass('topicGeneralItem') ||
+            $topic.hasClass('topicWelcomeItem')) {
+            // Don't delete either the general or welcome topic
         } else {
             // Prompt user to see if topic should really be deleted
             $("#topicDeleteDialog").data('topicElement', $topic);
@@ -1308,7 +1309,8 @@ $('#topicAdd').click(function() {
         var $topicItem = $(this).parent();
 
         if (SC.topicCrud.isTopicEditModeEnabled) {
-            if ($topicItem.hasClass('topicGeneralItem')) {
+            if ($topicItem.hasClass('topicGeneralItem') ||
+                $topicItem.hasClass('topicWelcomeItem')) {
                 // User might get confused when clicking on the 'General' topic when in edit mode.
                 // So alert them somehow as to their condition
                 notifyInEditMode(7);

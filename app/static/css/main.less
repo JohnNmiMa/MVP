@@ -11,6 +11,7 @@ body {
     padding-top: 57px;
 }
 
+.vex { z-index:7100; }
 .vex-content.snippetCreateContent {
     width:90% !important;
 }
@@ -18,21 +19,14 @@ body {
         height:60% !important;
     }
 
-/*.vex-overlay.validateDialogOverlay {*/
-	/*background:none !important;*/
-/*}*/
-
-
 .vex-content.signinDialog {
-	font-weight:300 !important;
-	width:270px !important;
-    //background-color: @doterra-secondary-color !important;
-    //color:#fff !important;;
+    font-weight:300 !important;
+    width:270px !important;
 }
     .vex-content.signinDialog h2 {
         margin-top:0;
     }
-    .vex-content.signinDialog div.signinButton {
+    .vex-content.signinDialog .signinButton {
         position:relative;
         height:50px;
         margin-top: 8px;
@@ -260,7 +254,8 @@ nav div.navbar-header {
             color:@brand-danger;
             cursor: pointer;
         }
-            #topicPanel li span.topicDeleteInvisible {
+            #topicPanel li span.topicDeleteInvisible,
+            #topicPanel li span.topicWelcomeInvisible {
                 color:white;
                 opacity:0;
                 cursor: auto;
