@@ -6,6 +6,7 @@ SECRET_KEY = '\xb1\x15Vjr\x1f\xdf\x18Q*\x18zGAm\xef\x06\x8eD\xbaF\x02\xf1\xfb'
 basedir = os.path.abspath(os.path.dirname(__file__))
 # The path to the database file
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'app.db')
+#SQLALCHEMY_DATABASE_URI = 'postgresql://localhost' + os.path.join(basedir, 'app.db')
 # Where the slqalchemy-migrate data files are stored
 SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
 # WhooshAlchemy for db searches
