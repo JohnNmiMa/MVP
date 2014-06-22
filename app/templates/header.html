@@ -9,7 +9,7 @@
             <span class="icon-bar"></span>
         </button>
         <a href="#" class="navbar-brand hidden-xs">SomeCode</a>
-        <form id="snippetSearchForm" name="snippetSearchForm" role="search" onSubmit="return viewUtils.searchSnippets(this)">
+        <form id="snippetSearchForm" name="snippetSearchForm" role="search" onSubmit="return SC.snippetCrud.searchSnippets(this)">
             <div id="snippetSearchDiv">
                 {% if name %}
                     {% set ph = 'Search personal snippets' %}

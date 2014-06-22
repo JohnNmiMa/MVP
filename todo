@@ -159,12 +159,17 @@ Change snippet public or private state in snippet edit - DONE
   - On snippet delete, if public, decrement the public counter - DONE
 
 Tidy up code
-  - create topicCrud object
-  - create snippetCrud object
+  - create topicCrud object - DONE
+  - create snippetCrud object - DONE
 
 Change DB to something that persists on Heroku (Postgres)
+  - UPDATE: moving to Postgres will force a different method of full-text search.
+            Therefore, we will keep using SQLite in the MVP. This means that every
+            time the server is restarted, we lose all data. It's okay for an MVP.
 
 Push to Heroku
+
+When deleting topics, query if all snippets should get deleted, or pushed to the General/another topic
 
 Implement Gear
   - Add "Setting" model in server
@@ -189,14 +194,10 @@ Associate snippet with a topic or multiple topics (MAYBE)
     - Update db to associate snippet to new topic link
       - show that the snippt belongs in multiple topics
 
-When deleting topics, query if all snippets should get deleted, or pushed to the General/another topic
-
 Sort snippets in a topic (Don't sort under General topic)
   - Sort by time, alphabetically, or custom
   - Custom sort will require each snippet to be draggable with drag bars
     - Add the pencil icon or 'edit' word to do custom order when in custom sort mode
-
-Add "All" topic to show all topics. This will be useful with the language filter
 
 Implement Language Filter
 
