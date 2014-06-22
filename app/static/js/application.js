@@ -258,7 +258,7 @@ var viewUtils = (function() {
         codeEditorMode = 'javascript',
         desEditor = {},
         desEditorTheme = 'eclipse',
-        desEditorMode = 'default';
+        desEditorMode = 'htmlmixed';
 
     /*
      * Private methods
@@ -337,15 +337,11 @@ var viewUtils = (function() {
             }
             snippetID = $snippet.find('span.snippetID').clone().children().remove().end().text();
             titleText = $snippet.find('.snippetContent .snippetTitleText').clone().children().remove().end().text();
-            //desHtml   = $snippet.find('.snippetContent .snippetDesText').html(),
-            domNodeStrings = getDomNodesAsString(
-                $snippet.find('.snippetContent .snippetDesText'),
-                $snippet.find('.snippetContent .snippetCodeText'));
-            desText  = domNodeStrings['desStr'];
-            codeText = domNodeStrings['codeStr'];
+            desHtml   = $snippet.find('.snippetContent .snippetDesText').html(),
+            codeText  = getDomNodesAsString($snippet.find('.snippetContent .snippetCodeText'));
 
             // Populate the snippet form with the edited snippets data
-            setupSnippetForm($snippet, titleText, desText, codeText, access, snippetID);
+            setupSnippetForm($snippet, titleText, desHtml, codeText, access, snippetID);
         } else {
             // Clear out the snippet form textareas (needed for Firefox)
             $('#desField').val("");
@@ -558,23 +554,13 @@ var viewUtils = (function() {
         highlightSnippetLayout($snippetFade, 'snippetTitleOnlyLayout');
     }
 
-    var getDomNodesAsString = function($snippetDesText, $snippetCodeText) {
-        var desStr = [],
-            codeStr = [];
+    var getDomNodesAsString = function($snippetNode) {
+        var nodeStr = [];
 
-        $snippetDesText.children('pre').each(function() {
-            desStr.push($(this).text());
+        $snippetNode.children('pre').each(function() {
+            nodeStr.push($(this).text());
         });
-        if (desStr.length === 0) {
-            $snippetDesText.children().each(function() {
-                desStr.push($(this).text());
-            });
-        }
-
-        $snippetCodeText.children('pre').each(function() {
-            codeStr.push($(this).text());
-        });
-        return {'desStr':desStr.join("\n"), 'codeStr':codeStr.join("\n")};
+        return nodeStr.join("\n");
     }
 
     var setupSnippetForm = function($snippet, titleText, desText, codeText, access, snippetID) {
@@ -583,6 +569,11 @@ var viewUtils = (function() {
             $snippetDesRow = $snippet.find('.snippetContent .snippetDes-row'),
             $snippetAccessIcon = $snippetForm.find('.snippetSelector').find('.glyphicon'),
             $snippetAccessFieldIcon = $('#snippetAccess').children('.glyphicon');
+
+        // Populate fields in the form
+        $("form #titleField").val(titleText);
+        $("form #desField").val(desText);
+        $("form #codeField").val(codeText);
 
         // Show the proper access state - public or private
         // - for both the snippet selector icon and the snippet bar form button
@@ -597,11 +588,6 @@ var viewUtils = (function() {
             $snippetAccessFieldIcon.addClass('glyphicon-eye-close');
             $('#snippetAccessField').prop('checked', false);
         }
-
-        // Populate fields in the form
-        $("form #titleField").val(titleText);
-        $("form #desField").val(desText);
-        $("form #codeField").val(codeText);
 
         $snippetForm.data('snippetElement', $snippet); // save the snippet in the form for later use
 
@@ -864,7 +850,6 @@ var viewUtils = (function() {
 
     // Create function that returns a string with all non-printing characters removed
     var getEditorTextContents = function($editorCodeDiv) {
-        //var editorTextContents = $editorCodeDiv.text().replace(/^\s+|\s+$/gm,'');
         var editorTextContents = $editorCodeDiv.text();
         if (editorTextContents.length === 1) {
             var charCode = editorTextContents.charCodeAt(0);
@@ -876,19 +861,13 @@ var viewUtils = (function() {
     }
 
     var updateTextareasWithEditorsContents = function($desField, $codeField) {
-        // Get the description editors DOM nodes in an HTML string
         var $editorDesField  = $desField.next().find('.CodeMirror-code'),
             $editorCodeField = $codeField.next().find('.CodeMirror-code'),
-            editorTextContents = getEditorTextContents($editorDesField),
+            editorTextContents = "",
             editorDomContents = "";
 
-        if (editorTextContents.length > 0) {
-            editorDomContents = $editorDesField.html();
-            // Add the HTML string as new DOM nodes in the form's textarea
-            $desField.val(editorDomContents);
-        } else {
-            $desField.val("");
-        }
+        // Put the text from the desEditor into the description's textarea.
+        desEditor.save();
 
         // Get the code editors DOM nodes in an HTML string
         editorTextContents = getEditorTextContents($editorCodeField);
