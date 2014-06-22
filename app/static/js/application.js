@@ -890,8 +890,6 @@ var SC = (function() {
                 duplicateNameFound = false,
                 success = function() {}, error = function() {};
 
-            console.log("Saving a new topic named " + topicName);
-
             // Make sure the topic doesn't already exist
             $('#topicPanel .topicItem a').each(function() {
                 var tmpTopicName = $(this).clone().children().remove().end().text().replace(/^\s+|\s+$/g,'');
@@ -958,7 +956,6 @@ var SC = (function() {
                 duplicateNameFound = false,
                 success = function() {}, error = function() {};
 
-            console.log("Updating topic " + topicName);
             if (!topicName) return false;
             if (topicID <= 0) return false;
 
@@ -1034,8 +1031,6 @@ var SC = (function() {
             $topicDeleteItem.after($topicEditFormItem);
             $topicEditNameFieldItem.val(topicName);
             $topicEditFormItem.show();
-
-            console.log("Editing topic " + topicName);
         }
 
         /*
