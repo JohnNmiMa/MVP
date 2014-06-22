@@ -86,33 +86,33 @@ w_snipt = {
 }
 
 w_snipa = {
-    'access': models.ACCESS_PRIVATE,
+    'access': models.ACCESS_PUBLIC,
     'title': 'Welcome to SomeCode',
     "des": "<p>SomeCode is a code snippet service for coders. Store your code here, search for other developer's code, and save snippets created by others to one of your snippet topics.</p> \
     Yes, snippets can be stored in buckets (topics) for improved snippet organization. Create subject areas (jQuery, Python OO, C++ OO etc.) or other topics to store tricks or notes you wish to remember.",
     "code": ''
 }
 w_snipb = {
-    'access': models.ACCESS_PRIVATE,
+    'access': models.ACCESS_PUBLIC,
     'title': 'When logged out, you can search for all public snippets in the SomeCode Snippet Cloud',
     "des": "Users without a SomeCode account can search any public snippet. The number of public snippets that can be searched is visible in the snippet search bar. It is envisioned, that over time as the SomeCode database grows and matures, snippet information will become a valuable resource, available to all serious coders. Enter the word 'python' to give it a try.",
     "code": ''
 }
 w_snipc = {
-    'access': models.ACCESS_PRIVATE,
+    'access': models.ACCESS_PUBLIC,
     'title': "When logged in, you can search public and personal snippets",
     "des": "<p>Just click the 'personal' search badge to search all snippets contained in any of the user's topics, or click the 'public' search badge to search all public snippets.</p>\
             Code snippets created by the currently logged in user are colored differently than snippets created by other users. This allows the user to quickly observe all personally authored snippets from the entire collection of snippets on the page. NOTE: only the 'code' text is colored differently. The 'description' text is not.",
     "code": ''
 }
 w_snipd = {
-    'access': models.ACCESS_PRIVATE,
+    'access': models.ACCESS_PUBLIC,
     'title': "Snippets in a topic can be displayed by the click of a button",
     "des": "Simply click on the topic name and all snippets in the topic will be displayed. Only the snippet display area of the page is updated and does not require a full page refresh. This provides a clean user experince without annoying page refreshes.",
     "code": ''
 }
 w_snipe = {
-    'access': models.ACCESS_PRIVATE,
+    'access': models.ACCESS_PUBLIC,
     'title': "When logged in, you can do CRUD with snippets and snippet topics",
     "des": "<p>Snippets and snippet topics can be created, edited, and deleted. To create, just click the Snippet Add (plus) icon in the snippet panel, or click the Topic Add (plus) icon in the topic panel. Each snippet has a snippet selector where the snippet can be edited or deleted. Just hover over the snippet selector (eye) to pop up the selector bar, and then click the edit icon (pencil) or delete icon (times).</p>\
     <p>All SomeCode accounts include a 'General' topic. Snippets not associated with a topic when created go into the General topic. And all snippets in a topic that is deleted will be moved to the General topic.</p>\
@@ -122,13 +122,13 @@ w_snipe = {
     "code": ''
 }
 w_snipf = {
-    'access': models.ACCESS_PRIVATE,
+    'access': models.ACCESS_PUBLIC,
     'title': "You can hide the Topic Panel by clicking the Topic Panel Toggle Icon",
     "des": "Clicking the Topic Panel Toggle Icon will toggle the visibility of the Topic Panel. Getting the Topic Panel out of view will provide more room to display large snippets.",
     "code": ''
 }
 w_snipg = {
-    'access': models.ACCESS_PRIVATE,
+    'access': models.ACCESS_PUBLIC,
     'title': "You can view the snippets in three ways",
     "des": "<p>The three different layout options are:</p>\
     <ol><li>'Columnar' mode, where the snippet description and code are side-by-side. This can be a handy when viewing many short snippets at once.</li>\
@@ -138,7 +138,7 @@ w_snipg = {
     "code": ''
 }
 w_sniph = {
-    'access': models.ACCESS_PRIVATE,
+    'access': models.ACCESS_PUBLIC,
     'title': "You can interact with individual snippets",
     "des": "<p>Just hover over the Snippet Selector Icon to perform the following tasks:</p><ol>\
     <li>'Snip It' (implemented soon) will allow any public or authored snippet to be saved to any of the user's topics. This will allow a snippet created by another user to be saved into any snippet topic. This is similar to pinning a pin in Pinterest. Just select the topic where the snippet is to reside and it will be visible in that topic.</li>\
@@ -148,13 +148,13 @@ w_sniph = {
     "code": ''
 }
 w_snipi = {
-    'access': models.ACCESS_PRIVATE,
+    'access': models.ACCESS_PUBLIC,
     'title': "Snippets can be public, so others can search and 'Snip It' your snippets.",
     "des": "'Private' snippets are shown with the 'Closed-Eye' access icon and 'public' snippets are shown with the 'Open-Eye' access icon. To make a snippet 'public' simply set the access icon (eye) to the public state when creating or editing snippets. Be careful though, public snippets can be searched and snipped by anyone. And once they are snipped, they can no longer be made private.",
     "code": ''
 }
 w_snipj = {
-    'access': models.ACCESS_PRIVATE,
+    'access': models.ACCESS_PUBLIC,
     'title': "Future Functionality",
     "des": "<p>The application before you came to life as an MVP project in Thinkful's 'Programming in Python' (Python/Flask) class. It was the author's experience that other code snippet tools have a less than useful UX experience. When creating a snippet, a full page webform is flashed where the data is to be enter. All other information on the page is locked out and the context in which the new snippet is being placed is blocked. Another weaknesses is the display and layout of the snippets. Only a few snippets are displayed on the page, and the ability to see multiple snippets at once is missing. This application was an attempt to add a better UX experience for the user with the addition of functionality not present in other code snippet tools (e.g.: 'Snip It', public vs private searches, authored vs snipped code, etc.</p>\
     <p>To more fully flesh out the application, the following features are envisioned as being useful for a great 'snippet management' experience:</p> \

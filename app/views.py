@@ -281,8 +281,8 @@ def createUserInDb(fb_id, goog_id, twit_id, name, email, role):
     snippets = welcome_snippets.all()
     snippets.reverse()
     for snip in snippets:
-        s = Snippet(title = snip.title, description = snip.description, code = snip.code,
-                           timestamp = datetime.utcnow(), topic=topic, creator_id=snip.id, access=ACCESS_PRIVATE)
+        s = Snippet(title=snip.title, description=snip.description, code=snip.code,
+                            timestamp=snip.timestamp, topic=topic, creator_id=snip.id, access=ACCESS_PRIVATE)
         db.session.add(s)
 
     db.session.commit()

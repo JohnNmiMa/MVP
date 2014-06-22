@@ -238,7 +238,7 @@ Future:
 
 --------
 Bugs:
-* Login overlay is underneath layout icons.
+* Login overlay is underneath layout icons. - DONE
 * Title length can be created bigger than desired.
 * Title field does not wrap.
 * Topic count is not incremented when a new snippet is added - DONE
@@ -247,7 +247,7 @@ Bugs:
 * When logging in, don't default to showing no topic. If first time, show the General topic
 * Do a search on some personal snippet, then delete the snippet. The count in the topic where the snippet
   resided does not get decremented.
-* Public snippets that are not personal snippets (snipped not owned by user) don't show with correct color.
+* Public snippets that are not personal snippets (snipped not owned by user) don't show with correct color. - DONE
 * Should authenticate according to OAuth ID, not email. The email can change, but the ID will not change.
 
 --------
