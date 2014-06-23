@@ -1,5 +1,5 @@
 venv
-venv-orig
+venv-orig*
 *~
 *.*~
 *.*.*~
