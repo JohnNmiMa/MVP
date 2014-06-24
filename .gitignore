@@ -1,6 +1,4 @@
 venv-orig*
-app.db
-db_repository
 *~
 *.*~
 *.*.*~
@@ -10,7 +8,6 @@ db_repository
 *.swo
 *.*.swo
 *.*.*.swo
-*.db
 EE-Gospel
 *.html~
 todo~
