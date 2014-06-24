@@ -1,29 +1,29 @@
 import os
 from flask import Flask
-console.log("import Flask")
+print("import Flask")
 from flask.ext.login import LoginManager
-console.log("import LoginManager")
+print("import LoginManager")
 from flask.ext.sqlalchemy import SQLAlchemy
-console.log("import SQLAlchemy")
+print("import SQLAlchemy")
 from flask.ext.oauth import OAuth
-console.log("import OAuth")
+print("import OAuth")
 
 app = Flask(__name__)
-console.log("starting flask ")
+print("starting flask ")
 app.config.from_object('config')
-console.log("read app.config ")
+print("read app.config ")
 db = SQLAlchemy(app)
-console.log("create db ")
+print("create db ")
 
 login_manager = LoginManager()
-console.log("create loginManager")
+print("create loginManager")
 login_manager.init_app(app)
-console.log("init loginManager")
+print("init loginManager")
 #login_manager.login_view = 'login'
 
 oauth = OAuth()
-console.log("create OAuth")
+print("create OAuth")
 
 from app import views, models
-console.log("import views and modles")
+print("import views and modles")
 
