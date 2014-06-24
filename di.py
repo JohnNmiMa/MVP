@@ -1,4 +1,3 @@
-#!venv/bin/python
 from app import db, models
 from migrate.versioning import api
 from config import SQLALCHEMY_DATABASE_URI
@@ -388,3 +387,5 @@ def jsonify_snips():
         reply[i] = d
     return json.dumps(reply)
 
+if __name__ == "__main__":
+    populate_db()
