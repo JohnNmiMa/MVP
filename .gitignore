@@ -1,6 +1,7 @@
 venv
 venv-orig*
 app.db
+db_repository
 *~
 *.*~
 *.*.*~
