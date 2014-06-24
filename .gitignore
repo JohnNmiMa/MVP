@@ -1,6 +1,4 @@
-*.db
 venv-orig*
-db_repository
 *~
 *.*~
 *.*.*~
@@ -14,5 +12,4 @@ EE-Gospel
 *.html~
 todo~
 app/templates/header.html~
-
 app/templates/snippetFormKeep.html
