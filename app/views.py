@@ -21,9 +21,7 @@ def before_request():
 @app.route('/')
 @app.route('/index')
 def index():
-    print("### In views:/index")
     public_count = Snippet.query.filter_by(access=ACCESS_PUBLIC).count()
-    print("### In views:/index - got list of public snippets")
     return render_template('index.html', user_id = -1, page = 'index', public_count = public_count)
 
 
