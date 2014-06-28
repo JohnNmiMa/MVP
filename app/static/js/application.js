@@ -1380,7 +1380,7 @@ $('#topicAdd').click(function() {
         var topicPanelWidth = $('#topicPanel').width(),
             snippetPanelWidth = $('#snippetPanel').width(),
             snippetBlockWidth = $('#snippetBlock').width(),
-            deltaFactor = 0.03, // decrease for faster animation
+            deltaFactor = 0.3, // decrease for faster animation
             delta = snippetBlockWidth / (100.0 * deltaFactor),  // make larger 1/100 of the whole snippet area
             newTPW = topicPanelWidth + delta;
 
@@ -1400,17 +1400,11 @@ $('#topicAdd').click(function() {
         }
     }
 
-/*if ($(this).width() >= 1280) {
-    //do something
-  }
-  else if ($(this).width() < 1280 && $(this).width()>= 980) {
-    //do something
-  }*/
     var hideTopicPanel = function(callback) {
         var topicPanelWidth = $('#topicPanel').width(),
             snippetPanelWidth = $('#snippetPanel').width(),
             snippetBlockWidth = $('#snippetBlock').width(),
-            deltaFactor = .01, // decrease for faster animation
+            deltaFactor = .4, // decrease for faster animation
             delta = snippetBlockWidth / (100.0 * deltaFactor);  // make smaller 1/100 of the whole snippet area
 
         if (topicPanelWidth > (delta * deltaFactor)) {
