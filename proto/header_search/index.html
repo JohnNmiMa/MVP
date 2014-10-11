@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+	<head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+		<title>SomeCode</title>
+
+        <!-- jQuery -->
+        <!--script src="http://code.jquery.com/jquery-latest.js"></script-->
+        <script src="static/js/jquery-2.1.1.min.js"></script>
+
+        <!-- Bootstrap -->
+        <link href="static/css/bootstrap.css" rel="stylesheet" media="screen">
+        <link href="static/css/bootstrap-theme.css?v=1.1" rel="stylesheet">
+        <script src="static/js/bootstrap.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- My Stuff -->
+        <link type="text/css" rel="stylesheet" href="static/css/main.css">
+		<script type="text/javascript" src="static/js/application.js"></script>
+
+	</head>
+    <body>
+   
+        <nav role="navigation" class="navbar navbar-default navbar-fixed-top">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="#" class="navbar-brand hidden-xs">SomeCode</a>
+                <form id="snippetSearchForm" name="snippetSearchForm" role="search" onSubmit="return SC.snippetCrud.searchSnippets(this)">
+                    <div id="snippetSearchDiv">
+                        <input type="text" id="snippetSearchField" class="form-control reset" name="q" autocomplete="off" placeholder='Search public snippets'>
+                        <div id="snippetSearchSelectorDiv">
+                            <span id="personalSnippetCounter" class="badge left selected">20</span> /
+                            <span id="publicSnippetCounter" class="badge right">1024</span>
+                        </div id="">
+                    </div>
+                </form>
+            </div>
+            <!-- Collection of nav links, forms, and other content for toggling -->
+            <div id="navbarCollapse" class="collapse navbar-collapse">
+                <!--form class="navbar-form navbar-left" role="search snippetSearch">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search public snippets">
+                    </div>
+                </form-->
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#" id="username">John</a></li>
+                    <li><a href="/logout" id="signout">Log Out</a></li>
+                    <li><a href="#"><span class="glyphicon glyphicon-cog"></span></a></li>
+                </ul>
+            </div>
+        </nav>
+
+    </body>
+</html>

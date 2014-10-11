@@ -172,7 +172,7 @@ w_snipj = {
     <li>Improve speed of code searches. Try NoSQL database persistence.</li>\
     <li>Implement in AngularJS to be completely single-page.</li>\
     <li>Get UI professionally designed for best/cleanest look. This will likely require a full rewrite of the client side UI code. Although the 'grid' functionality from Twitter Bootstrap is useful, it was pushed to its limits. This app needs a custom built UI.</li>\
-    <li>Create mobile apps for Anderoid, iPhone/iPad.</li>\
+    <li>Create mobile apps for Android, iPhone/iPad.</li>\
     <li>Add other modules: Todo, Notes, Projects, Pomodoro, Books, Scrum-like backlog, etc. This will allow the Snippet Topic Panel to be swapped out with a 'Notes' panel or a 'Todo' panel, or whatever module the user wishes to use. When a new module panel is displayed, the central display area will display data according to a format specific to that module.</li>\
     <li>Get user feedback for desired features and enhancements.</li>\
     </ul>",
